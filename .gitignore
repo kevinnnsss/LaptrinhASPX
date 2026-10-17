@@ -1,0 +1,23 @@
+## Chặn các thư mục tạm và cache của Visual Studio
+.vs/
+[Bb]in/
+[Oo]bj/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+## Chặn thư mục packages nạp từ NuGet
+packages/
+!packages/repositories.config
+
+## Chặn các file cơ sở dữ liệu tạm thời (Không đẩy CSDL thô lên Git)
+*.mdf
+*.ldf
+
+## Build Results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+build/
