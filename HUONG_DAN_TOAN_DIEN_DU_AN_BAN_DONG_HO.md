@@ -34,20 +34,23 @@ Tên Database: `layout`. Bắt buộc giữ nguyên 100% tên bảng và tên c�
    - Cột `Pos` xác định vị trí hiển thị (1: Menu ngang Header, 2: Sidebar danh mục, 3: Footer).
    - Cột `Hide` ẩn/hiện danh mục (0: hiện, 1: ẩn).
 2. **Bảng `PageItems`** (Khóa chính: `ID_P`):
-   - Lưu trữ sản phẩm đồng hồ và tin tức. Liên kết với `Menus` qua `ID_MN`.
-   - Cột `Title`: Tên đồng hồ. Cột `Contents`: Mô tả chi tiết, thông số kỹ thuật (vỏ thép, kính Sapphire, độ chịu nước).
+   - Lưu trữ sản phẩm đồng hồ và tin tức. Liên kết với `Menus` qua `ID_MN` (FK **NO ACTION** — không cho xóa menu khi còn sản phẩm/bài viết thuộc menu đó, hãy dùng `Menus.Hide = 1` để ẩn).
+   - Cột `Title`: Tên đồng hồ. Cột `Sumary`: **CHỈ chứa tóm tắt mô tả** (KHÔNG còn chứa giá — giá lấy duy nhất từ bảng `ProductPrices.Price`). Cột `Contents`: Mô tả chi tiết, thông số kỹ thuật (vỏ thép, kính Sapphire, độ chịu nước).
    - Cột `Image`: Tên file ảnh đại diện (lưu tại `/Assets/images/products/`).
+   - Cột `Gender` **(MỚI v2)**: Phân loại giới tính (`0`: Unisex/Không áp dụng, `1`: Nam, `2`: Nữ) — dùng để lọc sản phẩm theo trang "Đồng hồ Nam" / "Đồng hồ Nữ" qua query string `?gender=1` hoặc `?gender=2`.
+   - Cột `ItemType` **(MỚI v2)**: Phân loại nội dung (`1`: Sản phẩm, `2`: Tin tức/Bài viết) — giúp tách biệt rõ ràng giữa sản phẩm bán hàng và tin tức đánh giá trên cùng 1 bảng.
+   - Cột `Hide`: **Chỉ có nghĩa "ẩn khỏi website"** (`0`: Hiển thị, `1`: Ẩn). Hết hàng xác định bằng `ProductPrices.StockQuantity = 0`, không dùng `Hide`.
 3. **Bảng `Acounts`** (Khóa chính: `Username`):
-   - Quản lý tài khoản đăng nhập. `Permission`: 1 = Admin (toàn quyền), 2 = Khách hàng (Member).
+   - Quản lý tài khoản đăng nhập. `Permission`: 1 = Admin (toàn quyền), 2 = Khách hàng (Member). Có ràng buộc CHECK chỉ cho phép giá trị 1 hoặc 2.
    - `Lock`: 0 = hoạt động, 1 = bị khóa. `Active`: 1 = đã kích hoạt.
 
 ## 1.3. Giải pháp Bán hàng (Giá, Giỏ hàng, Đơn hàng)
-- **Phương án 1 (Tối thiểu):** Lưu chuỗi `"Giá|Mô tả ngắn"` vào cột `Sumary` của `PageItems` và lưu giỏ hàng trong `Session`.
-- **Phương án 2 (Đầy đủ - Khuyến nghị thực thi):** Giữ nguyên 100% 3 bảng lõi, bổ sung 3 bảng mở rộng độc lập:
-  + `ProductPrices`: Quan hệ 1-1 với `PageItems` qua `ID_P` (lưu `Price`, `OriginalPrice`, `StockQuantity`).
-  + `Orders`: Quản lý đơn đặt hàng (Người nhận, SĐT, Địa chỉ, Tổng tiền, Trạng thái).
-  + `OrderDetails`: Chi tiết từng sản phẩm trong đơn hàng.
-- **Quy chuẩn đồng bộ:** File script `Database_layout.sql` đã được tạo sẵn tại thư mục gốc dự án. Mở SSMS và nhấn **F5** để tạo trọn gói CSDL.
+- **Nguyên tắc v2:** Cột `Sumary` trong `PageItems` **CHỈ chứa tóm tắt mô tả thuần túy** (không chứa giá). Toàn bộ thông tin giá bán lấy duy nhất từ bảng `ProductPrices.Price`.
+- Giữ nguyên 100% 3 bảng lõi theo đề cương, bổ sung 3 bảng mở rộng độc lập:
+  + `ProductPrices`: Quan hệ 1-1 với `PageItems` qua `ID_P` (lưu `Price`, `OriginalPrice`, `StockQuantity`, `DiscountPercent`). Có các ràng buộc CHECK: giá ≥ 0, tồn kho ≥ 0, % khuyến mãi 0–100, giá bán ≤ giá niêm yết.
+  + `Orders`: Quản lý đơn đặt hàng. Có ràng buộc CHECK trạng thái chỉ nhận 5 giá trị: `Chờ xử lý`, `Đã xác nhận`, `Đang giao`, `Đã hoàn tất`, `Đã hủy`.
+  + `OrderDetails`: Chi tiết từng sản phẩm trong đơn hàng. Có ràng buộc UNIQUE `(OrderID, ID_P)` đảm bảo mỗi sản phẩm chỉ xuất hiện 1 dòng trong 1 đơn.
+- **Quy chuẩn đồng bộ:** File script `Database_layout.sql` (phiên bản v2) đã được tạo sẵn tại thư mục gốc dự án. Mở SSMS và nhấn **F5** để tạo trọn gói CSDL.
 
 ---
 
@@ -118,9 +121,9 @@ flowchart TD
 - **Mục tiêu:** Hiển thị menu động và danh sách đồng hồ.
 - **Các bước:**
   1. Viết code dựng Menu đa cấp tự động đọc từ bảng `Menus` (xem Phụ lục 9.3 - Mẫu 2).
-  2. Trang `Default.aspx`: Hiển thị Banner quảng cáo và danh sách 6 mẫu đồng hồ mới nhất bằng Server Control `Repeater`.
-  3. Trang `ProductList.aspx`: Nhận `idmn` từ URL query string để lọc đồng hồ theo thương hiệu (Casio, Seiko...).
-  4. Trang `ProductDetail.aspx`: Nhận `id` sản phẩm, hiển thị ảnh lớn, giá bán, thông số kỹ thuật và nút "Thêm vào giỏ hàng".
+  2. Trang `Default.aspx`: Hiển thị Banner quảng cáo và danh sách 6 mẫu đồng hồ mới nhất (`ItemType = 1`) bằng Server Control `Repeater`.
+  3. Trang `ProductList.aspx`: Nhận `idmn` từ URL query string để lọc đồng hồ theo thương hiệu (Casio, Seiko...), hoặc nhận `gender` để lọc theo giới tính (`gender=1`: Đồng hồ Nam, `gender=2`: Đồng hồ Nữ) — sử dụng cột `PageItems.Gender` (v2).
+  4. Trang `ProductDetail.aspx`: Nhận `id` sản phẩm, hiển thị ảnh lớn, giá bán (lấy từ `ProductPrices.Price`), thông số kỹ thuật và nút "Thêm vào giỏ hàng".
 
 ### GĐ5: Lập trình phân hệ Quản trị (Admin)
 - **Mục tiêu:** Quản trị đăng nhập, phân quyền và CRUD danh mục/sản phẩm.
@@ -790,7 +793,7 @@ namespace BCBTL.Admin
                 PageItem watch = new PageItem();
                 watch.ID_MN = int.Parse(ddlCategory.SelectedValue);
                 watch.Title = title;
-                watch.Sumary = price.ToString() + "|" + txtSummary.Text.Trim();
+                watch.Sumary = txtSummary.Text.Trim(); // v2: CHỈ chứa tóm tắt, KHÔNG chứa giá
                 watch.Contents = txtContents.Text;
                 watch.Image = imageName;
                 watch.CreaDate = DateTime.Now;
@@ -798,6 +801,8 @@ namespace BCBTL.Admin
                 watch.UserAdd = Session["AdminUser"].ToString();
                 watch.Hide = false;
                 watch.OrderKey = 0;
+                watch.Gender = 1;    // v2: Mặc định Nam (0: Unisex, 1: Nam, 2: Nữ)
+                watch.ItemType = 1;  // v2: Sản phẩm (1: Sản phẩm, 2: Tin tức)
 
                 db.PageItems.InsertOnSubmit(watch);
                 db.SubmitChanges(); // Lưu để sinh ID_P tự tăng
