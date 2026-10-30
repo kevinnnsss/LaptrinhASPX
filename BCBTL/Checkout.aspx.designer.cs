@@ -1,0 +1,21 @@
+﻿namespace BCBTL
+{
+    public partial class Checkout
+    {
+        protected global::System.Web.UI.WebControls.Label lblCheckoutError;
+        protected global::System.Web.UI.WebControls.TextBox txtCustomerName;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvName;
+        protected global::System.Web.UI.WebControls.TextBox txtCustomerPhone;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvPhone;
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator revPhone;
+        protected global::System.Web.UI.WebControls.TextBox txtCustomerEmail;
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator revEmail;
+        protected global::System.Web.UI.WebControls.TextBox txtDeliveryAddress;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvAddress;
+        protected global::System.Web.UI.WebControls.TextBox txtOrderNotes;
+        protected global::System.Web.UI.WebControls.Repeater rptSummaryItems;
+        protected global::System.Web.UI.WebControls.Literal litSubTotal;
+        protected global::System.Web.UI.WebControls.Literal litGrandTotal;
+        protected global::System.Web.UI.WebControls.Button btnPlaceOrder;
+    }
+}

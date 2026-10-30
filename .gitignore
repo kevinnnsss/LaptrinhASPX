@@ -21,3 +21,6 @@ packages/
 x64/
 x86/
 build/
+
+## Scratch & Temporary Test scripts
+scratch/

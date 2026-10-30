@@ -1,0 +1,216 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="BCBTL.Site" %>
+
+<!DOCTYPE html>
+<html lang="vi">
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%: Page.Title %> - Duy Anh Watch | Thế Giới Đồng Hồ Chính Hãng Cao Cấp</title>
+    <link rel="stylesheet" href="~/Assets/css/style.css" />
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <!-- 1. TOP BAR -->
+        <div class="top-bar">
+            <div class="container top-bar-inner">
+                <div class="top-bar-left">
+                    <span class="top-bar-item">
+                        <svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16" style="vertical-align:-1px; margin-right:4px;"><path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z"/></svg>
+                        <span>Hotline:</span> <b>1800 0091</b> (Miễn phí)
+                    </span>
+                    <span class="top-bar-item">
+                        <svg width="13" height="13" fill="currentColor" viewBox="0 0 16 16" style="vertical-align:-1px; margin-right:4px;"><path d="M4 2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v11a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-11zm1 .5v2h2V3H5zm3 0v2h2V3H8zm-3 3v2h2V6H5zm3 0v2h2V6H8zm-3 3v2h2V9H5zm3 0v2h2V9H8zm-3 3v1.5h6V12H5z"/></svg>
+                        <span>Hệ thống Showroom:</span> Hà Nội &amp; TP. Hồ Chí Minh
+                    </span>
+                    <span class="top-bar-item">
+                        <svg width="13" height="13" fill="#d4af37" viewBox="0 0 16 16" style="vertical-align:-1px; margin-right:4px;"><path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/></svg>
+                        <span>Cam kết:</span> 100% Chính hãng - Đền gấp 10 lần
+                    </span>
+                </div>
+                <div class="top-bar-right">
+                    <a href="ProductList.aspx" class="top-bar-link">Tra cứu đồng hồ</a>
+                    <asp:Literal ID="litUserAuth" runat="server"></asp:Literal>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. MAIN HEADER -->
+        <header class="main-header">
+            <div class="container main-header-inner">
+                <!-- Brand Logo -->
+                <div class="logo-brand">
+                    <a href="Default.aspx">
+                        <h1>DUY ANH <span>WATCH</span></h1>
+                        <span class="logo-sub">Đồng Hồ Chính Hãng &bull; Từ Năm 1950</span>
+                    </a>
+                </div>
+
+                <!-- Search Box -->
+                <div class="header-search">
+                    <div class="search-form">
+                        <asp:TextBox ID="txtHeaderSearch" runat="server" CssClass="search-input" placeholder="Tìm kiếm đồng hồ Casio, Seiko, Citizen, Rolex, Nam, Nữ..."></asp:TextBox>
+                        <asp:Button ID="btnHeaderSearch" runat="server" Text="TÌM KIẾM" CssClass="search-btn" OnClick="btnHeaderSearch_Click" />
+                    </div>
+                </div>
+
+                <!-- Actions: Hotline & Cart -->
+                <div class="header-actions">
+                    <div class="header-hotline">
+                        <div class="hotline-icon">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M8 1a5 5 0 0 0-5 5v1h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a6 6 0 1 1 12 0v6a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h1V6a5 5 0 0 0-5-5z"/></svg>
+                        </div>
+                        <div class="hotline-text">
+                            <span class="hotline-label">Tư vấn miễn phí</span>
+                            <span class="hotline-number">1800 0091</span>
+                        </div>
+                    </div>
+
+                    <a href="Cart.aspx" class="header-cart-btn" title="Xem giỏ hàng của bạn">
+                        <div class="cart-icon-wrapper">
+                            <svg width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/></svg>
+                            <span class="cart-count">
+                                <asp:Literal ID="litCartCount" runat="server">0</asp:Literal>
+                            </span>
+                        </div>
+                        <div class="cart-info">
+                            <span class="cart-title">Giỏ hàng</span>
+                            <span class="cart-total-preview">
+                                <asp:Literal ID="litCartTotal" runat="server">0 đ</asp:Literal>
+                            </span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- 3. NAVIGATION BAR (DYNAMIC MULTI-LEVEL MENU) -->
+        <nav class="main-nav">
+            <div class="container">
+                <asp:Literal ID="litNavMenu" runat="server"></asp:Literal>
+            </div>
+        </nav>
+
+        <!-- 4. TRUST COMMITMENT STRIP -->
+        <div class="trust-strip">
+            <div class="container">
+                <div class="trust-grid">
+                    <div class="trust-item">
+                        <div class="trust-icon">
+                            <svg width="28" height="28" fill="currentColor" viewBox="0 0 16 16"><path d="M5.338 1.59a61.44 61.44 0 0 0-2.837.856.481.481 0 0 0-.328.39c-.554 4.157.726 7.19 2.253 9.188a10.725 10.725 0 0 0 2.287 2.233c.346.244.652.42.893.533.12.057.218.095.293.118a.55.55 0 0 0 .101.02.515.515 0 0 0 .1-.02c.076-.023.174-.061.294-.118.24-.113.547-.29.893-.533a10.726 10.726 0 0 0 2.287-2.233c1.527-1.997 2.807-5.031 2.253-9.188a.48.48 0 0 0-.328-.39c-.651-.213-1.75-.56-2.837-.855C9.552 1.29 8.531 1.067 8 1.067c-.53 0-1.552.223-2.662.524zM5.072.56C6.157.265 7.31 0 8 0s1.843.265 2.928.56c1.11.3 2.229.655 2.887.87a1.54 1.54 0 0 1 1.044 1.262c.599 4.491-.71 7.776-2.383 9.992a11.722 11.722 0 0 1-2.528 2.457 12.04 12.04 0 0 1-.986.586c-.255.132-.516.236-.78.29-.265-.054-.526-.158-.78-.29a12.041 12.041 0 0 1-.987-.586 11.722 11.722 0 0 1-2.527-2.457c-1.674-2.216-2.983-5.501-2.383-9.992A1.54 1.54 0 0 1 1.14 1.43c.658-.215 1.777-.57 2.887-.87z"/><path d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z"/></svg>
+                        </div>
+                        <div class="trust-text">
+                            <h4>100% Chính Hãng</h4>
+                            <p>Đại lý ủy quyền chính thức</p>
+                        </div>
+                    </div>
+                    <div class="trust-item">
+                        <div class="trust-icon">
+                            <svg width="28" height="28" fill="currentColor" viewBox="0 0 16 16"><path d="M0 3.5A1.5 1.5 0 0 1 1.5 2h9A1.5 1.5 0 0 1 12 3.5V5h1.02a1.5 1.5 0 0 1 1.17.563l1.481 1.85a1.5 1.5 0 0 1 .329.938V10.5a1.5 1.5 0 0 1-1.5 1.5H14a2 2 0 1 1-4 0H5a2 2 0 1 1-4 0H.5A.5.5 0 0 1 0 11.5v-8zm1 0v7h.08a2 2 0 0 1 3.84 0h5.16a2 2 0 0 1 3.84 0H14v-1.5a.5.5 0 0 0-.5-.5h-2a.5.5 0 0 1-.5-.5V4a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5zm11 3.5h2.368l-1.2-1.5H12V7z"/></svg>
+                        </div>
+                        <div class="trust-text">
+                            <h4>Miễn Phí Vận Chuyển</h4>
+                            <p>Giao hàng toàn quốc - Kiểm tra hàng</p>
+                        </div>
+                    </div>
+                    <div class="trust-item">
+                        <div class="trust-icon">
+                            <svg width="28" height="28" fill="currentColor" viewBox="0 0 16 16"><path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"/><path d="M8 4a.5.5 0 0 1 .5.5V6H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V7H6a.5.5 0 0 1 0-1h1.5V4.5A.5.5 0 0 1 8 4z"/></svg>
+                        </div>
+                        <div class="trust-text">
+                            <h4>Bảo Hành 5 Năm</h4>
+                            <p>Red Guarantee độc quyền Duy Anh</p>
+                        </div>
+                    </div>
+                    <div class="trust-item">
+                        <div class="trust-icon">
+                            <svg width="28" height="28" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/><path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/></svg>
+                        </div>
+                        <div class="trust-text">
+                            <h4>Đổi Mới Trong 7 Ngày</h4>
+                            <p>Nếu có lỗi kỹ thuật từ nhà sản xuất</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. MAIN CONTENT PLACEHOLDER -->
+        <main>
+            <asp:ContentPlaceHolder ID="MainContent" runat="server">
+            </asp:ContentPlaceHolder>
+        </main>
+
+        <!-- 6. FOOTER (CHUẨN DONGHODUYANH.COM) -->
+        <footer class="main-footer">
+            <div class="container">
+                <div class="footer-grid">
+                    <!-- Col 1: About -->
+                    <div class="footer-col footer-about">
+                        <h4>Đồng Hồ Duy Anh</h4>
+                        <p>Duy Anh Watch tự hào là một trong những hệ thống phân phối đồng hồ chính hãng lâu đời và uy tín bậc nhất tại Việt Nam. Chúng tôi cam kết 100% sản phẩm là hàng chính hãng từ các thương hiệu hàng đầu Nhật Bản và Thụy Sĩ.</p>
+                        <p><b>Hotline:</b> 1800 0091 (Hỗ trợ 24/7)</p>
+                        <p><b>Email:</b> duyanhwatch@watchstore.vn</p>
+                        <p style="margin-top:10px; color:var(--gold-color); font-weight:700;">★ ĐẠI LÝ ỦY QUYỀN CHÍNH THỨC TẠI VIỆT NAM</p>
+                    </div>
+
+                    <!-- Col 2: Showroom System -->
+                    <div class="footer-col">
+                        <h4>Hệ Thống Showroom</h4>
+                        <div class="footer-showroom-item">
+                            <b>Hà Nội - Showroom 1:</b>
+                            <span>200A Phố Huế, Q. Hai Bà Trưng, Hà Nội</span>
+                        </div>
+                        <div class="footer-showroom-item">
+                            <b>Hà Nội - Showroom 2:</b>
+                            <span>205 Trần Hưng Đạo, Q. Hoàn Kiếm, Hà Nội</span>
+                        </div>
+                        <div class="footer-showroom-item">
+                            <b>TP. Hồ Chí Minh - Showroom 1:</b>
+                            <span>300 Hai Bà Trưng, Phường 8, Quận 3, TP.HCM</span>
+                        </div>
+                        <div class="footer-showroom-item">
+                            <b>TP. Hồ Chí Minh - Showroom 2:</b>
+                            <span>Tầng 3, TTTM Diamond Plaza, Quận 1, TP.HCM</span>
+                        </div>
+                    </div>
+
+                    <!-- Col 3: Policies -->
+                    <div class="footer-col">
+                        <h4>Chính Sách &amp; Quy Định</h4>
+                        <ul class="footer-links">
+                            <li><a href="Contact.aspx">Chính sách bảo hành 5 năm</a></li>
+                            <li><a href="Contact.aspx">Chính sách đổi trả hàng</a></li>
+                            <li><a href="Contact.aspx">Chính sách vận chuyển &amp; giao nhận</a></li>
+                            <li><a href="Contact.aspx">Chính sách bảo mật thông tin</a></li>
+                            <li><a href="Contact.aspx">Hướng dẫn mua hàng &amp; thanh toán</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Col 4: Service & Verification -->
+                    <div class="footer-col">
+                        <h4>Phòng Kỹ Thuật &amp; Bảo Dưỡng</h4>
+                        <p>Phòng bảo hành tiêu chuẩn Thụy Sĩ với đội ngũ chuyên gia được đào tạo trực tiếp từ các hãng đồng hồ quốc tế.</p>
+                        <p>&bull; Miễn phí thay pin trọn đời cho đồng hồ Quartz</p>
+                        <p>&bull; Đo độ chính xác máy cơ bằng máy vi tính Witschi Thụy Sĩ</p>
+                        <p>&bull; Kiểm tra chống nước bằng máy nén áp suất chân không</p>
+                        <div style="margin-top: 15px; padding: 8px 12px; background:#262626; border-radius:4px; display:inline-block;">
+                            <span style="color:#ffffff; font-weight:700;">ĐÃ THÔNG BÁO BỘ CÔNG THƯƠNG ✔</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footer-bottom">
+                    <p>&copy; 2026 DUY ANH WATCH - BÀI TẬP LỚN LẬP TRÌNH WEB (ASP.NET WEB FORMS &amp; LINQ TO SQL) - ĐẠI HỌC ĐỒNG THÁP</p>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Back To Top Button -->
+        <button type="button" id="btnBackToTop" class="btn-back-to-top" title="Lên đầu trang">▲</button>
+    </form>
+
+    <script src="~/Assets/js/main.js"></script>
+</body>
+</html>

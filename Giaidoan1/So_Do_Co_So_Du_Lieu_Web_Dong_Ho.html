@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sơ Đồ Cơ Sở Dữ Liệu &amp; Ánh Xạ Giao Diện Website Bán Đồng Hồ</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background: #090d16;
+      color: #f8fafc;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      padding: 24px;
+      line-height: 1.5;
+    }
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #111827;
+      border: 1px solid #1e293b;
+      padding: 16px 24px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+    .header-bar h1 {
+      font-size: 20px;
+      color: #60a5fa;
+    }
+    .header-bar p {
+      font-size: 13px;
+      color: #94a3b8;
+    }
+    .actions {
+      display: flex;
+      gap: 12px;
+    }
+    .btn {
+      background: #2563eb;
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      transition: background 0.2s;
+      border: none;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background: #1d4ed8;
+    }
+    .btn-green {
+      background: #059669;
+    }
+    .btn-green:hover {
+      background: #047857;
+    }
+    .svg-container {
+      width: 100%;
+      background: #0b1120;
+      border: 1px solid #1e293b;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+    }
+    .svg-container svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    .quick-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+      gap: 16px;
+      margin-top: 24px;
+    }
+    .card {
+      background: #111827;
+      border: 1px solid #1e293b;
+      border-radius: 10px;
+      padding: 16px;
+    }
+    .card h3 {
+      font-size: 16px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card p {
+      font-size: 13px;
+      color: #94a3b8;
+      margin-bottom: 6px;
+    }
+    .tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="header-bar">
+    <div>
+      <h1>SƠ ĐỒ DATABASE CƠ SỞ DỮ LIỆU &quot;layout&quot; (v2) – ĐỐI SOÁT WEBSITE BÁN ĐỒNG HỒ</h1>
+      <p>Môn Lập trình Web ASP.NET Web Forms (C# / LINQ to SQL) – Đại học Đồng Tháp | Giảng viên: Thầy Lương Thái Ngọc</p>
+    </div>
+    <div class="actions">
+      <a href="So_Do_Co_So_Du_Lieu_Web_Dong_Ho.png" download class="btn">Tải ảnh PNG độ nét cao</a>
+      <a href="So_Do_Co_So_Du_Lieu_Web_Dong_Ho.svg" download class="btn btn-green">Tải file SVG Vector</a>
+      <button onclick="window.print()" class="btn" style="background:#475569;">In / Xuất PDF</button>
+    </div>
+  </div>
+
+  <div class="svg-container">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2700 1780" width="2700" height="1780" style="background:#090d16; font-family:'Segoe UI', system-ui, -apple-system, sans-serif;">
+  <defs>
+    <!-- Gradients -->
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b1120"/>
+      <stop offset="50%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#070a12"/>
+    </linearGradient>
+
+    <!-- Header Gradients for Tables -->
+    <linearGradient id="gAcounts" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#6d28d9"/>
+      <stop offset="100%" stop-color="#8b5cf6"/>
+    </linearGradient>
+    <linearGradient id="gMenus" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#047857"/>
+      <stop offset="100%" stop-color="#10b981"/>
+    </linearGradient>
+    <linearGradient id="gPageItems" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#1d4ed8"/>
+      <stop offset="100%" stop-color="#3b82f6"/>
+    </linearGradient>
+    <linearGradient id="gProductPrices" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#0284c7"/>
+      <stop offset="100%" stop-color="#06b6d4"/>
+    </linearGradient>
+    <linearGradient id="gOrders" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#b45309"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+    <linearGradient id="gOrderDetails" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#be123c"/>
+      <stop offset="100%" stop-color="#f43f5e"/>
+    </linearGradient>
+
+    <!-- UI Mockup Gradients -->
+    <linearGradient id="gWebHeader" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#1e1b4b"/>
+      <stop offset="100%" stop-color="#312e81"/>
+    </linearGradient>
+
+    <!-- Drop Shadows -->
+    <filter id="shadowBox" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+    <filter id="glowGold" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#f59e0b" flood-opacity="0.6"/>
+    </filter>
+    <filter id="glowBlue" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#3b82f6" flood-opacity="0.6"/>
+    </filter>
+
+    <!-- Markers for Lines -->
+    <marker id="arrowRel" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#f59e0b"/>
+    </marker>
+    <marker id="arrowRelGreen" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#10b981"/>
+    </marker>
+    <marker id="arrowRelBlue" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#38bdf8"/>
+    </marker>
+    <marker id="arrowRelRose" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#fb7185"/>
+    </marker>
+    <marker id="arrowUI" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M 0 2 L 10 6 L 0 10 z" fill="#fbbf24"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="2700" height="1780" fill="url(#bgGrad)"/>
+  <rect x="20" y="20" width="2660" height="1740" rx="16" fill="none" stroke="#1e293b" stroke-width="2"/>
+
+  <!-- ================= TOP BANNER ================= -->
+  <g transform="translate(60, 40)">
+    <rect width="2580" height="85" rx="12" fill="#111827" stroke="#1e293b" stroke-width="2"/>
+    <rect x="0" y="0" width="8" height="85" rx="4" fill="#3b82f6"/>
+    
+    <text x="30" y="38" fill="#f8fafc" font-size="24" font-weight="bold">
+      SƠ ĐỒ CƠ SỞ DỮ LIỆU CSDL &quot;layout&quot; (v2) – ĐỐI SOÁT TRỰC QUAN GIAO DIỆN WEBSITE BÁN ĐỒNG HỒ
+    </text>
+    <text x="30" y="66" fill="#94a3b8" font-size="15">
+      Môn Lập trình Web ASP.NET Web Forms (C# / LINQ to SQL) – Đại học Đồng Tháp | Giảng viên: Thầy Lương Thái Ngọc | Tổng hợp từ tài liệu: &quot;Bảng Dịch &amp; Giải Nghĩa Các Thuộc Tính CSDL&quot;
+    </text>
+
+    <!-- Version badge -->
+    <rect x="2380" y="22" width="170" height="40" rx="20" fill="#1e1b4b" stroke="#6366f1" stroke-width="1.5"/>
+    <circle cx="2405" cy="42" r="6" fill="#10b981"/>
+    <text x="2425" y="47" fill="#c7d2fe" font-size="14" font-weight="bold">PHIÊN BẢN v2</text>
+  </g>
+
+  <!-- ================= LEFT AREA: DATABASE SCHEMA (6 TABLES) ================= -->
+  <!-- Left Header -->
+  <g transform="translate(60, 145)">
+    <rect width="970" height="42" rx="8" fill="#1e293b"/>
+    <text x="20" y="27" fill="#60a5fa" font-size="16" font-weight="bold">
+      PHÂN HỆ 1: SƠ ĐỒ THỰC THỂ CƠ SỞ DỮ LIỆU QUAN HỆ (6 BẢNG CSDL &quot;layout&quot;)
+    </text>
+    <text x="730" y="27" fill="#94a3b8" font-size="13">3 Bảng Lõi + 3 Bảng Mở rộng</text>
+  </g>
+
+  <!-- TABLE 1: Acounts -->
+  <g id="table_acounts" transform="translate(60, 205)" filter="url(#shadowBox)">
+    <!-- Card Container -->
+    <rect width="450" height="290" rx="12" fill="#0f172a" stroke="#6d28d9" stroke-width="2"/>
+    <!-- Card Header -->
+    <rect width="450" height="52" rx="12" fill="url(#gAcounts)"/>
+    <rect y="40" width="450" height="12" fill="url(#gAcounts)"/>
+    <text x="20" y="32" fill="#ffffff" font-size="18" font-weight="bold">Acounts</text>
+    <text x="95" y="32" fill="#ddd6fe" font-size="13">(Lưu ý: đề cương thiếu chữ &#39;c&#39;)</text>
+    <rect x="330" y="14" width="105" height="24" rx="12" fill="#4c1d95"/>
+    <text x="345" y="30" fill="#e9d5ff" font-size="11" font-weight="bold">🔑 Nhóm Lõi</text>
+
+    <!-- Table Columns -->
+    <g transform="translate(15, 65)">
+      <!-- Row 1: Username -->
+      <rect y="0" width="420" height="28" rx="4" fill="#1e1b4b" fill-opacity="0.6"/>
+      <rect x="5" y="5" width="28" height="18" rx="3" fill="#fbbf24"/>
+      <text x="10" y="18" fill="#000000" font-size="10" font-weight="bold">PK</text>
+      <text x="40" y="19" fill="#f8fafc" font-size="13" font-weight="bold">Username</text>
+      <text x="135" y="19" fill="#a78bfa" font-size="12">VARCHAR(50)</text>
+      <text x="245" y="19" fill="#cbd5e1" font-size="12">Tên đăng nhập tài khoản</text>
+
+      <!-- Row 2: Password -->
+      <text x="40" y="47" fill="#f8fafc" font-size="13">Password</text>
+      <text x="135" y="47" fill="#64748b" font-size="12">VARCHAR(256)</text>
+      <text x="245" y="47" fill="#94a3b8" font-size="12">Mật khẩu băm SHA-256</text>
+
+      <!-- Row 3: Fullname -->
+      <text x="40" y="75" fill="#f8fafc" font-size="13">Fullname</text>
+      <text x="135" y="75" fill="#64748b" font-size="12">NVARCHAR(100)</text>
+      <text x="245" y="75" fill="#94a3b8" font-size="12">Họ tên hiển thị trên web</text>
+
+      <!-- Row 4: Permission -->
+      <rect y="84" width="420" height="28" rx="4" fill="#312e81" fill-opacity="0.3"/>
+      <text x="40" y="103" fill="#38bdf8" font-size="13" font-weight="bold">Permission</text>
+      <text x="135" y="103" fill="#38bdf8" font-size="12">INT (CHECK 1,2)</text>
+      <text x="245" y="103" fill="#7dd3fc" font-size="12">1=Admin, 2=Member</text>
+
+      <!-- Row 5: Email -->
+      <text x="40" y="131" fill="#f8fafc" font-size="13">Email</text>
+      <text x="135" y="131" fill="#64748b" font-size="12">VARCHAR(100)</text>
+      <text x="245" y="131" fill="#94a3b8" font-size="12">Địa chỉ thư điện tử</text>
+
+      <!-- Row 6: Lock -->
+      <text x="40" y="159" fill="#f43f5e" font-size="13">Lock</text>
+      <text x="135" y="159" fill="#64748b" font-size="12">BIT (DEF 0)</text>
+      <text x="245" y="159" fill="#fda4af" font-size="12">0=Bình thường, 1=Khóa</text>
+
+      <!-- Row 7: Active -->
+      <text x="40" y="187" fill="#34d399" font-size="13">Active</text>
+      <text x="135" y="187" fill="#64748b" font-size="12">BIT (DEF 1)</text>
+      <text x="245" y="187" fill="#a7f3d0" font-size="12">1=Đã kích hoạt hoạt động</text>
+
+      <!-- Footnote badge -->
+      <rect y="200" width="420" height="20" rx="4" fill="#1e1b4b"/>
+      <text x="10" y="214" fill="#c084fc" font-size="11">🌐 Ánh xạ: Auth Header, Đăng nhập / Đăng ký, Phân quyền Admin</text>
+    </g>
+    <!-- Badge for mapping -->
+    <circle cx="435" cy="20" r="14" fill="#a855f7"/>
+    <text x="431" y="25" fill="#ffffff" font-size="13" font-weight="bold">1</text>
+  </g>
+
+  <!-- TABLE 2: Menus -->
+  <g id="table_menus" transform="translate(560, 205)" filter="url(#shadowBox)">
+    <rect width="470" height="350" rx="12" fill="#0f172a" stroke="#059669" stroke-width="2"/>
+    <rect width="470" height="52" rx="12" fill="url(#gMenus)"/>
+    <rect y="40" width="470" height="12" fill="url(#gMenus)"/>
+    <text x="20" y="32" fill="#ffffff" font-size="18" font-weight="bold">Menus</text>
+    <text x="85" y="32" fill="#a7f3d0" font-size="13">Điều hướng &amp; Thương hiệu</text>
+    <rect x="350" y="14" width="105" height="24" rx="12" fill="#064e3b"/>
+    <text x="365" y="30" fill="#6ee7b7" font-size="11" font-weight="bold">🔑 Nhóm Lõi</text>
+
+    <g transform="translate(15, 65)">
+      <!-- Row 1: ID_MN -->
+      <rect y="0" width="440" height="26" rx="4" fill="#064e3b" fill-opacity="0.4"/>
+      <rect x="5" y="4" width="28" height="18" rx="3" fill="#fbbf24"/>
+      <text x="10" y="17" fill="#000000" font-size="10" font-weight="bold">PK</text>
+      <text x="40" y="18" fill="#f8fafc" font-size="13" font-weight="bold">ID_MN</text>
+      <text x="135" y="18" fill="#34d399" font-size="12">INT IDENTITY</text>
+      <text x="245" y="18" fill="#cbd5e1" font-size="12">Mã định danh Menu tự tăng</text>
+
+      <!-- Row 2: Parent -->
+      <rect x="5" y="31" width="28" height="18" rx="3" fill="#10b981"/>
+      <text x="9" y="44" fill="#000000" font-size="9" font-weight="bold">FK*</text>
+      <text x="40" y="45" fill="#34d399" font-size="13" font-weight="bold">Parent</text>
+      <text x="135" y="45" fill="#64748b" font-size="12">INT (DEF 0)</text>
+      <text x="245" y="45" fill="#cbd5e1" font-size="12">0=Gốc, &gt;0=Mã menu cha</text>
+
+      <!-- Row 3: Pos -->
+      <rect y="54" width="440" height="26" rx="4" fill="#064e3b" fill-opacity="0.2"/>
+      <text x="40" y="72" fill="#38bdf8" font-size="13" font-weight="bold">Pos</text>
+      <text x="135" y="72" fill="#38bdf8" font-size="12">INT (CHECK 1,2,3)</text>
+      <text x="245" y="72" fill="#7dd3fc" font-size="12">1=Header, 2=Sidebar, 3=Footer</text>
+
+      <!-- Row 4: Lable -->
+      <text x="40" y="99" fill="#f59e0b" font-size="13" font-weight="bold">Lable</text>
+      <text x="135" y="99" fill="#64748b" font-size="12">NVARCHAR(150)</text>
+      <text x="245" y="99" fill="#fcd34d" font-size="12">Tên nhãn (Đề cương sai &#39;el&#39;)</text>
+
+      <!-- Row 5: UrlLink -->
+      <text x="40" y="126" fill="#f8fafc" font-size="13">UrlLink</text>
+      <text x="135" y="126" fill="#64748b" font-size="12">NVARCHAR(255)</text>
+      <text x="245" y="126" fill="#94a3b8" font-size="12">Đường dẫn liên kết web</text>
+
+      <!-- Row 6: OrderKey -->
+      <text x="40" y="153" fill="#f8fafc" font-size="13">OrderKey</text>
+      <text x="135" y="153" fill="#64748b" font-size="12">INT (DEF 0)</text>
+      <text x="245" y="153" fill="#94a3b8" font-size="12">Thứ tự ưu tiên sắp xếp</text>
+
+      <!-- Row 7: UserAdd -->
+      <rect x="5" y="166" width="28" height="18" rx="3" fill="#a855f7"/>
+      <text x="10" y="179" fill="#ffffff" font-size="10" font-weight="bold">FK</text>
+      <text x="40" y="180" fill="#c084fc" font-size="13">UserAdd</text>
+      <text x="135" y="180" fill="#64748b" font-size="12">VARCHAR(50)</text>
+      <text x="245" y="180" fill="#e9d5ff" font-size="12">Người tạo -&gt; Acounts(Username)</text>
+
+      <!-- Row 8: UserTest -->
+      <text x="40" y="207" fill="#f8fafc" font-size="13">UserTest</text>
+      <text x="135" y="207" fill="#64748b" font-size="12">VARCHAR(50)</text>
+      <text x="245" y="207" fill="#94a3b8" font-size="12">Tài khoản người kiểm duyệt</text>
+
+      <!-- Row 9: Hide -->
+      <text x="40" y="234" fill="#f43f5e" font-size="13">Hide</text>
+      <text x="135" y="234" fill="#64748b" font-size="12">BIT (DEF 0)</text>
+      <text x="245" y="234" fill="#fda4af" font-size="12">0=Hiện trên web, 1=Ẩn menu</text>
+
+      <rect y="250" width="440" height="24" rx="4" fill="#064e3b"/>
+      <text x="10" y="266" fill="#6ee7b7" font-size="11">🌐 Ánh xạ: Header Nav (Pos=1), Menu Thương hiệu Casio, Seiko (Pos=2)</text>
+    </g>
+    <circle cx="455" cy="20" r="14" fill="#10b981"/>
+    <text x="451" y="25" fill="#ffffff" font-size="13" font-weight="bold">2</text>
+  </g>
+
+  <!-- TABLE 3: ProductPrices (Placed on Left Middle) -->
+  <g id="table_productprices" transform="translate(60, 525)" filter="url(#shadowBox)">
+    <rect width="450" height="270" rx="12" fill="#0f172a" stroke="#0284c7" stroke-width="2"/>
+    <rect width="450" height="52" rx="12" fill="url(#gProductPrices)"/>
+    <rect y="40" width="450" height="12" fill="url(#gProductPrices)"/>
+    <text x="20" y="32" fill="#ffffff" font-size="18" font-weight="bold">ProductPrices</text>
+    <text x="150" y="32" fill="#bae6fd" font-size="13">Giá &amp; Tồn kho (Mở rộng)</text>
+    <rect x="330" y="14" width="105" height="24" rx="12" fill="#0369a1"/>
+    <text x="345" y="30" fill="#e0f2fe" font-size="11" font-weight="bold">⚡ Quan hệ 1-1</text>
+
+    <g transform="translate(15, 65)">
+      <!-- Row 1: ID_P (PK & FK 1-1) -->
+      <rect y="0" width="420" height="28" rx="4" fill="#0369a1" fill-opacity="0.4"/>
+      <rect x="5" y="5" width="48" height="18" rx="3" fill="#fbbf24"/>
+      <text x="8" y="18" fill="#000000" font-size="9" font-weight="bold">PK/FK</text>
+      <text x="60" y="19" fill="#f8fafc" font-size="13" font-weight="bold">ID_P</text>
+      <text x="135" y="19" fill="#38bdf8" font-size="12">INT (1-1 CASCADE)</text>
+      <text x="255" y="19" fill="#bae6fd" font-size="12">Trỏ tới PageItems(ID_P)</text>
+
+      <!-- Row 2: Price -->
+      <rect y="29" width="420" height="26" rx="4" fill="#064e3b" fill-opacity="0.3"/>
+      <text x="60" y="47" fill="#34d399" font-size="13" font-weight="bold">Price</text>
+      <text x="135" y="47" fill="#34d399" font-size="12">DECIMAL (&gt;= 0)</text>
+      <text x="255" y="47" fill="#a7f3d0" font-size="12">Giá bán thực tế (VNĐ)</text>
+
+      <!-- Row 3: OriginalPrice -->
+      <text x="60" y="75" fill="#f8fafc" font-size="13">OriginalPrice</text>
+      <text x="135" y="75" fill="#64748b" font-size="12">DECIMAL (&gt;= Price)</text>
+      <text x="255" y="75" fill="#94a3b8" font-size="12">Giá gốc niêm yết (gạch)</text>
+
+      <!-- Row 4: StockQuantity -->
+      <rect y="85" width="420" height="26" rx="4" fill="#451a03" fill-opacity="0.4"/>
+      <text x="60" y="103" fill="#f59e0b" font-size="13" font-weight="bold">StockQuantity</text>
+      <text x="135" y="103" fill="#f59e0b" font-size="12">INT (DEF 10, &gt;= 0)</text>
+      <text x="255" y="103" fill="#fde68a" font-size="12">Tồn kho (0 = Hết hàng)</text>
+
+      <!-- Row 5: DiscountPercent -->
+      <text x="60" y="131" fill="#38bdf8" font-size="13">DiscountPercent</text>
+      <text x="135" y="131" fill="#38bdf8" font-size="12">INT (0 -&gt; 100)</text>
+      <text x="255" y="131" fill="#7dd3fc" font-size="12">% Giảm giá hiển thị (-12%)</text>
+
+      <rect y="155" width="420" height="40" rx="4" fill="#082f49"/>
+      <text x="10" y="171" fill="#38bdf8" font-size="11">📌 Lưu ý v2: Nguồn lưu giá DUY NHẤT. Cột Sumary trong PageItems</text>
+      <text x="10" y="187" fill="#38bdf8" font-size="11">không còn lưu giá. Hết hàng dựa vào StockQuantity = 0.</text>
+    </g>
+    <circle cx="435" cy="20" r="14" fill="#0284c7"/>
+    <text x="431" y="25" fill="#ffffff" font-size="13" font-weight="bold">4</text>
+  </g>
+
+  <!-- TABLE 4: PageItems (Placed on Right Middle) -->
+  <g id="table_pageitems" transform="translate(560, 580)" filter="url(#shadowBox)">
+    <rect width="470" height="490" rx="12" fill="#0f172a" stroke="#1d4ed8" stroke-width="2"/>
+    <rect width="470" height="52" rx="12" fill="url(#gPageItems)"/>
+    <rect y="40" width="470" height="12" fill="url(#gPageItems)"/>
+    <text x="20" y="32" fill="#ffffff" font-size="18" font-weight="bold">PageItems</text>
+    <text x="115" y="32" fill="#bfdbfe" font-size="13">Sản phẩm đồng hồ &amp; Tin tức</text>
+    <rect x="350" y="14" width="105" height="24" rx="12" fill="#1e3a8a"/>
+    <text x="365" y="30" fill="#93c5fd" font-size="11" font-weight="bold">🔑 Nhóm Lõi</text>
+
+    <g transform="translate(15, 65)">
+      <!-- Row 1: ID_P -->
+      <rect y="0" width="440" height="24" rx="4" fill="#1e3a8a" fill-opacity="0.4"/>
+      <rect x="5" y="3" width="28" height="18" rx="3" fill="#fbbf24"/>
+      <text x="10" y="16" fill="#000000" font-size="10" font-weight="bold">PK</text>
+      <text x="40" y="17" fill="#f8fafc" font-size="13" font-weight="bold">ID_P</text>
+      <text x="120" y="17" fill="#60a5fa" font-size="12">INT IDENTITY</text>
+      <text x="245" y="17" fill="#cbd5e1" font-size="12">Mã sản phẩm / bài viết</text>
+
+      <!-- Row 2: ID_MN -->
+      <rect x="5" y="27" width="28" height="18" rx="3" fill="#10b981"/>
+      <text x="10" y="40" fill="#ffffff" font-size="10" font-weight="bold">FK</text>
+      <text x="40" y="41" fill="#34d399" font-size="13" font-weight="bold">ID_MN</text>
+      <text x="120" y="41" fill="#34d399" font-size="12">INT (NO ACTION)</text>
+      <text x="245" y="41" fill="#a7f3d0" font-size="12">Thuộc Hãng nào -&gt; Menus</text>
+
+      <!-- Row 3: Title -->
+      <text x="40" y="65" fill="#f8fafc" font-size="13" font-weight="bold">Title</text>
+      <text x="120" y="65" fill="#64748b" font-size="12">NVARCHAR(255)</text>
+      <text x="245" y="65" fill="#f8fafc" font-size="12">Tên đồng hồ / Tiêu đề bài</text>
+
+      <!-- Row 4: Sumary -->
+      <text x="40" y="89" fill="#f59e0b" font-size="13" font-weight="bold">Sumary</text>
+      <text x="120" y="89" fill="#64748b" font-size="12">NVARCHAR(500)</text>
+      <text x="245" y="89" fill="#fcd34d" font-size="12">Tóm tắt mô tả (thiếu &#39;m&#39;)</text>
+
+      <!-- Row 5: Contents -->
+      <text x="40" y="113" fill="#f8fafc" font-size="13">Contents</text>
+      <text x="120" y="113" fill="#64748b" font-size="12">NVARCHAR(MAX)</text>
+      <text x="245" y="113" fill="#94a3b8" font-size="12">Bài chi tiết thông số (HTML)</text>
+
+      <!-- Row 6: Image -->
+      <rect y="120" width="440" height="24" rx="4" fill="#1e3a8a" fill-opacity="0.3"/>
+      <text x="40" y="137" fill="#38bdf8" font-size="13" font-weight="bold">Image</text>
+      <text x="120" y="137" fill="#38bdf8" font-size="12">NVARCHAR(255)</text>
+      <text x="245" y="137" fill="#7dd3fc" font-size="12">Tên file ảnh (seiko5.jpg)</text>
+
+      <!-- Row 7: Gender -->
+      <rect y="144" width="440" height="24" rx="4" fill="#312e81" fill-opacity="0.4"/>
+      <text x="40" y="161" fill="#c084fc" font-size="13" font-weight="bold">Gender</text>
+      <text x="120" y="161" fill="#c084fc" font-size="12">INT (CHECK 0,1,2)</text>
+      <text x="245" y="161" fill="#e9d5ff" font-size="12">0=Unisex, 1=Nam, 2=Nữ</text>
+
+      <!-- Row 8: ItemType -->
+      <rect y="168" width="440" height="24" rx="4" fill="#451a03" fill-opacity="0.3"/>
+      <text x="40" y="185" fill="#f59e0b" font-size="13" font-weight="bold">ItemType</text>
+      <text x="120" y="185" fill="#f59e0b" font-size="12">INT (CHECK 1,2)</text>
+      <text x="245" y="185" fill="#fde68a" font-size="12">1=Đồng hồ, 2=Tin tức/Review</text>
+
+      <!-- Row 9: CreaDate & ModiDate -->
+      <text x="40" y="209" fill="#94a3b8" font-size="13">CreaDate</text>
+      <text x="120" y="209" fill="#64748b" font-size="12">DATETIME (GETDATE)</text>
+      <text x="245" y="209" fill="#94a3b8" font-size="12">Ngày đăng sản phẩm</text>
+
+      <text x="40" y="233" fill="#94a3b8" font-size="13">ModiDate</text>
+      <text x="120" y="233" fill="#64748b" font-size="12">DATETIME (GETDATE)</text>
+      <text x="245" y="233" fill="#94a3b8" font-size="12">Ngày sửa đổi gần nhất</text>
+
+      <!-- Row 10: OrderKey -->
+      <text x="40" y="257" fill="#94a3b8" font-size="13">OrderKey</text>
+      <text x="120" y="257" fill="#64748b" font-size="12">INT (DEF 0)</text>
+      <text x="245" y="257" fill="#94a3b8" font-size="12">Thứ tự hiển thị trên danh mục</text>
+
+      <!-- Row 11: UserAdd & UserTest -->
+      <text x="40" y="281" fill="#94a3b8" font-size="13">UserAdd / Test</text>
+      <text x="120" y="281" fill="#64748b" font-size="12">VARCHAR(50)</text>
+      <text x="245" y="281" fill="#94a3b8" font-size="12">Tài khoản thêm / duyệt bài</text>
+
+      <!-- Row 12: Hide -->
+      <text x="40" y="305" fill="#f43f5e" font-size="13">Hide</text>
+      <text x="120" y="305" fill="#64748b" font-size="12">BIT (DEF 0)</text>
+      <text x="245" y="305" fill="#fda4af" font-size="12">0=Hiển thị, 1=Ẩn khỏi web</text>
+
+      <rect y="330" width="440" height="42" rx="4" fill="#172554"/>
+      <text x="10" y="347" fill="#93c5fd" font-size="11">🌐 Ánh xạ: Thẻ Card Đồng hồ (Ảnh, Tên, Tóm tắt), Lọc theo Nam / Nữ</text>
+      <text x="10" y="363" fill="#93c5fd" font-size="11">qua ?gender=1/2, Phân tách đồng hồ và bài viết tin tức.</text>
+    </g>
+    <circle cx="455" cy="20" r="14" fill="#2563eb"/>
+    <text x="451" y="25" fill="#ffffff" font-size="13" font-weight="bold">3</text>
+  </g>
+
+  <!-- TABLE 5: Orders (Placed on Left Bottom) -->
+  <g id="table_orders" transform="translate(60, 820)" filter="url(#shadowBox)">
+    <rect width="450" height="370" rx="12" fill="#0f172a" stroke="#b45309" stroke-width="2"/>
+    <rect width="450" height="52" rx="12" fill="url(#gOrders)"/>
+    <rect y="40" width="450" height="12" fill="url(#gOrders)"/>
+    <text x="20" y="32" fill="#ffffff" font-size="18" font-weight="bold">Orders</text>
+    <text x="90" y="32" fill="#fde68a" font-size="13">Đơn đặt hàng (Mở rộng)</text>
+    <rect x="330" y="14" width="105" height="24" rx="12" fill="#78350f"/>
+    <text x="345" y="30" fill="#fef3c7" font-size="11" font-weight="bold">🛒 Đơn Hàng</text>
+
+    <g transform="translate(15, 65)">
+      <!-- Row 1: OrderID -->
+      <rect y="0" width="420" height="26" rx="4" fill="#78350f" fill-opacity="0.3"/>
+      <rect x="5" y="4" width="28" height="18" rx="3" fill="#fbbf24"/>
+      <text x="10" y="17" fill="#000000" font-size="10" font-weight="bold">PK</text>
+      <text x="40" y="18" fill="#f8fafc" font-size="13" font-weight="bold">OrderID</text>
+      <text x="135" y="18" fill="#fbbf24" font-size="12">INT IDENTITY</text>
+      <text x="255" y="18" fill="#cbd5e1" font-size="12">Mã đơn hàng tự tăng</text>
+
+      <!-- Row 2: CustomerName -->
+      <text x="40" y="45" fill="#f8fafc" font-size="13" font-weight="bold">CustomerName</text>
+      <text x="135" y="45" fill="#64748b" font-size="12">NVARCHAR(100)</text>
+      <text x="255" y="45" fill="#f8fafc" font-size="12">Họ tên người nhận</text>
+
+      <!-- Row 3: CustomerPhone -->
+      <text x="40" y="72" fill="#38bdf8" font-size="13" font-weight="bold">CustomerPhone</text>
+      <text x="135" y="72" fill="#38bdf8" font-size="12">VARCHAR(20)</text>
+      <text x="255" y="72" fill="#7dd3fc" font-size="12">Số ĐT liên hệ giao hàng</text>
+
+      <!-- Row 4: CustomerEmail -->
+      <text x="40" y="99" fill="#f8fafc" font-size="13">CustomerEmail</text>
+      <text x="135" y="99" fill="#64748b" font-size="12">VARCHAR(100)</text>
+      <text x="255" y="99" fill="#94a3b8" font-size="12">Email nhận hóa đơn</text>
+
+      <!-- Row 5: DeliveryAddress -->
+      <text x="40" y="126" fill="#f8fafc" font-size="13">DeliveryAddress</text>
+      <text x="135" y="126" fill="#64748b" font-size="12">NVARCHAR(300)</text>
+      <text x="255" y="126" fill="#94a3b8" font-size="12">Địa chỉ giao hàng nhận</text>
+
+      <!-- Row 6: OrderNotes -->
+      <text x="40" y="153" fill="#f8fafc" font-size="13">OrderNotes</text>
+      <text x="135" y="153" fill="#64748b" font-size="12">NVARCHAR(500)</text>
+      <text x="255" y="153" fill="#94a3b8" font-size="12">Ghi chú lời dặn của khách</text>
+
+      <!-- Row 7: TotalAmount -->
+      <rect y="161" width="420" height="26" rx="4" fill="#064e3b" fill-opacity="0.4"/>
+      <text x="40" y="179" fill="#34d399" font-size="13" font-weight="bold">TotalAmount</text>
+      <text x="135" y="179" fill="#34d399" font-size="12">DECIMAL (&gt;= 0)</text>
+      <text x="255" y="179" fill="#a7f3d0" font-size="12">Tổng tiền thanh toán cả đơn</text>
+
+      <!-- Row 8: OrderDate -->
+      <text x="40" y="206" fill="#94a3b8" font-size="13">OrderDate</text>
+      <text x="135" y="206" fill="#64748b" font-size="12">DATETIME (GETDATE)</text>
+      <text x="255" y="206" fill="#94a3b8" font-size="12">Thời điểm bấm đặt hàng</text>
+
+      <!-- Row 9: Status -->
+      <text x="40" y="233" fill="#f59e0b" font-size="13" font-weight="bold">Status</text>
+      <text x="135" y="233" fill="#f59e0b" font-size="12">NVARCHAR(50)</text>
+      <text x="255" y="233" fill="#fde68a" font-size="12">&#39;Chờ xử lý&#39;,&#39;Đang giao&#39;...</text>
+
+      <!-- Row 10: Username -->
+      <rect x="5" y="246" width="28" height="18" rx="3" fill="#a855f7"/>
+      <text x="10" y="259" fill="#ffffff" font-size="10" font-weight="bold">FK</text>
+      <text x="40" y="260" fill="#c084fc" font-size="13">Username</text>
+      <text x="135" y="260" fill="#64748b" font-size="12">VARCHAR(50)</text>
+      <text x="255" y="260" fill="#e9d5ff" font-size="12">Tài khoản mua (hoặc NULL)</text>
+
+      <rect y="278" width="420" height="22" rx="4" fill="#451a03"/>
+      <text x="10" y="293" fill="#fde68a" font-size="11">🌐 Ánh xạ: Form Thanh toán giỏ hàng, Lịch sử mua hàng, Admin duyệt đơn</text>
+    </g>
+    <circle cx="435" cy="20" r="14" fill="#d97706"/>
+    <text x="431" y="25" fill="#ffffff" font-size="13" font-weight="bold">5</text>
+  </g>
+
+  <!-- TABLE 6: OrderDetails (Placed on Right Bottom) -->
+  <g id="table_orderdetails" transform="translate(560, 1100)" filter="url(#shadowBox)">
+    <rect width="470" height="280" rx="12" fill="#0f172a" stroke="#be123c" stroke-width="2"/>
+    <rect width="470" height="52" rx="12" fill="url(#gOrderDetails)"/>
+    <rect y="40" width="470" height="12" fill="url(#gOrderDetails)"/>
+    <text x="20" y="32" fill="#ffffff" font-size="18" font-weight="bold">OrderDetails</text>
+    <text x="135" y="32" fill="#fecdd3" font-size="13">Chi tiết giỏ hàng &amp; Dòng món</text>
+    <rect x="350" y="14" width="105" height="24" rx="12" fill="#881337"/>
+    <text x="365" y="30" fill="#ffe4e6" font-size="11" font-weight="bold">📦 Dòng Món</text>
+
+    <g transform="translate(15, 65)">
+      <!-- Row 1: DetailID -->
+      <rect y="0" width="440" height="26" rx="4" fill="#881337" fill-opacity="0.3"/>
+      <rect x="5" y="4" width="28" height="18" rx="3" fill="#fbbf24"/>
+      <text x="10" y="17" fill="#000000" font-size="10" font-weight="bold">PK</text>
+      <text x="40" y="18" fill="#f8fafc" font-size="13" font-weight="bold">DetailID</text>
+      <text x="135" y="18" fill="#fb7185" font-size="12">INT IDENTITY</text>
+      <text x="245" y="18" fill="#cbd5e1" font-size="12">Mã dòng chi tiết tự tăng</text>
+
+      <!-- Row 2: OrderID -->
+      <rect x="5" y="31" width="28" height="18" rx="3" fill="#f59e0b"/>
+      <text x="10" y="44" fill="#000000" font-size="10" font-weight="bold">FK</text>
+      <text x="40" y="45" fill="#f59e0b" font-size="13" font-weight="bold">OrderID</text>
+      <text x="135" y="45" fill="#f59e0b" font-size="12">INT (CASCADE)</text>
+      <text x="245" y="45" fill="#fde68a" font-size="12">Thuộc đơn hàng -&gt; Orders</text>
+
+      <!-- Row 3: ID_P -->
+      <rect x="5" y="58" width="28" height="18" rx="3" fill="#3b82f6"/>
+      <text x="10" y="71" fill="#ffffff" font-size="10" font-weight="bold">FK</text>
+      <text x="40" y="72" fill="#60a5fa" font-size="13" font-weight="bold">ID_P</text>
+      <text x="135" y="72" fill="#60a5fa" font-size="12">INT (NO ACTION)</text>
+      <text x="245" y="72" fill="#bfdbfe" font-size="12">Mẫu đồng hồ mua -&gt; PageItems</text>
+
+      <!-- Row 4: Quantity -->
+      <rect y="81" width="440" height="26" rx="4" fill="#0369a1" fill-opacity="0.3"/>
+      <text x="40" y="99" fill="#38bdf8" font-size="13" font-weight="bold">Quantity</text>
+      <text x="135" y="99" fill="#38bdf8" font-size="12">INT (DEF 1, &gt; 0)</text>
+      <text x="245" y="99" fill="#bae6fd" font-size="12">Số lượng đặt mua</text>
+
+      <!-- Row 5: UnitPrice -->
+      <text x="40" y="126" fill="#34d399" font-size="13" font-weight="bold">UnitPrice</text>
+      <text x="135" y="126" fill="#34d399" font-size="12">DECIMAL (&gt;= 0)</text>
+      <text x="245" y="126" fill="#a7f3d0" font-size="12">Đơn giá bán tại thời điểm mua</text>
+
+      <!-- Row 6: LineTotal -->
+      <rect y="135" width="440" height="26" rx="4" fill="#4c0519" fill-opacity="0.5"/>
+      <rect x="5" y="139" width="32" height="18" rx="3" fill="#a78bfa"/>
+      <text x="8" y="152" fill="#000000" font-size="8" font-weight="bold">CALC</text>
+      <text x="40" y="153" fill="#f43f5e" font-size="13" font-weight="bold">LineTotal</text>
+      <text x="135" y="153" fill="#f43f5e" font-size="12">AS (Qty * UnitPrice)</text>
+      <text x="245" y="153" fill="#fecdd3" font-size="12">Thành tiền dòng (Cột tính toán)</text>
+
+      <rect y="172" width="440" height="35" rx="4" fill="#4c0519"/>
+      <text x="10" y="188" fill="#fda4af" font-size="11">📌 Ràng buộc UNIQUE (OrderID, ID_P): Trong 1 đơn không có 2 dòng trùng SP.</text>
+      <text x="10" y="202" fill="#fda4af" font-size="11">🌐 Ánh xạ: Bảng dòng sản phẩm trong Giỏ hàng &amp; Chi tiết hóa đơn.</text>
+    </g>
+    <circle cx="455" cy="20" r="14" fill="#e11d48"/>
+    <text x="451" y="25" fill="#ffffff" font-size="13" font-weight="bold">6</text>
+  </g>
+
+  <!-- ================= RELATIONSHIP CONNECTOR LINES ================= -->
+  <!-- 1. Acounts.Username -> Menus.UserAdd -->
+  <path d="M 510 270 L 535 270 L 535 385 L 560 385" fill="none" stroke="#a855f7" stroke-width="2.5" stroke-dasharray="5,4" marker-end="url(#arrowRel)"/>
+  <rect x="515" y="320" width="40" height="18" rx="4" fill="#1e1b4b" stroke="#a855f7" stroke-width="1"/>
+  <text x="520" y="333" fill="#c084fc" font-size="10" font-weight="bold">1..N</text>
+
+  <!-- 2. Menus.ID_MN -> PageItems.ID_MN -->
+  <path d="M 780 555 L 780 580" fill="none" stroke="#10b981" stroke-width="3" marker-end="url(#arrowRelGreen)"/>
+  <rect x="790" y="556" width="70" height="20" rx="4" fill="#064e3b" stroke="#10b981" stroke-width="1"/>
+  <text x="795" y="570" fill="#a7f3d0" font-size="11" font-weight="bold">1..N (Hãng)</text>
+
+  <!-- 3. Menus.Parent -> Menus.ID_MN (Self reference) -->
+  <path d="M 1030 270 C 1060 270, 1060 220, 1030 220" fill="none" stroke="#10b981" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrowRelGreen)"/>
+  <text x="1045" y="250" fill="#6ee7b7" font-size="10">Parent Cây</text>
+
+  <!-- 4. PageItems.ID_P -> ProductPrices.ID_P (1-1 relationship) -->
+  <path d="M 560 645 L 535 645 L 535 590 L 510 590" fill="none" stroke="#38bdf8" stroke-width="3.5" marker-end="url(#arrowRelBlue)"/>
+  <rect x="515" y="605" width="40" height="22" rx="4" fill="#082f49" stroke="#38bdf8" stroke-width="1.5"/>
+  <text x="520" y="620" fill="#38bdf8" font-size="11" font-weight="bold">1..1</text>
+
+  <!-- 5. PageItems.ID_P -> OrderDetails.ID_P -->
+  <path d="M 780 1070 L 780 1100" fill="none" stroke="#3b82f6" stroke-width="3" marker-end="url(#arrowRelBlue)"/>
+  <rect x="790" y="1075" width="75" height="20" rx="4" fill="#1e3a8a" stroke="#3b82f6" stroke-width="1"/>
+  <text x="795" y="1089" fill="#bfdbfe" font-size="11" font-weight="bold">1..N (Món)</text>
+
+  <!-- 6. Orders.OrderID -> OrderDetails.OrderID -->
+  <path d="M 510 885 L 535 885 L 535 1145 L 560 1145" fill="none" stroke="#f59e0b" stroke-width="3" marker-end="url(#arrowRel)"/>
+  <rect x="515" y="1000" width="40" height="22" rx="4" fill="#451a03" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="520" y="1015" fill="#fde68a" font-size="11" font-weight="bold">1..N</text>
+
+  <!-- 7. Acounts.Username -> Orders.Username -->
+  <path d="M 285 495 L 285 820" fill="none" stroke="#a855f7" stroke-width="2.5" stroke-dasharray="6,4" marker-end="url(#arrowRel)"/>
+  <rect x="295" y="660" width="75" height="20" rx="4" fill="#1e1b4b" stroke="#a855f7" stroke-width="1"/>
+  <text x="300" y="674" fill="#c084fc" font-size="11" font-weight="bold">1..N (Khách)</text>
+
+
+  <!-- ================= RIGHT AREA: WEBSITE MOCKUP (ÁNH XẠ GIAO DIỆN) ================= -->
+  <g transform="translate(1080, 145)">
+    <!-- Right Header Banner -->
+    <rect width="1560" height="42" rx="8" fill="#1e293b"/>
+    <text x="20" y="27" fill="#38bdf8" font-size="16" font-weight="bold">
+      PHÂN HỆ 2: ÁNH XẠ TRỰC QUAN GIAO DIỆN WEBSITE BÁN ĐỒNG HỒ (UI COMPONENTS &amp; UX FLOW)
+    </text>
+    <text x="1170" y="27" fill="#94a3b8" font-size="13">Các ô số [1] -&gt; [6] khớp trực tiếp với từng bảng CSDL</text>
+  </g>
+
+  <!-- Browser Window Wrapper -->
+  <g transform="translate(1080, 205)" filter="url(#shadowBox)">
+    <!-- Browser Frame Outer -->
+    <rect width="1560" height="1235" rx="14" fill="#0f172a" stroke="#334155" stroke-width="2"/>
+    
+    <!-- Browser Top Bar (Chrome-style) -->
+    <path d="M 0 14 C 0 6.27 6.27 0 14 0 L 1546 0 C 1553.73 0 1560 6.27 1560 14 L 1560 48 L 0 48 Z" fill="#1e293b"/>
+    <circle cx="25" cy="24" r="6" fill="#ef4444"/>
+    <circle cx="45" cy="24" r="6" fill="#f59e0b"/>
+    <circle cx="65" cy="24" r="6" fill="#10b981"/>
+    
+    <!-- Address Bar -->
+    <rect x="100" y="10" width="800" height="28" rx="6" fill="#0f172a" stroke="#334155" stroke-width="1"/>
+    <text x="120" y="28" fill="#38bdf8" font-size="12">🔒 https://donghodongthap.vn/Default.aspx?idmn=7&amp;gender=1</text>
+    
+    <text x="930" y="28" fill="#94a3b8" font-size="12">ASP.NET Web Forms (.aspx) | C# | LINQ to SQL</text>
+
+    <!-- ================= 1. WEBSITE HEADER ================= -->
+    <g transform="translate(20, 60)">
+      <!-- Top Announcement -->
+      <rect width="1520" height="30" rx="4" fill="#111827"/>
+      <text x="20" y="20" fill="#94a3b8" font-size="12">📞 Hotline đặt hàng: 0912.345.678 | 📍 Đại lý Đồng Tháp: 783 Phạm Hữu Lầu, TP. Cao Lãnh</text>
+      <text x="1100" y="20" fill="#10b981" font-size="12">✔ Cam kết 100% Đồng hồ Chính Hãng - Bảo hành 5 năm</text>
+
+      <!-- Main Header Bar -->
+      <rect y="35" width="1520" height="75" rx="8" fill="url(#gWebHeader)" stroke="#4338ca" stroke-width="1.5"/>
+
+      <!-- Logo -->
+      <text x="25" y="80" fill="#fbbf24" font-size="24" font-weight="bold">⌚ WATCH STORE</text>
+      <text x="25" y="98" fill="#a5b4fc" font-size="11">ĐẠI HỌC ĐỒNG THÁP - BÀI TẬP LỚN WEB</text>
+
+      <!-- Search Box -->
+      <rect x="260" y="52" width="460" height="42" rx="21" fill="#0f172a" stroke="#6366f1" stroke-width="1.5"/>
+      <text x="280" y="78" fill="#94a3b8" font-size="13">🔍 Tìm kiếm mẫu đồng hồ Casio, Seiko, Citizen...</text>
+      <rect x="640" y="56" width="72" height="34" rx="17" fill="#4f46e5"/>
+      <text x="655" y="78" fill="#ffffff" font-size="12" font-weight="bold">Tìm kiếm</text>
+
+      <!-- Auth Bar [1: Acounts] -->
+      <g transform="translate(740, 50)">
+        <rect width="450" height="46" rx="8" fill="#1e1b4b" stroke="#8b5cf6" stroke-width="2"/>
+        <circle cx="25" cy="23" r="14" fill="#7c3aed"/>
+        <text x="18" y="28" fill="#ffffff" font-size="14">👤</text>
+        <text x="48" y="20" fill="#f8fafc" font-size="12" font-weight="bold">Xin chào: Admin (Thái Ngọc)</text>
+        <rect x="235" y="8" width="95" height="18" rx="4" fill="#4c1d95"/>
+        <text x="242" y="21" fill="#e9d5ff" font-size="10" font-weight="bold">Permission = 1</text>
+        <text x="48" y="38" fill="#c084fc" font-size="11">[Quản trị Admin] | [Đăng xuất]</text>
+        <!-- Badge 1 -->
+        <circle cx="430" cy="23" r="13" fill="#8b5cf6"/>
+        <text x="426" y="28" fill="#ffffff" font-size="12" font-weight="bold">1</text>
+      </g>
+
+      <!-- Cart Button [5, 6: Orders & OrderDetails] -->
+      <g transform="translate(1210, 50)">
+        <rect width="290" height="46" rx="8" fill="#451a03" stroke="#f59e0b" stroke-width="2"/>
+        <text x="20" y="28" fill="#ffffff" font-size="16">🛒</text>
+        <text x="45" y="20" fill="#fef3c7" font-size="13" font-weight="bold">Giỏ Hàng (2 món)</text>
+        <text x="45" y="38" fill="#fde68a" font-size="12" font-weight="bold">5.650.000 đ</text>
+        <!-- Badges 5, 6 -->
+        <circle cx="245" cy="23" r="13" fill="#d97706"/>
+        <text x="241" y="28" fill="#ffffff" font-size="12" font-weight="bold">5</text>
+        <circle cx="272" cy="23" r="13" fill="#e11d48"/>
+        <text x="268" y="28" fill="#ffffff" font-size="12" font-weight="bold">6</text>
+      </g>
+
+      <!-- ================= 2. NAVBAR (Pos = 1) ================= -->
+      <g transform="translate(0, 120)">
+        <rect width="1520" height="44" rx="6" fill="#064e3b" stroke="#10b981" stroke-width="2"/>
+        <text x="30" y="27" fill="#ffffff" font-size="14" font-weight="bold">🏠 TRANG CHỦ</text>
+        
+        <!-- Active Men Tab: ?gender=1 -->
+        <rect x="150" y="4" width="190" height="36" rx="4" fill="#047857"/>
+        <text x="165" y="27" fill="#fef08a" font-size="14" font-weight="bold">ĐỒNG HỒ NAM (?gender=1)</text>
+
+        <text x="370" y="27" fill="#ffffff" font-size="14">ĐỒNG HỒ NỮ (?gender=2)</text>
+        <text x="570" y="27" fill="#ffffff" font-size="14">THƯƠNG HIỆU HOT</text>
+        <text x="750" y="27" fill="#ffffff" font-size="14">TIN TỨC &amp; ĐÁNH GIÁ (ItemType=2)</text>
+        <text x="1030" y="27" fill="#ffffff" font-size="14">LIÊN HỆ &amp; BẢO HÀNH</text>
+
+        <!-- Badge 2 indicator -->
+        <rect x="1270" y="8" width="230" height="28" rx="14" fill="#022c22" stroke="#34d399" stroke-width="1"/>
+        <circle cx="1285" cy="22" r="10" fill="#10b981"/>
+        <text x="1282" y="26" fill="#ffffff" font-size="10" font-weight="bold">2</text>
+        <text x="1302" y="26" fill="#a7f3d0" font-size="11">Bảng Menus (Cột Pos = 1)</text>
+      </g>
+    </g>
+
+    <!-- ================= 3. MAIN BODY LAYOUT ================= -->
+    <g transform="translate(20, 235)">
+      
+      <!-- LEFT SIDEBAR (Width: 320px) -->
+      <g transform="translate(0, 0)">
+        <!-- Brand Tree Box [2: Menus Pos=2] -->
+        <rect width="320" height="340" rx="8" fill="#0b1120" stroke="#059669" stroke-width="2"/>
+        <rect width="320" height="38" rx="8" fill="#064e3b"/>
+        <text x="15" y="24" fill="#ffffff" font-size="14" font-weight="bold">🏷️ DANH MỤC THƯƠNG HIỆU</text>
+        <circle cx="295" cy="19" r="12" fill="#10b981"/>
+        <text x="291" y="24" fill="#ffffff" font-size="11" font-weight="bold">2</text>
+
+        <!-- Brand Items -->
+        <g transform="translate(15, 50)">
+          <!-- Casio (Active) -->
+          <rect y="0" width="290" height="30" rx="4" fill="#047857"/>
+          <text x="10" y="20" fill="#ffffff" font-size="13" font-weight="bold">▼ CASIO (ID_MN = 7, Parent = 0)</text>
+
+          <!-- Sub items -->
+          <text x="25" y="48" fill="#34d399" font-size="12">├─ Edifice Thể thao (Parent=7)</text>
+          <text x="25" y="70" fill="#34d399" font-size="12">├─ G-Shock Siêu bền (Parent=7)</text>
+          <text x="25" y="92" fill="#34d399" font-size="12">└─ Baby-G Nữ tính (Parent=7)</text>
+
+          <!-- Other brands -->
+          <text x="10" y="120" fill="#cbd5e1" font-size="13">▶ SEIKO (ID_MN = 8)</text>
+          <text x="10" y="148" fill="#cbd5e1" font-size="13">▶ CITIZEN Eco-Drive (ID_MN = 9)</text>
+          <text x="10" y="176" fill="#cbd5e1" font-size="13">▶ ROLEX Luxury (ID_MN = 10)</text>
+
+          <rect y="210" width="290" height="60" rx="4" fill="#064e3b" fill-opacity="0.4"/>
+          <text x="10" y="228" fill="#a7f3d0" font-size="11">💡 Đệ quy Parent/Child:</text>
+          <text x="10" y="244" fill="#a7f3d0" font-size="11">Parent = 0 là Hãng mẹ</text>
+          <text x="10" y="260" fill="#a7f3d0" font-size="11">Parent = 7 là Dòng con của Casio</text>
+        </g>
+
+        <!-- Filter Box 2: Gender [3: PageItems.Gender] -->
+        <g transform="translate(0, 355)">
+          <rect width="320" height="150" rx="8" fill="#0b1120" stroke="#2563eb" stroke-width="2"/>
+          <rect width="320" height="34" rx="8" fill="#1e3a8a"/>
+          <text x="15" y="22" fill="#ffffff" font-size="13" font-weight="bold">🚻 BỘ LỌC GIỚI TÍNH (Gender)</text>
+          <circle cx="295" cy="17" r="12" fill="#2563eb"/>
+          <text x="291" y="22" fill="#ffffff" font-size="11" font-weight="bold">3</text>
+
+          <g transform="translate(15, 48)">
+            <!-- Radio 1: All -->
+            <circle cx="8" cy="10" r="6" fill="none" stroke="#64748b" stroke-width="2"/>
+            <text x="25" y="15" fill="#94a3b8" font-size="12">Tất cả sản phẩm (Gender = 0)</text>
+
+            <!-- Radio 2: Men (Checked) -->
+            <circle cx="8" cy="38" r="6" fill="#38bdf8" stroke="#38bdf8" stroke-width="2"/>
+            <circle cx="8" cy="38" r="2.5" fill="#ffffff"/>
+            <text x="25" y="43" fill="#38bdf8" font-size="12" font-weight="bold">Đồng hồ Nam (Gender = 1)</text>
+
+            <!-- Radio 3: Women -->
+            <circle cx="8" cy="66" r="6" fill="none" stroke="#64748b" stroke-width="2"/>
+            <text x="25" y="71" fill="#94a3b8" font-size="12">Đồng hồ Nữ (Gender = 2)</text>
+          </g>
+        </g>
+
+        <!-- Filter Box 3: Price Range [4: ProductPrices.Price] -->
+        <g transform="translate(0, 520)">
+          <rect width="320" height="135" rx="8" fill="#0b1120" stroke="#0284c7" stroke-width="2"/>
+          <rect width="320" height="34" rx="8" fill="#0369a1"/>
+          <text x="15" y="22" fill="#ffffff" font-size="13" font-weight="bold">💰 LỌC KHOẢNG GIÁ (Price)</text>
+          <circle cx="295" cy="17" r="12" fill="#0284c7"/>
+          <text x="291" y="22" fill="#ffffff" font-size="11" font-weight="bold">4</text>
+
+          <g transform="translate(15, 48)">
+            <text x="10" y="15" fill="#cbd5e1" font-size="12">▫ Dưới 3.000.000 đ</text>
+            <text x="10" y="38" fill="#38bdf8" font-size="12" font-weight="bold">✔ Từ 3.000.000 đ - 10.000.000 đ</text>
+            <text x="10" y="61" fill="#cbd5e1" font-size="12">▫ Trên 10.000.000 đ (Cao cấp)</text>
+          </g>
+        </g>
+      </g>
+
+      <!-- CENTER CONTENT: PRODUCT GRID (Width: 720px) -->
+      <g transform="translate(340, 0)">
+        <!-- Grid Header -->
+        <rect width="720" height="38" rx="8" fill="#1e293b"/>
+        <text x="15" y="24" fill="#60a5fa" font-size="15" font-weight="bold">
+          📦 DANH SÁCH SẢN PHẨM (PageItems.ItemType = 1 &amp; Hide = 0)
+        </text>
+        <text x="560" y="24" fill="#94a3b8" font-size="12">Hiển thị 2 / 9 sản phẩm</text>
+
+        <!-- PRODUCT CARD 1: Casio Edifice -->
+        <g transform="translate(0, 50)" filter="url(#shadowBox)">
+          <rect width="350" height="520" rx="10" fill="#0f172a" stroke="#2563eb" stroke-width="2"/>
+          
+          <!-- Image Box [PageItems.Image] -->
+          <rect x="15" y="15" width="320" height="190" rx="6" fill="#1e293b"/>
+          <text x="90" y="105" fill="#60a5fa" font-size="16" font-weight="bold">🖼️ casio_efr539d.jpg</text>
+          <text x="105" y="125" fill="#94a3b8" font-size="11">Assets/images/products/</text>
+          
+          <!-- Discount Badge [ProductPrices.DiscountPercent] -->
+          <rect x="25" y="25" width="68" height="26" rx="4" fill="#dc2626"/>
+          <text x="34" y="43" fill="#ffffff" font-size="13" font-weight="bold">-12%</text>
+
+          <!-- Gender Tag [PageItems.Gender] -->
+          <rect x="235" y="25" width="85" height="26" rx="4" fill="#312e81" stroke="#818cf8" stroke-width="1"/>
+          <text x="245" y="42" fill="#e0e7ff" font-size="11" font-weight="bold">Nam (Gen=1)</text>
+
+          <!-- Title [PageItems.Title] -->
+          <text x="15" y="230" fill="#f8fafc" font-size="14" font-weight="bold">Đồng hồ Nam Casio Edifice EFR-539D</text>
+          
+          <!-- Summary [PageItems.Sumary] -->
+          <text x="15" y="252" fill="#94a3b8" font-size="11">Thiết kế thể thao Chronograph 6 kim, vỏ thép 316L,</text>
+          <text x="15" y="268" fill="#94a3b8" font-size="11">dây kim loại sáng bóng, độ chịu nước 100 mét.</text>
+
+          <!-- Price Row [ProductPrices.Price & OriginalPrice] -->
+          <rect x="15" y="285" width="320" height="50" rx="6" fill="#064e3b" stroke="#10b981" stroke-width="1.5"/>
+          <text x="25" y="315" fill="#34d399" font-size="20" font-weight="bold">3.450.000 đ</text>
+          <text x="165" y="315" fill="#64748b" font-size="14" text-decoration="line-through">3.900.000 đ</text>
+          <text x="260" y="315" fill="#fbbf24" font-size="11">Tiết kiệm 450k</text>
+
+          <!-- Stock Tag [ProductPrices.StockQuantity] -->
+          <rect x="15" y="345" width="320" height="28" rx="4" fill="#0b1120"/>
+          <circle cx="28" cy="359" r="5" fill="#10b981"/>
+          <text x="40" y="363" fill="#a7f3d0" font-size="12" font-weight="bold">Còn hàng: 25 chiếc trong kho (StockQuantity &gt; 0)</text>
+
+          <!-- Action Button -->
+          <rect x="15" y="385" width="320" height="42" rx="6" fill="#2563eb"/>
+          <text x="100" y="411" fill="#ffffff" font-size="14" font-weight="bold">🛒 THÊM VÀO GIỎ</text>
+
+          <!-- Mapping Callout Card 1 -->
+          <rect x="15" y="440" width="320" height="65" rx="6" fill="#1e293b"/>
+          <text x="25" y="460" fill="#60a5fa" font-size="11" font-weight="bold">📌 Ánh xạ CSDL [3] PageItems &amp; [4] ProductPrices:</text>
+          <text x="25" y="478" fill="#cbd5e1" font-size="10">ID_P = 1 | ID_MN = 7 (Casio) | Gender = 1 | ItemType = 1</text>
+          <text x="25" y="494" fill="#cbd5e1" font-size="10">Price: 3.450.000 đ | Original: 3.900.000 đ | Stock: 25</text>
+        </g>
+
+        <!-- PRODUCT CARD 2: Seiko 5 Sports -->
+        <g transform="translate(370, 50)" filter="url(#shadowBox)">
+          <rect width="350" height="520" rx="10" fill="#0f172a" stroke="#2563eb" stroke-width="2"/>
+          
+          <!-- Image Box [PageItems.Image] -->
+          <rect x="15" y="15" width="320" height="190" rx="6" fill="#1e293b"/>
+          <text x="80" y="105" fill="#60a5fa" font-size="16" font-weight="bold">🖼️ seiko5_srpd55k1.jpg</text>
+          <text x="105" y="125" fill="#94a3b8" font-size="11">Assets/images/products/</text>
+          
+          <!-- Discount Badge -->
+          <rect x="25" y="25" width="68" height="26" rx="4" fill="#dc2626"/>
+          <text x="34" y="43" fill="#ffffff" font-size="13" font-weight="bold">-10%</text>
+
+          <!-- Gender Tag -->
+          <rect x="235" y="25" width="85" height="26" rx="4" fill="#312e81" stroke="#818cf8" stroke-width="1"/>
+          <text x="245" y="42" fill="#e0e7ff" font-size="11" font-weight="bold">Nam (Gen=1)</text>
+
+          <!-- Title -->
+          <text x="15" y="230" fill="#f8fafc" font-size="14" font-weight="bold">Đồng hồ Nam Seiko 5 Sports SRPD55K1</text>
+          
+          <!-- Summary -->
+          <text x="15" y="252" fill="#94a3b8" font-size="11">Máy cơ Automatic 4R36 trữ cót 41h, lộ đáy quyến rũ,</text>
+          <text x="15" y="268" fill="#94a3b8" font-size="11">vành xoay bezel thợ lặn, dạ quang LumiBrite rực rỡ.</text>
+
+          <!-- Price Row -->
+          <rect x="15" y="285" width="320" height="50" rx="6" fill="#064e3b" stroke="#10b981" stroke-width="1.5"/>
+          <text x="25" y="315" fill="#34d399" font-size="20" font-weight="bold">5.600.000 đ</text>
+          <text x="165" y="315" fill="#64748b" font-size="14" text-decoration="line-through">6.200.000 đ</text>
+          <text x="260" y="315" fill="#fbbf24" font-size="11">Tiết kiệm 600k</text>
+
+          <!-- Stock Tag -->
+          <rect x="15" y="345" width="320" height="28" rx="4" fill="#0b1120"/>
+          <circle cx="28" cy="359" r="5" fill="#10b981"/>
+          <text x="40" y="363" fill="#a7f3d0" font-size="12" font-weight="bold">Còn hàng: 18 chiếc trong kho (StockQuantity &gt; 0)</text>
+
+          <!-- Action Button -->
+          <rect x="15" y="385" width="320" height="42" rx="6" fill="#2563eb"/>
+          <text x="100" y="411" fill="#ffffff" font-size="14" font-weight="bold">🛒 THÊM VÀO GIỎ</text>
+
+          <!-- Mapping Callout Card 2 -->
+          <rect x="15" y="440" width="320" height="65" rx="6" fill="#1e293b"/>
+          <text x="25" y="460" fill="#60a5fa" font-size="11" font-weight="bold">📌 Ánh xạ CSDL [3] PageItems &amp; [4] ProductPrices:</text>
+          <text x="25" y="478" fill="#cbd5e1" font-size="10">ID_P = 4 | ID_MN = 8 (Seiko) | Gender = 1 | ItemType = 1</text>
+          <text x="25" y="494" fill="#cbd5e1" font-size="10">Price: 5.600.000 đ | Original: 6.200.000 đ | Stock: 18</text>
+        </g>
+
+        <!-- ARTICLE / NEWS ROW [PageItems.ItemType = 2] -->
+        <g transform="translate(0, 585)">
+          <rect width="720" height="70" rx="8" fill="#1e1b4b" stroke="#8b5cf6" stroke-width="1.5"/>
+          <text x="15" y="26" fill="#fde68a" font-size="13" font-weight="bold">📰 TIN TỨC &amp; KIẾN THỨC ĐỒNG HỒ (ItemType = 2, ID_MN = 5 - Không có dòng giá trong ProductPrices):</text>
+          <text x="15" y="48" fill="#e2e8f0" font-size="12">&quot;Hướng dẫn cách phân biệt đồng hồ thật và giả&quot; – Tác giả: admin | Xem chi tiết bài viết (Contents)...</text>
+          <rect x="630" y="15" width="75" height="40" rx="4" fill="#4c1d95"/>
+          <text x="642" y="38" fill="#ffffff" font-size="11">Đọc ngay</text>
+        </g>
+      </g>
+
+      <!-- RIGHT SIDE: CART & CHECKOUT DRAWER (Width: 460px) -->
+      <g transform="translate(1080, 0)">
+        <rect width="440" height="655" rx="10" fill="#0b1120" stroke="#f59e0b" stroke-width="2"/>
+        <rect width="440" height="44" rx="10" fill="url(#gOrders)"/>
+        <text x="15" y="28" fill="#ffffff" font-size="16" font-weight="bold">🛒 ĐƠN ĐẶT HÀNG &amp; CHI TIẾT GIỎ</text>
+        <circle cx="410" cy="22" r="12" fill="#d97706"/>
+        <text x="406" y="27" fill="#ffffff" font-size="11" font-weight="bold">5</text>
+
+        <!-- OrderDetails Table [6: OrderDetails] -->
+        <g transform="translate(15, 55)">
+          <rect width="410" height="150" rx="6" fill="#1e293b" stroke="#e11d48" stroke-width="1.5"/>
+          <text x="12" y="22" fill="#fb7185" font-size="12" font-weight="bold">BẢNG CHI TIẾT GIỎ HÀNG (Bảng OrderDetails)</text>
+          <circle cx="390" cy="18" r="10" fill="#e11d48"/>
+          <text x="387" y="22" fill="#ffffff" font-size="9" font-weight="bold">6</text>
+
+          <!-- Item 1 -->
+          <g transform="translate(10, 35)">
+            <text x="0" y="15" fill="#f8fafc" font-size="12" font-weight="bold">1. Casio Edifice EFR-539D (ID_P = 1)</text>
+            <text x="0" y="32" fill="#94a3b8" font-size="11">SL (Quantity): 1  x  Đơn giá (UnitPrice): 3.450.000 đ</text>
+            <text x="280" y="32" fill="#34d399" font-size="12" font-weight="bold">= 3.450.000 đ</text>
+          </g>
+
+          <!-- Item 2 -->
+          <g transform="translate(10, 80)">
+            <text x="0" y="15" fill="#f8fafc" font-size="12" font-weight="bold">2. Nữ Baby-G BGA-280 (ID_P = 3)</text>
+            <text x="0" y="32" fill="#94a3b8" font-size="11">SL (Quantity): 1  x  Đơn giá (UnitPrice): 2.200.000 đ</text>
+            <text x="280" y="32" fill="#34d399" font-size="12" font-weight="bold">= 2.200.000 đ</text>
+          </g>
+
+          <line x1="10" y1="125" x2="400" y2="125" stroke="#334155" stroke-width="1"/>
+          <text x="10" y="142" fill="#fda4af" font-size="10">LineTotal = Quantity * UnitPrice (Cột tự tính trong SQL Server)</text>
+        </g>
+
+        <!-- Checkout Form [5: Orders] -->
+        <g transform="translate(15, 220)">
+          <rect width="410" height="350" rx="6" fill="#1e1b4b" stroke="#f59e0b" stroke-width="1"/>
+          <text x="12" y="24" fill="#fde68a" font-size="13" font-weight="bold">THÔNG TIN GIAO HÀNG (Bảng Orders)</text>
+
+          <g transform="translate(12, 40)">
+            <text x="0" y="12" fill="#94a3b8" font-size="11">Họ tên người nhận (CustomerName):</text>
+            <rect y="18" width="385" height="28" rx="4" fill="#0f172a" stroke="#475569"/>
+            <text x="10" y="37" fill="#f8fafc" font-size="12">Nguyễn Văn An</text>
+
+            <text x="0" y="65" fill="#94a3b8" font-size="11">Số điện thoại (CustomerPhone):</text>
+            <rect y="71" width="385" height="28" rx="4" fill="#0f172a" stroke="#475569"/>
+            <text x="10" y="90" fill="#38bdf8" font-size="12" font-weight="bold">0987.654.321</text>
+
+            <text x="0" y="118" fill="#94a3b8" font-size="11">Địa chỉ nhận hàng (DeliveryAddress):</text>
+            <rect y="124" width="385" height="28" rx="4" fill="#0f172a" stroke="#475569"/>
+            <text x="10" y="143" fill="#f8fafc" font-size="12">Số 123 Đường 30/4, Phường 1, TP. Cao Lãnh</text>
+
+            <text x="0" y="171" fill="#94a3b8" font-size="11">Ghi chú (OrderNotes):</text>
+            <rect y="177" width="385" height="28" rx="4" fill="#0f172a" stroke="#475569"/>
+            <text x="10" y="196" fill="#94a3b8" font-size="12">Giao giờ hành chính, gọi trước khi đến</text>
+
+            <!-- Total Amount Row -->
+            <rect y="215" width="385" height="42" rx="6" fill="#064e3b" stroke="#10b981" stroke-width="1.5"/>
+            <text x="10" y="241" fill="#ffffff" font-size="12">TỔNG TIỀN (TotalAmount):</text>
+            <text x="210" y="243" fill="#34d399" font-size="18" font-weight="bold">5.650.000 đ</text>
+
+            <!-- Status Row -->
+            <text x="0" y="278" fill="#94a3b8" font-size="11">Trạng thái (Status):</text>
+            <rect x="130" y="265" width="120" height="22" rx="4" fill="#ca8a04"/>
+            <text x="140" y="280" fill="#ffffff" font-size="11" font-weight="bold">⏳ Chờ xử lý</text>
+
+            <!-- Submit Button -->
+            <rect y="295" width="385" height="40" rx="6" fill="#d97706"/>
+            <text x="120" y="320" fill="#ffffff" font-size="14" font-weight="bold">✅ XÁC NHẬN ĐẶT HÀNG</text>
+          </g>
+        </g>
+
+        <!-- Order Footnote -->
+        <rect x="15" y="585" width="410" height="55" rx="6" fill="#1e293b"/>
+        <text x="25" y="605" fill="#fde68a" font-size="11" font-weight="bold">📌 Lưu ý nghiệp vụ C# (LINQ to SQL):</text>
+        <text x="25" y="621" fill="#cbd5e1" font-size="10">Insert vào bảng Orders trước -&gt; Lấy OrderID tự tăng -&gt;</text>
+        <text x="25" y="635" fill="#cbd5e1" font-size="10">Insert từng dòng vào bảng OrderDetails trong 1 Transaction.</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- ================= BRIDGING CALLOUTS (FROM CSDL TO UI MOCKUP) ================= -->
+  <!-- Callout Ribbon 1: Acounts -> Auth Bar -->
+  <path d="M 510 320 C 700 280, 1600 220, 1820 280" fill="none" stroke="#a855f7" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#arrowUI)"/>
+
+  <!-- Callout Ribbon 2: Menus -> Brand Tree & Nav -->
+  <path d="M 1030 350 C 1050 350, 1060 460, 1090 480" fill="none" stroke="#10b981" stroke-width="2.5" stroke-dasharray="6,4" marker-end="url(#arrowUI)"/>
+
+  <!-- Callout Ribbon 3: PageItems -> Product Card 1 -->
+  <path d="M 1030 820 C 1150 820, 1300 650, 1420 620" fill="none" stroke="#3b82f6" stroke-width="2.5" stroke-dasharray="6,4" marker-end="url(#arrowUI)"/>
+
+  <!-- Callout Ribbon 4: ProductPrices -> Price Row Card 1 -->
+  <path d="M 510 680 C 800 700, 1200 680, 1420 700" fill="none" stroke="#0284c7" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#arrowUI)"/>
+
+  <!-- Callout Ribbon 5: Orders & OrderDetails -> Checkout Panel -->
+  <path d="M 1030 1200 C 1400 1250, 1900 1000, 2160 880" fill="none" stroke="#f59e0b" stroke-width="2.5" stroke-dasharray="6,4" marker-end="url(#arrowUI)"/>
+
+
+  <!-- ================= BOTTOM LEGEND & SPELLING QUIRKS BAR ================= -->
+  <g transform="translate(60, 1485)">
+    <rect width="2580" height="235" rx="12" fill="#111827" stroke="#1e293b" stroke-width="2"/>
+    
+    <!-- Left Section: Legend -->
+    <g transform="translate(30, 20)">
+      <text x="0" y="20" fill="#60a5fa" font-size="16" font-weight="bold">📌 CHÚ THÍCH KÝ HIỆU &amp; QUY ƯỚC CSDL</text>
+      
+      <g transform="translate(0, 35)">
+        <!-- PK -->
+        <rect width="32" height="20" rx="3" fill="#fbbf24"/>
+        <text x="6" y="14" fill="#000000" font-size="11" font-weight="bold">PK</text>
+        <text x="40" y="15" fill="#f8fafc" font-size="12">Khóa chính (Primary Key - duy nhất, NOT NULL)</text>
+
+        <!-- FK -->
+        <rect y="28" width="32" height="20" rx="3" fill="#a855f7"/>
+        <text x="7" y="42" fill="#ffffff" font-size="11" font-weight="bold">FK</text>
+        <text x="40" y="43" fill="#f8fafc" font-size="12">Khóa ngoại (Foreign Key - liên kết bảng tham chiếu)</text>
+
+        <!-- 1-1 -->
+        <rect y="56" width="32" height="20" rx="3" fill="#0284c7"/>
+        <text x="5" y="70" fill="#ffffff" font-size="10" font-weight="bold">1-1</text>
+        <text x="40" y="71" fill="#f8fafc" font-size="12">Quan hệ 1-1 (PageItems &lt;-&gt; ProductPrices qua ID_P)</text>
+
+        <!-- 1-N -->
+        <rect y="84" width="32" height="20" rx="3" fill="#10b981"/>
+        <text x="5" y="98" fill="#ffffff" font-size="10" font-weight="bold">1-N</text>
+        <text x="40" y="99" fill="#f8fafc" font-size="12">Quan hệ 1-Nhiều (Menus -&gt; PageItems, Orders -&gt; OrderDetails)</text>
+
+        <!-- CALC -->
+        <rect y="112" width="40" height="20" rx="3" fill="#f43f5e"/>
+        <text x="5" y="125" fill="#ffffff" font-size="9" font-weight="bold">CALC</text>
+        <text x="48" y="126" fill="#f8fafc" font-size="12">Computed Column (LineTotal = Qty * UnitPrice trong SQL)</text>
+      </g>
+    </g>
+
+    <!-- Center Section: 3 Spelling Quirks (Crucial for C# LINQ to SQL) -->
+    <g transform="translate(680, 20)">
+      <rect width="860" height="195" rx="8" fill="#1e1b4b" stroke="#6366f1" stroke-width="1.5"/>
+      <text x="20" y="25" fill="#c084fc" font-size="15" font-weight="bold">
+        ⚠️ 3 TỪ GIỮ NGUYÊN LỖI CHÍNH TẢ ĐỀ CƯƠNG (BẮT BUỘC KHI VIẾT C# LINQ TO SQL)
+      </text>
+
+      <g transform="translate(20, 42)">
+        <!-- Word 1 -->
+        <rect width="820" height="42" rx="6" fill="#0f172a"/>
+        <text x="15" y="22" fill="#f43f5e" font-size="14" font-weight="bold">1. Bảng Acounts</text>
+        <text x="145" y="22" fill="#fbbf24" font-size="12">Thiếu chữ &#39;c&#39;</text>
+        <text x="260" y="22" fill="#cbd5e1" font-size="12">Tiếng Anh chuẩn là Accounts (/əˈkaʊnts/ - Các tài khoản). Khi gọi trong C#: db.Acounts</text>
+        <text x="15" y="36" fill="#64748b" font-size="10">Class sinh ra trong file .designer.cs sẽ là: public Table&lt;Acount&gt; Acounts</text>
+
+        <!-- Word 2 -->
+        <rect y="48" width="820" height="42" rx="6" fill="#0f172a"/>
+        <text x="15" y="70" fill="#f43f5e" font-size="14" font-weight="bold">2. Cột Lable</text>
+        <text x="145" y="70" fill="#fbbf24" font-size="12">Đảo vị trí &#39;el&#39;</text>
+        <text x="260" y="70" fill="#cbd5e1" font-size="12">Tiếng Anh chuẩn là Label (/ˈleɪbl/ - Nhãn menu). Khi viết code: menu.Lable = &quot;Đồng hồ Nam&quot;</text>
+        <text x="15" y="84" fill="#64748b" font-size="10">Không được đổi tên cột trong SQL vì sẽ lệch đề thi/đề cương thực hành của thầy</text>
+
+        <!-- Word 3 -->
+        <rect y="96" width="820" height="42" rx="6" fill="#0f172a"/>
+        <text x="15" y="118" fill="#f43f5e" font-size="14" font-weight="bold">3. Cột Sumary</text>
+        <text x="145" y="118" fill="#fbbf24" font-size="12">Thiếu chữ &#39;m&#39;</text>
+        <text x="260" y="118" fill="#cbd5e1" font-size="12">Tiếng Anh chuẩn là Summary (/ˈsʌməri/ - Tóm tắt). Ở v2 CHỈ lưu mô tả, KHÔNG lưu giá.</text>
+        <text x="15" y="132" fill="#64748b" font-size="10">Truy vấn lấy giá phải JOIN qua bảng ProductPrices: from p in db.PageItems join pr in db.ProductPrices...</text>
+      </g>
+    </g>
+
+    <!-- Right Section: Key Business Rules -->
+    <g transform="translate(1580, 20)">
+      <rect width="970" height="195" rx="8" fill="#064e3b" stroke="#10b981" stroke-width="1.5"/>
+      <text x="20" y="25" fill="#6ee7b7" font-size="15" font-weight="bold">
+        ✅ QUY TẮC NGHIỆP VỤ CỐT LÕI (CSDL v2 &amp; ASP.NET WEB FORMS)
+      </text>
+
+      <g transform="translate(20, 45)">
+        <text x="0" y="15" fill="#f8fafc" font-size="12" font-weight="bold">1. Phân loại nội dung:</text>
+        <text x="160" y="15" fill="#a7f3d0" font-size="12">Cột ItemType phân định: 1 = Đồng hồ thương mại (có giá), 2 = Tin tức / Đánh giá (không giá).</text>
+
+        <text x="0" y="42" fill="#f8fafc" font-size="12" font-weight="bold">2. Bộ lọc Nam / Nữ:</text>
+        <text x="160" y="42" fill="#a7f3d0" font-size="12">Cột Gender (0: Unisex, 1: Nam, 2: Nữ). Trang &quot;Đồng hồ Nam&quot; truyền query string ?gender=1.</text>
+
+        <text x="0" y="69" fill="#f8fafc" font-size="12" font-weight="bold">3. Xử lý hết hàng:</text>
+        <text x="160" y="69" fill="#a7f3d0" font-size="12">Khi StockQuantity = 0 thì hiển thị nhãn &quot;Hết hàng&quot;, KHÔNG dùng Hide = 1 (Hide chỉ dùng để ẩn bài).</text>
+
+        <text x="0" y="96" fill="#f8fafc" font-size="12" font-weight="bold">4. An toàn dữ liệu:</text>
+        <text x="160" y="96" fill="#a7f3d0" font-size="12">FK Menus -&gt; PageItems là NO ACTION (chặn xóa menu khi còn sản phẩm, muốn bỏ thì dùng Menus.Hide = 1).</text>
+
+        <text x="0" y="123" fill="#f8fafc" font-size="12" font-weight="bold">5. Bảo vệ giá chốt:</text>
+        <text x="160" y="123" fill="#a7f3d0" font-size="12">Bảng OrderDetails lưu UnitPrice tại thời điểm mua, tránh việc admin đổi giá làm sai lệch doanh thu đơn cũ.</text>
+      </g>
+    </g>
+  </g>
+</svg>
+
+  </div>
+
+  <div class="quick-cards">
+    <div class="card" style="border-left: 4px solid #8b5cf6;">
+      <h3><span class="tag" style="background:#4c1d95; color:#ddd6fe;">Bảng 1</span> Acounts – Tài khoản &amp; Phân quyền</h3>
+      <p><strong>Khóa chính:</strong> Username (VARCHAR 50).</p>
+      <p><strong>Nghiệp vụ Web:</strong> Quản lý đăng nhập, mật khẩu SHA-256. <code>Permission</code> (1 = Admin, 2 = Member). Chỉ cho phép đăng nhập khi <code>Lock = 0</code> và <code>Active = 1</code>.</p>
+      <p><em>⚠️ Lưu ý chính tả đề cương: Tên bảng thiếu chữ 'c' (Acounts).</em></p>
+    </div>
+
+    <div class="card" style="border-left: 4px solid #10b981;">
+      <h3><span class="tag" style="background:#064e3b; color:#a7f3d0;">Bảng 2</span> Menus – Điều hướng &amp; Danh mục Hãng</h3>
+      <p><strong>Khóa chính:</strong> ID_MN (INT IDENTITY tự tăng).</p>
+      <p><strong>Nghiệp vụ Web:</strong> Cây đa cấp với <code>Parent</code> (0 = gốc, &gt;0 = con). Cột <code>Pos</code> xác định vị trí hiển thị: 1 = Header, 2 = Sidebar danh mục Hãng (Casio, Seiko, Citizen, Rolex), 3 = Footer.</p>
+      <p><em>⚠️ Lưu ý chính tả đề cương: Tên cột Lable bị đảo vị trí 'el' (Label).</em></p>
+    </div>
+
+    <div class="card" style="border-left: 4px solid #3b82f6;">
+      <h3><span class="tag" style="background:#1e3a8a; color:#bfdbfe;">Bảng 3</span> PageItems – Sản phẩm &amp; Tin tức</h3>
+      <p><strong>Khóa chính:</strong> ID_P (INT IDENTITY tự tăng). FK -&gt; Menus(ID_MN).</p>
+      <p><strong>Nghiệp vụ Web:</strong> Hiển thị thẻ card đồng hồ (Image, Title, Sumary). Cột <code>Gender</code> lọc Nam/Nữ/Unisex (?gender=1/2). Cột <code>ItemType</code> (1 = Đồng hồ, 2 = Tin tức).</p>
+      <p><em>⚠️ Lưu ý: Sumary chỉ lưu tóm tắt mô tả, KHÔNG lưu giá.</em></p>
+    </div>
+
+    <div class="card" style="border-left: 4px solid #0284c7;">
+      <h3><span class="tag" style="background:#0369a1; color:#e0f2fe;">Bảng 4</span> ProductPrices – Giá &amp; Tồn kho (1-1)</h3>
+      <p><strong>Khóa chính/ngoại:</strong> ID_P (1-1 với PageItems, CASCADE).</p>
+      <p><strong>Nghiệp vụ Web:</strong> Nguồn lưu giá DUY NHẤT. <code>Price</code> (giá bán hiện tại), <code>OriginalPrice</code> (giá niêm yết gạch ngang), <code>DiscountPercent</code> (% giảm giá hiển thị), <code>StockQuantity</code> (0 = Hết hàng).</p>
+    </div>
+
+    <div class="card" style="border-left: 4px solid #f59e0b;">
+      <h3><span class="tag" style="background:#78350f; color:#fde68a;">Bảng 5</span> Orders – Đơn đặt hàng</h3>
+      <p><strong>Khóa chính:</strong> OrderID (INT IDENTITY tự tăng). FK -&gt; Acounts.</p>
+      <p><strong>Nghiệp vụ Web:</strong> Lưu thông tin khách đặt mua: CustomerName, CustomerPhone, DeliveryAddress, TotalAmount, Status ('Chờ xử lý', 'Đã xác nhận', 'Đang giao'...).</p>
+    </div>
+
+    <div class="card" style="border-left: 4px solid #e11d48;">
+      <h3><span class="tag" style="background:#881337; color:#fecdd3;">Bảng 6</span> OrderDetails – Dòng món trong giỏ</h3>
+      <p><strong>Khóa chính:</strong> DetailID (INT IDENTITY). FK -&gt; Orders, FK -&gt; PageItems.</p>
+      <p><strong>Nghiệp vụ Web:</strong> Danh sách từng mẫu đồng hồ trong đơn: Quantity, UnitPrice (giữ nguyên giá lúc mua). Cột <code>LineTotal = Quantity * UnitPrice</code> tự tính trong SQL.</p>
+    </div>
+  </div>
+</body>
+</html>
