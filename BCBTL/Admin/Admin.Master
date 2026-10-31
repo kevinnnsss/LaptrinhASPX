@@ -1,136 +1,90 @@
-<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Admin.Master.cs" Inherits="BCBTL.Admin.Admin" %>
+<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Admin.master.cs" Inherits="BCBTL.Admin.AdminMaster" %>
 
 <!DOCTYPE html>
 <html lang="vi">
 <head runat="server">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><%: Page.Title %> - Hệ Thống Quản Trị KevLouis Watch</title>
-    <link rel="stylesheet" href="~/Assets/css/admin.css" />
+    <title><%: Page.Title %> - Quản Trị Hệ Thống Duy Anh Watch</title>
+    <link href="~/Assets/css/admin.css" rel="stylesheet" runat="server" />
     <asp:ContentPlaceHolder ID="headAdmin" runat="server">
     </asp:ContentPlaceHolder>
 </head>
 <body>
-    <form id="formAdmin" runat="server" enctype="multipart/form-data">
+    <form id="formAdmin" runat="server">
+        <asp:ScriptManager ID="smAdmin" runat="server"></asp:ScriptManager>
         <div class="admin-wrapper">
-            <!-- SIDEBAR -->
+            <!-- 1. SIDEBAR -->
             <aside class="admin-sidebar">
-                <div class="sidebar-header">
-                    <div class="sidebar-logo-icon">KW</div>
-                    <div class="sidebar-logo-text">
-                        <h3>KevLouis Admin</h3>
-                        <span>ĐỒNG HỒ CAO CẤP</span>
+                <div class="admin-brand">
+                    <span>👑</span>
+                    <div>
+                        <h1>DUY ANH <span>ADMIN</span></h1>
+                        <small style="color: #a0aec0; font-size: 11px;">Hệ thống Quản trị v2.0</small>
                     </div>
                 </div>
 
-                <div class="sidebar-user">
-                    <div class="sidebar-user-avatar">
-                        <asp:Literal ID="litAvatarChar" runat="server">A</asp:Literal>
-                    </div>
-                    <div class="sidebar-user-info">
-                        <div class="sidebar-user-name">
-                            <asp:Literal ID="litSidebarName" runat="server">Quản trị viên</asp:Literal>
-                        </div>
-                        <div class="sidebar-user-role">Administrator</div>
-                    </div>
-                </div>
-
-                <div class="sidebar-nav">
-                    <div class="nav-heading">Tổng Quan</div>
-                    <ul>
-                        <li>
-                            <a href='<%= ResolveUrl("~/Admin/Dashboard.aspx") %>' class='<%= IsActivePage("Dashboard.aspx") %>'>
-                                <span class="nav-icon">📊</span>
-                                <span>Bảng điều khiển</span>
-                            </a>
-                        </li>
-                    </ul>
-
-                    <div class="nav-heading">Quản Lý Bán Hàng</div>
-                    <ul>
-                        <li>
-                            <a href='<%= ResolveUrl("~/Admin/ManageProducts.aspx") %>' class='<%= IsActivePage("ManageProducts.aspx") %>'>
-                                <span class="nav-icon">⌚</span>
-                                <span>Quản lý Sản phẩm</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href='<%= ResolveUrl("~/Admin/ManageOrders.aspx") %>' class='<%= IsActivePage("ManageOrders.aspx") %>'>
-                                <span class="nav-icon">📦</span>
-                                <span>Quản lý Đơn hàng</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href='<%= ResolveUrl("~/Admin/ManageMenus.aspx") %>' class='<%= IsActivePage("ManageMenus.aspx") %>'>
-                                <span class="nav-icon">🏷️</span>
-                                <span>Quản lý Danh mục Menu</span>
-                            </a>
-                        </li>
-                    </ul>
-
-                    <div class="nav-heading">Hệ Thống</div>
-                    <ul>
-                        <li>
-                            <a href='<%= ResolveUrl("~/Admin/ManageAccounts.aspx") %>' class='<%= IsActivePage("ManageAccounts.aspx") %>'>
-                                <span class="nav-icon">👤</span>
-                                <span>Tài khoản & Phân quyền</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href='<%= ResolveUrl("~/Default.aspx") %>' target="_blank">
-                                <span class="nav-icon">🌐</span>
-                                <span>Xem Website Khách</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="sidebar-footer">
-                    <a href='<%= ResolveUrl("~/Default.aspx") %>' class="btn-sidebar-action" title="Về trang chủ">
-                        <span>Trang chủ</span>
-                    </a>
-                    <a href='<%= ResolveUrl("~/Logout.aspx") %>' class="btn-sidebar-action btn-sidebar-logout" title="Đăng xuất khỏi hệ thống">
-                        <span>Đăng xuất</span>
-                    </a>
-                </div>
+                <ul class="admin-nav">
+                    <li>
+                        <a href="Dashboard.aspx">
+                            <span class="nav-icon">📊</span>
+                            <span>Bảng Điều Khiển</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="ManageProducts.aspx">
+                            <span class="nav-icon">⌚</span>
+                            <span>Quản Lý Sản Phẩm</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="ManageMenus.aspx">
+                            <span class="nav-icon">📑</span>
+                            <span>Danh Mục & Thương Hiệu</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="ManageOrders.aspx">
+                            <span class="nav-icon">🛒</span>
+                            <span>Quản Lý Đơn Hàng</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="ManageAccounts.aspx">
+                            <span class="nav-icon">👥</span>
+                            <span>Quản Lý Tài Khoản</span>
+                        </a>
+                    </li>
+                    <li style="margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
+                        <a href="../Default.aspx" target="_blank">
+                            <span class="nav-icon">🌐</span>
+                            <span>Xem Website Khách ▶</span>
+                        </a>
+                    </li>
+                </ul>
             </aside>
 
-            <!-- MAIN CONTENT AREA -->
-            <main class="admin-main">
+            <!-- 2. MAIN WORKSPACE -->
+            <div class="admin-main">
                 <!-- TOPBAR -->
-                <header class="admin-topbar">
-                    <div class="topbar-left">
-                        <h1 class="topbar-page-title"><%: Page.Title %></h1>
+                <header class="admin-header">
+                    <div class="admin-title-area">
+                        <h2><%: Page.Title %></h2>
                     </div>
-                    <div class="topbar-right">
-                        <span class="topbar-badge-time">
-                            📅 <%= DateTime.Now.ToString("dd/MM/yyyy HH:mm") %>
-                        </span>
-                        <a href='<%= ResolveUrl("~/Default.aspx") %>' target="_blank" class="btn-topbar-web">
-                            <span>🌐 Xem trang bán hàng</span>
-                        </a>
-                        <a href='<%= ResolveUrl("~/Logout.aspx") %>' class="btn btn-sm btn-danger">
-                            <span>Thoát</span>
-                        </a>
+                    <div class="admin-user-area">
+                        <span class="admin-badge">Quản Trị Viên</span>
+                        <span>Xin chào, <asp:Literal ID="litAdminName" runat="server">Admin</asp:Literal></span>
+                        <span style="color:#cbd5e0;">|</span>
+                        <asp:LinkButton ID="btnLogout" runat="server" CssClass="btn-logout" OnClick="btnLogout_Click">Đăng Xuất [✖]</asp:LinkButton>
                     </div>
                 </header>
 
-                <!-- CONTENT -->
-                <div class="admin-content">
+                <!-- PAGE CONTENT -->
+                <main class="admin-content">
                     <asp:ContentPlaceHolder ID="AdminMainContent" runat="server">
                     </asp:ContentPlaceHolder>
-                </div>
-
-                <!-- FOOTER -->
-                <footer class="admin-footer">
-                    <div>
-                        <strong>KevLouis WatchStore</strong> &copy; <%= DateTime.Now.Year %> - Hệ thống Quản trị Bán Đồng Hồ Trực Tuyến
-                    </div>
-                    <div>
-                        ASP.NET Web Forms (.NET 4.8) | LINQ to SQL | SQL Server 2022
-                    </div>
-                </footer>
-            </main>
+                </main>
+            </div>
         </div>
     </form>
 </body>

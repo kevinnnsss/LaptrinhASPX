@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Web.UI;
 using System.Web.UI.WebControls;
 
 namespace BCBTL.Admin
@@ -11,114 +12,71 @@ namespace BCBTL.Admin
         {
             if (!IsPostBack)
             {
-                LoadBrandDropdowns();
+                LoadCategoryDropdowns();
                 BindProductGrid();
             }
         }
 
-        private void LoadBrandDropdowns()
+        private void LoadCategoryDropdowns()
         {
             using (var db = DbContextHelper.GetContext())
             {
-                // Lấy các danh mục thương hiệu (Parent > 0 hoặc Pos = 2)
-                var brands = db.Menus.Where(m => m.Hide == false && m.Parent > 0).OrderBy(m => m.Lable).ToList();
+                var brands = db.Menus.Where(m => m.Hide == false && m.Parent > 0).OrderBy(m => m.OrderKey).ToList();
 
-                // Nạp vào Form Thêm/Sửa
-                ddlCategory.Items.Clear();
-                foreach (var b in brands)
-                {
-                    ddlCategory.Items.Add(new ListItem(b.Lable, b.ID_MN.ToString()));
-                }
+                ddlCategory.DataSource = brands;
+                ddlCategory.DataTextField = "Lable";
+                ddlCategory.DataValueField = "ID_MN";
+                ddlCategory.DataBind();
 
-                // Nạp vào Bộ Lọc
-                ddlFilterBrand.Items.Clear();
-                ddlFilterBrand.Items.Add(new ListItem("-- Mọi thương hiệu --", "0"));
-                foreach (var b in brands)
-                {
-                    ddlFilterBrand.Items.Add(new ListItem(b.Lable, b.ID_MN.ToString()));
-                }
+                ddlFilterCategory.DataSource = brands;
+                ddlFilterCategory.DataTextField = "Lable";
+                ddlFilterCategory.DataValueField = "ID_MN";
+                ddlFilterCategory.DataBind();
+                ddlFilterCategory.Items.Insert(0, new ListItem("-- Tất cả thương hiệu --", "0"));
             }
         }
 
         private void BindProductGrid()
         {
-            string keyword = txtSearchKeyword.Text.Trim();
-            int filterBrand = int.Parse(ddlFilterBrand.SelectedValue);
-            int filterGender = int.Parse(ddlFilterGender.SelectedValue);
-            int filterStatus = int.Parse(ddlFilterStatus.SelectedValue);
-
             using (var db = DbContextHelper.GetContext())
             {
                 var query = from p in db.PageItems
                             join m in db.Menus on p.ID_MN equals m.ID_MN
                             join pr in db.ProductPrices on p.ID_P equals pr.ID_P into prGroup
                             from price in prGroup.DefaultIfEmpty()
-                            where p.ItemType == 1 // Chỉ lấy sản phẩm đồng hồ
+                            where p.ItemType == 1 && p.Hide == false
                             select new
                             {
                                 p.ID_P,
                                 p.Title,
                                 p.Image,
                                 p.Gender,
-                                p.Hide,
-                                p.ID_MN,
+                                CategoryId = m.ID_MN,
                                 CategoryName = m.Lable,
                                 Price = price != null ? price.Price : 0,
-                                OriginalPrice = price != null ? price.OriginalPrice : 0,
                                 StockQuantity = price != null ? price.StockQuantity : 0,
-                                DiscountPercent = price != null ? price.DiscountPercent : 0
+                                CreaDate = p.CreaDate
                             };
 
-                // Áp dụng bộ lọc
-                if (!string.IsNullOrEmpty(keyword))
+                // Filter by keyword
+                string search = txtSearchKey.Text.Trim();
+                if (!string.IsNullOrEmpty(search))
                 {
-                    query = query.Where(p => p.Title.Contains(keyword));
+                    query = query.Where(p => p.Title.Contains(search));
                 }
 
-                if (filterBrand > 0)
+                // Filter by brand
+                if (int.TryParse(ddlFilterCategory.SelectedValue, out int brandId) && brandId > 0)
                 {
-                    query = query.Where(p => p.ID_MN == filterBrand);
-                }
-
-                if (filterGender != -1)
-                {
-                    query = query.Where(p => p.Gender == filterGender);
-                }
-
-                if (filterStatus != -1)
-                {
-                    bool isHidden = (filterStatus == 1);
-                    query = query.Where(p => p.Hide == isHidden);
+                    query = query.Where(p => p.CategoryId == brandId);
                 }
 
                 var list = query.OrderByDescending(p => p.ID_P).ToList();
+                litProductCount.Text = list.Count.ToString("N0");
+
                 gvProducts.DataSource = list;
                 gvProducts.DataBind();
-
-                lblTotalCount.Text = list.Count.ToString();
             }
-        }
-
-        protected void btnFilter_Click(object sender, EventArgs e)
-        {
-            gvProducts.PageIndex = 0;
-            BindProductGrid();
-        }
-
-        protected void btnResetFilter_Click(object sender, EventArgs e)
-        {
-            txtSearchKeyword.Text = string.Empty;
-            ddlFilterBrand.SelectedIndex = 0;
-            ddlFilterGender.SelectedIndex = 0;
-            ddlFilterStatus.SelectedIndex = 0;
-            gvProducts.PageIndex = 0;
-            BindProductGrid();
-        }
-
-        protected void gvProducts_PageIndexChanging(object sender, GridViewPageEventArgs e)
-        {
-            gvProducts.PageIndex = e.NewPageIndex;
-            BindProductGrid();
         }
 
         protected void btnSaveProduct_Click(object sender, EventArgs e)
@@ -126,149 +84,200 @@ namespace BCBTL.Admin
             string title = txtTitle.Text.Trim();
             if (string.IsNullOrEmpty(title))
             {
-                ShowAlert("Vui lòng nhập tên sản phẩm đồng hồ!", "alert-danger");
+                ShowMsg("Vui lòng nhập tên sản phẩm!", true);
                 return;
             }
 
             decimal price = 0;
             decimal.TryParse(txtPrice.Text.Trim(), out price);
 
-            decimal originalPrice = 0;
-            decimal.TryParse(txtOriginalPrice.Text.Trim(), out originalPrice);
-            if (originalPrice <= 0) originalPrice = price;
+            decimal origPrice = 0;
+            decimal.TryParse(txtOriginalPrice.Text.Trim(), out origPrice);
+            if (origPrice < price) origPrice = price;
 
-            int discountPercent = 0;
-            int.TryParse(txtDiscountPercent.Text.Trim(), out discountPercent);
-            if (discountPercent < 0) discountPercent = 0;
-            if (discountPercent > 100) discountPercent = 100;
+            int discount = 0;
+            int.TryParse(txtDiscountPercent.Text.Trim(), out discount);
 
-            int stockQuantity = 20;
-            int.TryParse(txtStockQuantity.Text.Trim(), out stockQuantity);
-            if (stockQuantity < 0) stockQuantity = 0;
+            int stock = 20;
+            int.TryParse(txtStockQuantity.Text.Trim(), out stock);
 
-            int categoryId = int.Parse(ddlCategory.SelectedValue);
+            int idmn = int.Parse(ddlCategory.SelectedValue);
             int gender = int.Parse(ddlGender.SelectedValue);
-            int itemType = int.Parse(ddlItemType.SelectedValue);
-            bool hide = chkHide.Checked;
-
-            int productId = 0;
-            int.TryParse(hfProductId.Value, out productId);
-
-            // Xử lý upload ảnh
-            string imageName = productId > 0 ? hfCurrentImage.Value : "default-watch.jpg";
-            if (fuProductImage.HasFile)
-            {
-                string ext = Path.GetExtension(fuProductImage.FileName).ToLower();
-                if (ext == ".jpg" || ext == ".png" || ext == ".jpeg" || ext == ".webp")
-                {
-                    string safeFileName = Path.GetFileNameWithoutExtension(fuProductImage.FileName);
-                    safeFileName = safeFileName.Replace(" ", "_");
-                    imageName = Guid.NewGuid().ToString().Substring(0, 8) + "_" + safeFileName + ext;
-
-                    string uploadFolder = Server.MapPath("~/Assets/images/products/");
-                    if (!Directory.Exists(uploadFolder))
-                    {
-                        Directory.CreateDirectory(uploadFolder);
-                    }
-                    fuProductImage.SaveAs(Path.Combine(uploadFolder, imageName));
-                }
-                else
-                {
-                    ShowAlert("Định dạng ảnh không được hỗ trợ! Vui lòng chọn tệp .jpg, .png, .jpeg, .webp.", "alert-danger");
-                    return;
-                }
-            }
 
             using (var db = DbContextHelper.GetContext())
             {
-                string currentUser = Session["AdminUser"] != null ? Session["AdminUser"].ToString() : "admin";
-
-                if (productId == 0)
+                if (string.IsNullOrEmpty(hfEditProductId.Value))
                 {
-                    // THÊM MỚI SẢN PHẨM
+                    // 1. ADD NEW PRODUCT
+                    string imageName = "default-watch.jpg";
+                    if (fuProductImage.HasFile)
+                    {
+                        string ext = Path.GetExtension(fuProductImage.FileName).ToLower();
+                        if (ext == ".jpg" || ext == ".png" || ext == ".jpeg" || ext == ".webp")
+                        {
+                            imageName = Guid.NewGuid().ToString().Substring(0, 8) + "_" + fuProductImage.FileName;
+                            string folder = Server.MapPath("~/Assets/images/products/");
+                            if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
+                            fuProductImage.SaveAs(Path.Combine(folder, imageName));
+                        }
+                    }
+
                     PageItem watch = new PageItem
                     {
-                        ID_MN = categoryId,
+                        ID_MN = idmn,
                         Title = title,
-                        Sumary = txtSummary.Text.Trim(), // v2: CHỈ chứa tóm tắt, không chứa giá
-                        Contents = txtContents.Text.Trim(),
+                        Sumary = txtSummary.Text.Trim(),
+                        Contents = txtContents.Text,
                         Image = imageName,
                         CreaDate = DateTime.Now,
                         ModiDate = DateTime.Now,
-                        UserAdd = currentUser,
-                        Hide = hide,
+                        UserAdd = Session["AdminUser"]?.ToString() ?? "Admin",
+                        Hide = false,
                         OrderKey = 0,
                         Gender = gender,
-                        ItemType = itemType
+                        ItemType = 1 // 1: Product
                     };
 
                     db.PageItems.InsertOnSubmit(watch);
-                    db.SubmitChanges(); // Lưu để sinh ID_P tự tăng
+                    db.SubmitChanges(); // Generates ID_P
 
-                    // Thêm bản ghi giá vào ProductPrices
                     ProductPrice pr = new ProductPrice
                     {
                         ID_P = watch.ID_P,
                         Price = price,
-                        OriginalPrice = originalPrice,
-                        StockQuantity = stockQuantity,
-                        DiscountPercent = discountPercent
+                        OriginalPrice = origPrice,
+                        DiscountPercent = discount,
+                        StockQuantity = stock
                     };
-
                     db.ProductPrices.InsertOnSubmit(pr);
                     db.SubmitChanges();
 
-                    ShowAlert("Thêm mới sản phẩm đồng hồ thành công (Mã ID: " + watch.ID_P + ")!", "alert-success");
+                    ShowMsg("Thêm mới sản phẩm đồng hồ thành công!", false);
                 }
                 else
                 {
-                    // CẬP NHẬT SẢN PHẨM
-                    var watch = db.PageItems.FirstOrDefault(p => p.ID_P == productId);
+                    // 2. UPDATE EXISTING PRODUCT
+                    int pid = int.Parse(hfEditProductId.Value);
+                    var watch = db.PageItems.FirstOrDefault(p => p.ID_P == pid);
                     if (watch != null)
                     {
-                        watch.ID_MN = categoryId;
                         watch.Title = title;
-                        watch.Sumary = txtSummary.Text.Trim();
-                        watch.Contents = txtContents.Text.Trim();
-                        watch.ModiDate = DateTime.Now;
+                        watch.ID_MN = idmn;
                         watch.Gender = gender;
-                        watch.ItemType = itemType;
-                        watch.Hide = hide;
-                        if (!string.IsNullOrEmpty(imageName))
+                        watch.Sumary = txtSummary.Text.Trim();
+                        watch.Contents = txtContents.Text;
+                        watch.ModiDate = DateTime.Now;
+
+                        if (fuProductImage.HasFile)
                         {
-                            watch.Image = imageName;
+                            string ext = Path.GetExtension(fuProductImage.FileName).ToLower();
+                            if (ext == ".jpg" || ext == ".png" || ext == ".jpeg" || ext == ".webp")
+                            {
+                                string imageName = Guid.NewGuid().ToString().Substring(0, 8) + "_" + fuProductImage.FileName;
+                                string folder = Server.MapPath("~/Assets/images/products/");
+                                if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
+                                fuProductImage.SaveAs(Path.Combine(folder, imageName));
+                                watch.Image = imageName;
+                            }
                         }
 
-                        // Cập nhật ProductPrices
-                        var pr = db.ProductPrices.FirstOrDefault(x => x.ID_P == productId);
+                        var pr = db.ProductPrices.FirstOrDefault(x => x.ID_P == pid);
                         if (pr != null)
                         {
                             pr.Price = price;
-                            pr.OriginalPrice = originalPrice;
-                            pr.StockQuantity = stockQuantity;
-                            pr.DiscountPercent = discountPercent;
+                            pr.OriginalPrice = origPrice;
+                            pr.DiscountPercent = discount;
+                            pr.StockQuantity = stock;
                         }
                         else
                         {
                             ProductPrice newPr = new ProductPrice
                             {
-                                ID_P = productId,
+                                ID_P = pid,
                                 Price = price,
-                                OriginalPrice = originalPrice,
-                                StockQuantity = stockQuantity,
-                                DiscountPercent = discountPercent
+                                OriginalPrice = origPrice,
+                                DiscountPercent = discount,
+                                StockQuantity = stock
                             };
                             db.ProductPrices.InsertOnSubmit(newPr);
                         }
 
                         db.SubmitChanges();
-                        ShowAlert("Cập nhật thông tin đồng hồ #" + productId + " thành công!", "alert-success");
+                        ShowMsg("Cập nhật sản phẩm đồng hồ thành công!", false);
                     }
                 }
             }
 
             ResetForm();
             BindProductGrid();
+        }
+
+        protected void gvProducts_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            int pid = Convert.ToInt32(e.CommandArgument);
+
+            if (e.CommandName == "EditItem")
+            {
+                using (var db = DbContextHelper.GetContext())
+                {
+                    var product = (from p in db.PageItems
+                                   join pr in db.ProductPrices on p.ID_P equals pr.ID_P into prGroup
+                                   from price in prGroup.DefaultIfEmpty()
+                                   where p.ID_P == pid
+                                   select new { p, price }).FirstOrDefault();
+
+                    if (product != null)
+                    {
+                        hfEditProductId.Value = pid.ToString();
+                        txtTitle.Text = product.p.Title;
+                        txtSummary.Text = product.p.Sumary;
+                        txtContents.Text = product.p.Contents;
+
+                        if (ddlCategory.Items.FindByValue(product.p.ID_MN.ToString()) != null)
+                        {
+                            ddlCategory.SelectedValue = product.p.ID_MN.ToString();
+                        }
+
+                        if (ddlGender.Items.FindByValue(product.p.Gender.ToString()) != null)
+                        {
+                            ddlGender.SelectedValue = product.p.Gender.ToString();
+                        }
+
+                        if (product.price != null)
+                        {
+                            txtPrice.Text = product.price.Price.ToString("F0");
+                            txtOriginalPrice.Text = (product.price.OriginalPrice ?? product.price.Price).ToString("F0");
+                            txtDiscountPercent.Text = (product.price.DiscountPercent ?? 0).ToString();
+                            txtStockQuantity.Text = product.price.StockQuantity.ToString();
+                        }
+
+                        litFormTitle.Text = "Chỉnh Sửa Đồng Hồ: " + Server.HtmlEncode(product.p.Title);
+                        btnSaveProduct.Text = "CẬP NHẬT THAY ĐỔI";
+                        btnCancelEdit.Visible = true;
+
+                        if (!string.IsNullOrEmpty(product.p.Image))
+                        {
+                            pnlCurrentImg.Visible = true;
+                            imgCurrentPreview.ImageUrl = "~/Assets/images/products/" + product.p.Image;
+                        }
+                    }
+                }
+            }
+            else if (e.CommandName == "DeleteItem")
+            {
+                using (var db = DbContextHelper.GetContext())
+                {
+                    var p = db.PageItems.FirstOrDefault(x => x.ID_P == pid);
+                    if (p != null)
+                    {
+                        // Soft delete (Hide = true)
+                        p.Hide = true;
+                        db.SubmitChanges();
+                        ShowMsg("Đã ẩn / xóa sản phẩm ID #" + pid + " thành công!", false);
+                    }
+                }
+                BindProductGrid();
+            }
         }
 
         protected void btnCancelEdit_Click(object sender, EventArgs e)
@@ -278,157 +287,51 @@ namespace BCBTL.Admin
 
         private void ResetForm()
         {
-            hfProductId.Value = "0";
-            hfCurrentImage.Value = string.Empty;
-            txtTitle.Text = string.Empty;
-            if (ddlCategory.Items.Count > 0) ddlCategory.SelectedIndex = 0;
-            ddlGender.SelectedValue = "1";
-            ddlItemType.SelectedValue = "1";
+            hfEditProductId.Value = "";
+            txtTitle.Text = "";
             txtPrice.Text = "0";
             txtOriginalPrice.Text = "0";
             txtDiscountPercent.Text = "0";
             txtStockQuantity.Text = "20";
-            txtSummary.Text = string.Empty;
-            txtContents.Text = string.Empty;
-            chkHide.Checked = false;
-            pnlCurrentPreview.Visible = false;
-            lblEditModeNotice.Visible = false;
-            litFormTitle.Text = "➕ Thêm Sản Phẩm Đồng Hồ Mới";
-            btnSaveProduct.Text = "Lưu Sản Phẩm";
+            txtSummary.Text = "";
+            txtContents.Text = "";
+            litFormTitle.Text = "Thêm Đồng Hồ Mới";
+            btnSaveProduct.Text = "LƯU SẢN PHẨM";
+            btnCancelEdit.Visible = false;
+            pnlCurrentImg.Visible = false;
         }
 
-        protected void gvProducts_RowCommand(object sender, GridViewCommandEventArgs e)
+        private void ShowMsg(string msg, bool isError)
         {
-            int productId = Convert.ToInt32(e.CommandArgument);
-
-            if (e.CommandName == "EditProduct")
-            {
-                using (var db = DbContextHelper.GetContext())
-                {
-                    var product = (from p in db.PageItems
-                                   join pr in db.ProductPrices on p.ID_P equals pr.ID_P into prGroup
-                                   from price in prGroup.DefaultIfEmpty()
-                                   where p.ID_P == productId
-                                   select new
-                                   {
-                                       p.ID_P,
-                                       p.Title,
-                                       p.ID_MN,
-                                       p.Gender,
-                                       p.ItemType,
-                                       p.Image,
-                                       p.Sumary,
-                                       p.Contents,
-                                       p.Hide,
-                                       Price = price != null ? price.Price : 0,
-                                       OriginalPrice = price != null ? price.OriginalPrice : 0,
-                                       StockQuantity = price != null ? price.StockQuantity : 0,
-                                       DiscountPercent = price != null ? price.DiscountPercent : 0
-                                   }).FirstOrDefault();
-
-                    if (product != null)
-                    {
-                        hfProductId.Value = product.ID_P.ToString();
-                        txtTitle.Text = product.Title;
-                        if (ddlCategory.Items.FindByValue(product.ID_MN.ToString()) != null)
-                        {
-                            ddlCategory.SelectedValue = product.ID_MN.ToString();
-                        }
-                        if (ddlGender.Items.FindByValue(product.Gender.ToString()) != null)
-                        {
-                            ddlGender.SelectedValue = product.Gender.ToString();
-                        }
-                        if (ddlItemType.Items.FindByValue(product.ItemType.ToString()) != null)
-                        {
-                            ddlItemType.SelectedValue = product.ItemType.ToString();
-                        }
-                        txtPrice.Text = Convert.ToInt64(product.Price).ToString();
-                        txtOriginalPrice.Text = Convert.ToInt64(product.OriginalPrice).ToString();
-                        txtStockQuantity.Text = product.StockQuantity.ToString();
-                        txtDiscountPercent.Text = product.DiscountPercent.ToString();
-                        txtSummary.Text = product.Sumary;
-                        txtContents.Text = product.Contents;
-                        chkHide.Checked = product.Hide;
-
-                        hfCurrentImage.Value = product.Image ?? "default-watch.jpg";
-                        pnlCurrentPreview.Visible = true;
-                        imgCurrentPreview.ImageUrl = ResolveUrl("~/Assets/images/products/" + (string.IsNullOrEmpty(product.Image) ? "default-watch.jpg" : product.Image));
-                        lblCurrentImgName.Text = product.Image;
-
-                        litFormTitle.Text = "✏️ Cập Nhật Đồng Hồ #" + product.ID_P;
-                        btnSaveProduct.Text = "Cập Nhật Sản Phẩm";
-                        lblEditModeNotice.Visible = true;
-                    }
-                }
-            }
-            else if (e.CommandName == "DeleteProduct")
-            {
-                using (var db = DbContextHelper.GetContext())
-                {
-                    // 1. Kiểm tra xem sản phẩm đã có trong OrderDetails hay chưa
-                    bool hasOrders = db.OrderDetails.Any(od => od.ID_P == productId);
-
-                    if (hasOrders)
-                    {
-                        // Đã có trong đơn hàng -> Chuyển sang ẨN để bảo toàn lịch sử đơn hàng
-                        var item = db.PageItems.FirstOrDefault(p => p.ID_P == productId);
-                        if (item != null)
-                        {
-                            item.Hide = true;
-                            db.SubmitChanges();
-                            ShowAlert("Sản phẩm #" + productId + " đã từng có trong đơn hàng của khách. Hệ thống đã tự động chuyển sang trạng thái ẨN để bảo toàn dữ liệu lịch sử giao dịch!", "alert-warning");
-                        }
-                    }
-                    else
-                    {
-                        // Chưa có đơn hàng -> Xóa an toàn
-                        var price = db.ProductPrices.FirstOrDefault(pr => pr.ID_P == productId);
-                        if (price != null)
-                        {
-                            db.ProductPrices.DeleteOnSubmit(price);
-                        }
-
-                        var item = db.PageItems.FirstOrDefault(p => p.ID_P == productId);
-                        if (item != null)
-                        {
-                            db.PageItems.DeleteOnSubmit(item);
-                        }
-
-                        db.SubmitChanges();
-                        ShowAlert("Đã xóa hoàn toàn sản phẩm #" + productId + " khỏi hệ thống!", "alert-success");
-                    }
-                }
-
-                ResetForm();
-                BindProductGrid();
-            }
+            lblMsg.Visible = true;
+            lblMsg.Text = (isError ? "✖ " : "✔ ") + msg;
+            lblMsg.CssClass = "alert-msg " + (isError ? "alert-error" : "alert-success");
         }
 
-        public string GetGenderName(int gender)
+        protected void gvProducts_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
-            switch (gender)
-            {
-                case 1: return "Nam";
-                case 2: return "Nữ";
-                default: return "Unisex";
-            }
+            gvProducts.PageIndex = e.NewPageIndex;
+            BindProductGrid();
         }
 
-        public string GetGenderBadgeClass(int gender)
+        protected void btnSearch_Click(object sender, EventArgs e)
         {
-            switch (gender)
-            {
-                case 1: return "badge badge-info";
-                case 2: return "badge badge-purple";
-                default: return "badge badge-secondary";
-            }
+            gvProducts.PageIndex = 0;
+            BindProductGrid();
         }
 
-        private void ShowAlert(string msg, string cssClass)
+        protected void ddlFilterCategory_SelectedIndexChanged(object sender, EventArgs e)
         {
-            pnlAlert.Visible = true;
-            pnlAlert.CssClass = "alert " + cssClass;
-            lblAlertMsg.Text = msg;
+            gvProducts.PageIndex = 0;
+            BindProductGrid();
+        }
+
+        protected void btnResetFilter_Click(object sender, EventArgs e)
+        {
+            txtSearchKey.Text = "";
+            ddlFilterCategory.SelectedIndex = 0;
+            gvProducts.PageIndex = 0;
+            BindProductGrid();
         }
     }
 }

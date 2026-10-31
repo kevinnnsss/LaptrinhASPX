@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using System.Text.RegularExpressions;
+using System.Web.UI;
 
 namespace BCBTL
 {
@@ -8,103 +8,52 @@ namespace BCBTL
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IsPostBack)
+            if (Session["Username"] != null)
             {
-                // Nếu đã đăng nhập rồi thì chuyển về trang chủ
-                if (Session["Username"] != null)
-                {
-                    Response.Redirect("~/Default.aspx");
-                }
+                Response.Redirect("~/Default.aspx");
             }
         }
 
-        protected void btnRegister_Click(object sender, EventArgs e)
+        protected void btnRegisterSubmit_Click(object sender, EventArgs e)
         {
+            if (!Page.IsValid) return;
+
             string username = txtUsername.Text.Trim();
             string fullname = txtFullname.Text.Trim();
+            string phone = txtPhone.Text.Trim();
             string email = txtEmail.Text.Trim();
             string password = txtPassword.Text.Trim();
-            string confirmPassword = txtConfirmPassword.Text.Trim();
-
-            // 1. Kiểm tra rỗng
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(fullname) || 
-                string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password) || string.IsNullOrEmpty(confirmPassword))
-            {
-                ShowAlert("Vui lòng điền đầy đủ tất cả các trường thông tin có dấu (*)", false);
-                return;
-            }
-
-            // 2. Kiểm tra định dạng username (chỉ chứa chữ cái, số, gạch dưới, từ 3-30 ký tự)
-            if (!Regex.IsMatch(username, "^[a-zA-Z0-9_]{3,30}$"))
-            {
-                ShowAlert("Tên đăng nhập từ 3 - 30 ký tự, viết liền không dấu, không chứa ký tự đặc biệt!", false);
-                return;
-            }
-
-            // 3. Kiểm tra định dạng email
-            if (!Regex.IsMatch(email, @"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"))
-            {
-                ShowAlert("Địa chỉ email không đúng định dạng!", false);
-                return;
-            }
-
-            // 4. Kiểm tra độ dài mật khẩu
-            if (password.Length < 6)
-            {
-                ShowAlert("Mật khẩu phải có độ dài tối thiểu từ 6 ký tự trở lên!", false);
-                return;
-            }
-
-            // 5. Kiểm tra so khớp mật khẩu
-            if (password != confirmPassword)
-            {
-                ShowAlert("Xác nhận mật khẩu không trùng khớp! Vui lòng nhập lại.", false);
-                return;
-            }
 
             using (var db = DbContextHelper.GetContext())
             {
-                // 6. Kiểm tra trùng tên đăng nhập
-                bool usernameExists = db.Acounts.Any(a => a.Username == username);
-                if (usernameExists)
+                if (db.Acounts.Any(a => a.Username == username))
                 {
-                    ShowAlert("Tên đăng nhập [" + username + "] đã được sử dụng! Vui lòng chọn tên khác.", false);
+                    lblMsg.Visible = true;
+                    lblMsg.Text = "Tên đăng nhập '" + Server.HtmlEncode(username) + "' đã có người sử dụng. Vui lòng chọn tên khác!";
                     return;
                 }
 
-                // 7. Băm mật khẩu chuẩn SHA-256 an toàn
-                string hashedPassword = SecurityHelper.HashPassword(password);
-
-                // 8. Tạo mới tài khoản khách hàng thành viên (Permission = 2)
-                Acount newAcc = new Acount
+                Acount acc = new Acount
                 {
                     Username = username,
-                    Password = hashedPassword,
+                    Password = SecurityHelper.HashPassword(password),
                     Fullname = fullname,
-                    Email = email,
-                    Permission = 2, // 2 = Thành viên khách hàng
-                    Lock = false,   // Hoạt động
-                    Active = true   // Kích hoạt ngay
+                    Email = string.IsNullOrEmpty(email) ? null : email,
+                    Permission = 2, // 2 = Customer / Member
+                    Lock = false,
+                    Active = true
                 };
 
-                db.Acounts.InsertOnSubmit(newAcc);
+                db.Acounts.InsertOnSubmit(acc);
                 db.SubmitChanges();
 
-                // 9. Tự động đăng nhập vào Session cho khách
-                Session["Username"] = newAcc.Username;
-                Session["Fullname"] = newAcc.Fullname;
-                Session["Permission"] = newAcc.Permission;
+                // Auto login to Session
+                Session["Username"] = acc.Username;
+                Session["Fullname"] = acc.Fullname;
+                Session["Permission"] = acc.Permission;
 
-                // 10. Chuyển hướng về trang chủ
                 Response.Redirect("~/Default.aspx?reg=success");
             }
-        }
-
-        private void ShowAlert(string msg, bool isSuccess)
-        {
-            lblMsg.Visible = true;
-            lblMsg.Text = (isSuccess ? "✔ " : "✖ ") + msg;
-            lblMsg.CssClass = "alert-box " + (isSuccess ? "alert-success" : "alert-error");
         }
     }
 }

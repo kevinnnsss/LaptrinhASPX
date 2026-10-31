@@ -1,450 +1,139 @@
-<%@ Page Title="Tra Cứu Tiến Độ Đơn Hàng" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="TrackOrder.aspx.cs" Inherits="BCBTL.TrackOrder" %>
+<%@ Page Title="Tra Cứu Đơn Hàng" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="TrackOrder.aspx.cs" Inherits="BCBTL.TrackOrder" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <style>
-        .track-container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 30px 15px 50px;
-        }
-        .track-search-card {
-            background: #ffffff;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 30px;
-            box-shadow: var(--shadow-sm);
-            margin-bottom: 30px;
-            text-align: center;
-        }
-        .track-search-title {
-            font-size: 22px;
-            font-weight: 800;
-            color: var(--primary-color);
-            margin-bottom: 8px;
-            text-transform: uppercase;
-        }
-        .track-search-sub {
-            color: var(--gray-text);
-            font-size: 13px;
-            margin-bottom: 20px;
-        }
-        .track-form-box {
-            display: flex;
-            gap: 10px;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        .track-input {
-            flex: 1;
-            padding: 12px 16px;
-            border: 2px solid var(--border-color);
-            border-radius: 6px;
-            font-size: 14px;
-            outline: none;
-            transition: var(--transition);
-        }
-        .track-input:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(158, 11, 15, 0.1);
-        }
-        .btn-track {
-            background: var(--primary-color);
-            color: #ffffff;
-            border: none;
-            padding: 12px 24px;
-            font-weight: 700;
-            font-size: 14px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            white-space: nowrap;
-        }
-        .btn-track:hover {
-            background: var(--primary-hover);
-        }
+        .track-container { max-width: 860px; margin: 30px auto; }
+        .track-card { background: #fff; border-radius: 8px; border: 1px solid #e2e8f0; padding: 28px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); margin-bottom: 24px; }
+        .track-header { text-align: center; margin-bottom: 24px; }
+        .track-header h1 { font-size: 24px; color: var(--primary-color); font-weight: 700; margin-bottom: 8px; }
+        .track-header p { color: #718096; font-size: 14px; }
+
+        .search-box-wrap { display: flex; gap: 12px; max-width: 550px; margin: 0 auto 10px; }
+        .track-input { flex-grow: 1; padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 6px; font-size: 15px; outline: none; transition: border-color 0.2s; }
+        .track-input:focus { border-color: var(--primary-color); }
+        .btn-track { background: var(--primary-color); color: #fff; padding: 12px 24px; border: none; border-radius: 6px; font-weight: 700; font-size: 15px; cursor: pointer; transition: background 0.2s; }
+        .btn-track:hover { background: var(--primary-dark); }
 
         /* STEPPER TIMELINE */
-        .stepper-wrap {
-            margin: 30px 0 25px;
-            padding: 20px 15px;
-            background: #fafafa;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-        }
-        .stepper-list {
-            display: flex;
-            justify-content: space-between;
-            position: relative;
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-        .stepper-list::before {
-            content: "";
-            position: absolute;
-            top: 24px;
-            left: 50px;
-            right: 50px;
-            height: 4px;
-            background: #e5e7eb;
-            z-index: 1;
-        }
-        .stepper-step {
-            position: relative;
-            z-index: 2;
-            text-align: center;
-            flex: 1;
-        }
-        .step-circle {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: #ffffff;
-            border: 3px solid #cbd5e1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 10px;
-            font-size: 20px;
-            font-weight: 700;
-            color: #94a3b8;
-            transition: var(--transition);
-        }
-        .step-label {
-            font-size: 13px;
-            font-weight: 700;
-            color: #64748b;
-        }
-        .step-desc {
-            font-size: 11px;
-            color: #94a3b8;
-            margin-top: 2px;
-        }
+        .stepper-wrap { display: flex; justify-content: space-between; position: relative; margin: 40px 20px 30px; }
+        .stepper-wrap::before { content: ''; position: absolute; top: 18px; left: 40px; right: 40px; height: 4px; background: #e2e8f0; z-index: 1; }
+        .stepper-progress { position: absolute; top: 18px; left: 40px; height: 4px; background: var(--primary-color); z-index: 1; transition: width 0.4s ease; }
+        .step-item { position: relative; z-index: 2; text-align: center; width: 100px; }
+        .step-circle { width: 40px; height: 40px; border-radius: 50%; background: #e2e8f0; color: #718096; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; font-weight: 700; font-size: 14px; transition: all 0.3s; }
+        .step-item.active .step-circle { background: var(--primary-color); color: #fff; box-shadow: 0 0 0 4px rgba(158,11,15,0.15); }
+        .step-item.completed .step-circle { background: #28a745; color: #fff; }
+        .step-title { font-size: 13px; font-weight: 600; color: #4a5568; }
+        .step-item.active .step-title { color: var(--primary-color); font-weight: 700; }
 
-        /* ACTIVE / COMPLETED STEPS */
-        .stepper-step.completed .step-circle {
-            background: #16a34a;
-            border-color: #16a34a;
-            color: #ffffff;
-        }
-        .stepper-step.completed .step-label {
-            color: #16a34a;
-        }
-
-        .stepper-step.current .step-circle {
-            background: #ffffff;
-            border-color: var(--primary-color);
-            color: var(--primary-color);
-            box-shadow: 0 0 0 4px rgba(158, 11, 15, 0.2);
-            animation: pulse-ring 1.8s infinite;
-        }
-        .stepper-step.current .step-label {
-            color: var(--primary-color);
-            font-weight: 800;
-        }
-
-        @keyframes pulse-ring {
-            0% { box-shadow: 0 0 0 0 rgba(158, 11, 15, 0.4); }
-            70% { box-shadow: 0 0 0 8px rgba(158, 11, 15, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(158, 11, 15, 0); }
-        }
-
-        /* Order Details Card */
-        .order-result-card {
-            background: #ffffff;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            box-shadow: var(--shadow-sm);
-            overflow: hidden;
-            margin-bottom: 30px;
-        }
-        .order-result-header {
-            padding: 18px 24px;
-            background: #f8fafc;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-        .order-result-body {
-            padding: 24px;
-        }
-        .info-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 18px;
-            margin-bottom: 24px;
-            padding: 16px;
-            background: #fdfdfd;
-            border: 1px solid #f1f5f9;
-            border-radius: 6px;
-        }
-        .info-cell {
-            font-size: 13px;
-        }
-        .info-cell b {
-            color: #475569;
-            display: inline-block;
-            width: 130px;
-        }
-        .info-cell span {
-            color: #1e293b;
-            font-weight: 600;
-        }
-
-        /* Table */
-        .order-items-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-            font-size: 13px;
-        }
-        .order-items-table th {
-            background: #f1f5f9;
-            padding: 10px 14px;
-            text-align: left;
-            font-weight: 700;
-            color: #334155;
-            border-bottom: 1px solid var(--border-color);
-        }
-        .order-items-table td {
-            padding: 12px 14px;
-            border-bottom: 1px solid var(--border-color);
-            vertical-align: middle;
-        }
-        .item-thumb {
-            width: 50px;
-            height: 50px;
-            object-fit: cover;
-            border-radius: 4px;
-            border: 1px solid #e2e8f0;
-        }
-
-        .cancelled-box {
-            background: #fee2e2;
-            color: #991b1b;
-            border: 1px solid #fecaca;
-            border-radius: 6px;
-            padding: 16px;
-            margin: 20px 0;
-            text-align: center;
-            font-weight: 700;
-        }
-
-        @media (max-width: 768px) {
-            .track-form-box {
-                flex-direction: column;
-            }
-            .info-grid {
-                grid-template-columns: 1fr;
-            }
-            .stepper-list::before {
-                display: none;
-            }
-            .stepper-list {
-                flex-direction: column;
-                gap: 15px;
-            }
-            .stepper-step {
-                display: flex;
-                align-items: center;
-                gap: 12px;
-                text-align: left;
-            }
-            .step-circle {
-                margin: 0;
-            }
-        }
+        .order-info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; background: #f8fafc; padding: 16px; border-radius: 6px; margin: 20px 0; border: 1px solid #edf2f7; }
+        .order-info-item small { display: block; color: #718096; font-size: 12px; margin-bottom: 4px; text-transform: uppercase; }
+        .order-info-item strong { color: #1a202c; font-size: 14px; }
     </style>
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="track-container">
-        <!-- BREADCRUMB -->
-        <div class="breadcrumb-wrap">
-            <div class="breadcrumb-list">
-                <span class="breadcrumb-item"><a href="Default.aspx">Trang chủ</a></span>
-                <span class="breadcrumb-separator">/</span>
-                <span class="breadcrumb-item active">Tra cứu đơn hàng</span>
-            </div>
-        </div>
-
-        <asp:UpdateProgress ID="upProgTrack" runat="server" AssociatedUpdatePanelID="upTrackOrder">
-            <ProgressTemplate>
-                <div class="cart-loading-overlay">
-                    <div class="cart-spinner-box">
-                        <div class="cart-spinner"></div>
-                        <span style="font-weight:700; color:var(--primary-color); font-size:14px;">Đang tìm kiếm thông tin đơn hàng...</span>
-                    </div>
-                </div>
-            </ProgressTemplate>
-        </asp:UpdateProgress>
-
+    <div class="container track-container">
         <asp:UpdatePanel ID="upTrackOrder" runat="server">
             <ContentTemplate>
-                <!-- FORM TRA CỨU -->
-        <div class="track-search-card">
-            <h1 class="track-search-title">🔍 Tra Cứu Tiến Độ Đơn Hàng</h1>
-            <p class="track-search-sub">
-                Nhập <b>Số điện thoại đặt hàng</b> hoặc <b>Mã đơn hàng</b> (ví dụ: 0943735437 hoặc mã số 5) để kiểm tra tình trạng xác nhận và lộ trình vận chuyển đồng hồ của bạn.
-            </p>
+                <div class="track-card">
+                    <div class="track-header">
+                        <h1>TRA CỨU TIẾN ĐỘ ĐƠN HÀNG</h1>
+                        <p>Nhập số điện thoại người nhận hoặc mã số đơn hàng để kiểm tra lộ trình vận chuyển</p>
+                    </div>
 
-            <div class="track-form-box">
-                <asp:TextBox ID="txtKeyword" runat="server" CssClass="track-input" 
-                    placeholder="Nhập số điện thoại (vd: 0943735437) hoặc mã đơn hàng..."></asp:TextBox>
-                <asp:Button ID="btnTrack" runat="server" Text="Tra Cứu Ngay" CssClass="btn-track" OnClick="btnTrack_Click" />
-            </div>
+                    <div class="search-box-wrap">
+                        <asp:TextBox ID="txtTrackQuery" runat="server" CssClass="track-input" placeholder="Ví dụ: 0912345678 hoặc Mã đơn..."></asp:TextBox>
+                        <asp:Button ID="btnSearchTrack" runat="server" Text="Tra Cứu" CssClass="btn-track" OnClick="btnSearchTrack_Click" />
+                    </div>
 
-            <asp:Label ID="lblTrackMsg" runat="server" Visible="false" 
-                style="display:inline-block; margin-top:15px; padding:8px 16px; border-radius:4px; font-size:13px; font-weight:700;"></asp:Label>
-        </div>
-
-        <!-- KẾT QUẢ TRA CỨU ĐƠN HÀNG -->
-        <asp:Panel ID="pnlResult" runat="server" Visible="false" CssClass="order-result-card">
-            <div class="order-result-header">
-                <div>
-                    <span style="font-size:12px; color:#64748b; text-transform:uppercase; font-weight:700;">ĐƠN ĐẶT HÀNG:</span>
-                    <h3 style="font-size:18px; font-weight:800; color:var(--primary-color); margin:0;">
-                        #<asp:Label ID="lblOrderID" runat="server"></asp:Label>
-                    </h3>
+                    <asp:Label ID="lblTrackMsg" runat="server" Visible="false" style="display:block; text-align:center; margin-top:12px; font-weight:600; color:#e53e3e;"></asp:Label>
                 </div>
-                <div>
-                    <span style="font-size:12px; color:#64748b; display:block;">Ngày đặt:</span>
-                    <strong style="color:#1e293b;"><asp:Label ID="lblOrderDate" runat="server"></asp:Label></strong>
-                </div>
-                <div>
-                    <span style="font-size:12px; color:#64748b; display:block;">Trạng thái hiện tại:</span>
-                    <asp:Label ID="lblStatusBadge" runat="server"></asp:Label>
-                </div>
-            </div>
 
-            <div class="order-result-body">
-                <!-- 1. THANH TIẾN TRÌNH TRẠNG THÁI (STEPPER) -->
-                <asp:Panel ID="pnlCancelled" runat="server" Visible="false" CssClass="cancelled-box">
-                    ❌ ĐƠN HÀNG NÀY ĐÃ ĐƯỢC HỦY THEO YÊU CẦU HOẶC KHÔNG THỂ LIÊN HỆ ĐƯỢC VỚI KHÁCH HÀNG.
-                </asp:Panel>
+                <!-- ORDER TRACKING RESULT -->
+                <asp:Panel ID="pnlResult" runat="server" Visible="false" CssClass="track-card">
+                    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0; padding-bottom:12px; margin-bottom:20px;">
+                        <div>
+                            <h2 style="font-size:18px; color:var(--primary-color);">Đơn Hàng #<asp:Literal ID="litOrderId" runat="server"></asp:Literal></h2>
+                            <small style="color:#718096;">Đặt lúc: <asp:Literal ID="litOrderDate" runat="server"></asp:Literal></small>
+                        </div>
+                        <div>
+                            <span class="badge-auth-tag" style="position:static; font-size:13px; padding:6px 12px;">
+                                <asp:Literal ID="litOrderStatus" runat="server"></asp:Literal>
+                            </span>
+                        </div>
+                    </div>
 
-                <asp:Panel ID="pnlStepper" runat="server" CssClass="stepper-wrap">
-                    <ul class="stepper-list">
-                        <!-- BƯỚC 1: CHỜ XỬ LÝ -->
-                        <li id="step1" runat="server" class="stepper-step">
+                    <!-- STEPPER -->
+                    <div class="stepper-wrap">
+                        <div class="stepper-progress" id="stepperProgress" runat="server" style="width: 0%;"></div>
+
+                        <div class="step-item" id="step1" runat="server">
                             <div class="step-circle">1</div>
-                            <div class="step-label">Chờ xử lý</div>
-                            <div class="step-desc">Đơn hàng vừa tạo</div>
-                        </li>
+                            <div class="step-title">Chờ Xử Lý</div>
+                        </div>
 
-                        <!-- BƯỚC 2: ĐÃ XÁC NHẬN -->
-                        <li id="step2" runat="server" class="stepper-step">
+                        <div class="step-item" id="step2" runat="server">
                             <div class="step-circle">2</div>
-                            <div class="step-label">Đã xác nhận</div>
-                            <div class="step-desc">Nhân viên đã duyệt đơn</div>
-                        </li>
+                            <div class="step-title">Đã Xác Nhận</div>
+                        </div>
 
-                        <!-- BƯỚC 3: ĐANG GIAO -->
-                        <li id="step3" runat="server" class="stepper-step">
+                        <div class="step-item" id="step3" runat="server">
                             <div class="step-circle">3</div>
-                            <div class="step-label">Đang giao hàng</div>
-                            <div class="step-desc">Đang vận chuyển đến bạn</div>
-                        </li>
+                            <div class="step-title">Đang Giao</div>
+                        </div>
 
-                        <!-- BƯỚC 4: ĐÃ HOÀN TẤT -->
-                        <li id="step4" runat="server" class="stepper-step">
+                        <div class="step-item" id="step4" runat="server">
                             <div class="step-circle">4</div>
-                            <div class="step-label">Đã hoàn tất</div>
-                            <div class="step-desc">Đã giao & thanh toán</div>
-                        </li>
-                    </ul>
-                </asp:Panel>
+                            <div class="step-title">Đã Hoàn Tất</div>
+                        </div>
+                    </div>
 
-                <!-- 2. THÔNG TIN KHÁCH HÀNG & GIAO HÀNG -->
-                <h4 style="margin-bottom:12px; color:#1e293b; font-size:15px;">👤 Thông Tin Nhận Hàng</h4>
-                <div class="info-grid">
-                    <div class="info-cell">
-                        <b>Người nhận:</b>
-                        <asp:Label ID="lblCustomerName" runat="server"></asp:Label>
+                    <!-- RECIPIENT INFO -->
+                    <div class="order-info-grid">
+                        <div class="order-info-item">
+                            <small>Người nhận hàng</small>
+                            <strong><asp:Literal ID="litCustomerName" runat="server"></asp:Literal></strong>
+                        </div>
+                        <div class="order-info-item">
+                            <small>Số điện thoại</small>
+                            <strong><asp:Literal ID="litCustomerPhone" runat="server"></asp:Literal></strong>
+                        </div>
+                        <div class="order-info-item">
+                            <small>Địa chỉ nhận</small>
+                            <strong><asp:Literal ID="litDeliveryAddress" runat="server"></asp:Literal></strong>
+                        </div>
+                        <div class="order-info-item">
+                            <small>Tổng thanh toán</small>
+                            <strong style="color:var(--primary-color); font-size:16px;"><asp:Literal ID="litTotalAmount" runat="server"></asp:Literal></strong>
+                        </div>
                     </div>
-                    <div class="info-cell">
-                        <b>Số điện thoại:</b>
-                        <asp:Label ID="lblCustomerPhone" runat="server"></asp:Label>
-                    </div>
-                    <div class="info-cell">
-                        <b>Email:</b>
-                        <asp:Label ID="lblCustomerEmail" runat="server"></asp:Label>
-                    </div>
-                    <div class="info-cell">
-                        <b>Phương thức:</b>
-                        <span>Thanh toán khi nhận hàng (COD)</span>
-                    </div>
-                    <div class="info-cell" style="grid-column: span 2;">
-                        <b>Địa chỉ giao hàng:</b>
-                        <asp:Label ID="lblDeliveryAddress" runat="server"></asp:Label>
-                    </div>
-                    <div class="info-cell" style="grid-column: span 2;">
-                        <b>Ghi chú đơn hàng:</b>
-                        <asp:Label ID="lblOrderNotes" runat="server" Font-Italic="true"></asp:Label>
-                    </div>
-                </div>
 
-                <!-- 3. DANH SÁCH SẢN PHẨM MUA -->
-                <h4 style="margin-bottom:12px; color:#1e293b; font-size:15px;">⌚ Danh Sách Đồng Hồ Đã Đặt</h4>
-                <div style="overflow-x:auto;">
-                    <asp:GridView ID="gvItems" runat="server" AutoGenerateColumns="False" 
-                        CssClass="order-items-table" GridLines="None">
-                        <Columns>
-                            <asp:TemplateField HeaderText="Ảnh" ItemStyle-Width="60px" ItemStyle-CssClass="text-center" HeaderStyle-CssClass="text-center">
-                                <ItemTemplate>
+                    <!-- PRODUCT ITEMS -->
+                    <h3 style="font-size:15px; margin: 20px 0 10px; color:#1a202c;">Sản Phẩm Trong Đơn Hàng:</h3>
+                    <asp:Repeater ID="rptTrackItems" runat="server">
+                        <HeaderTemplate>
+                            <table style="width:100%; border-collapse:collapse;">
+                        </HeaderTemplate>
+                        <ItemTemplate>
+                            <tr style="border-bottom:1px solid #edf2f7;">
+                                <td style="padding:10px 0; width:60px;">
                                     <img src='<%# ResolveUrl("~/Assets/images/products/" + (string.IsNullOrEmpty(Eval("Image") as string) ? "default-watch.jpg" : Eval("Image"))) %>' 
-                                         alt="" class="item-thumb" />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="Tên Đồng Hồ">
-                                <ItemTemplate>
-                                    <a href='<%# "ProductDetail.aspx?id=" + Eval("ID_P") %>' style="font-weight:700; color:#1e293b;" target="_blank">
-                                        <%# Eval("Title") %>
-                                    </a>
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="Đơn Giá" ItemStyle-HorizontalAlign="Right" HeaderStyle-HorizontalAlign="Right">
-                                <ItemTemplate>
-                                    <%# string.Format("{0:N0} đ", Eval("UnitPrice")) %>
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:BoundField DataField="Quantity" HeaderText="Số Lượng" ItemStyle-HorizontalAlign="Center" HeaderStyle-HorizontalAlign="Center" />
-                            <asp:TemplateField HeaderText="Thành Tiền" ItemStyle-HorizontalAlign="Right" HeaderStyle-HorizontalAlign="Right">
-                                <ItemTemplate>
-                                    <strong style="color:var(--primary-color);"><%# string.Format("{0:N0} đ", Eval("LineTotal")) %></strong>
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                        </Columns>
-                    </asp:GridView>
-                </div>
-
-                <!-- TỔNG TIỀN -->
-                <div style="text-align:right; margin-top:15px; padding-top:15px; border-top:2px solid #e2e8f0;">
-                    <span style="font-size:14px; font-weight:700; color:#475569;">TỔNG TIỀN THANH TOÁN: </span>
-                    <span style="font-size:22px; font-weight:900; color:var(--primary-color);">
-                        <asp:Label ID="lblTotalAmount" runat="server"></asp:Label>
-                    </span>
-                </div>
-            </div>
-        </asp:Panel>
-
-        <!-- KHÔNG TÌM THẤY KẾT QUẢ -->
-        <asp:Panel ID="pnlNotFound" runat="server" Visible="false" CssClass="empty-results">
-            <div class="empty-icon">🔎</div>
-            <h3>Không tìm thấy đơn hàng nào!</h3>
-            <p>
-                Rất tiếc, hệ thống không tìm thấy đơn hàng nào khớp với thông tin bạn vừa nhập. Bạn vui lòng kiểm tra lại chính xác <b>Số điện thoại</b> hoặc <b>Mã đơn hàng</b> khi đặt hàng.
-            </p>
-            <p style="font-size:12px; color:#64748b;">
-                Cần hỗ trợ gấp? Gọi ngay Hotline CSKH: <b style="color:var(--primary-color);">1900 2117</b> (8h00 - 21h30).
-            </p>
-        </asp:Panel>
+                                         style="width:50px; height:50px; border-radius:4px; object-fit:cover; border:1px solid #e2e8f0;" />
+                                </td>
+                                <td style="padding:10px 15px;">
+                                    <div style="font-weight:600; color:#2d3748;"><%# Eval("Title") %></div>
+                                    <small style="color:#718096;">Số lượng: <%# Eval("Quantity") %> chiếc</small>
+                                </td>
+                                <td style="padding:10px 0; text-align:right; font-weight:700; color:var(--primary-color);">
+                                    <%# string.Format("{0:N0} đ", Eval("TotalPrice")) %>
+                                </td>
+                            </tr>
+                        </ItemTemplate>
+                        <FooterTemplate>
+                            </table>
+                        </FooterTemplate>
+                    </asp:Repeater>
+                </asp:Panel>
             </ContentTemplate>
         </asp:UpdatePanel>
     </div>

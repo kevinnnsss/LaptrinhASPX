@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Web.UI;
 
 namespace BCBTL.Admin
 {
@@ -11,7 +12,7 @@ namespace BCBTL.Admin
             {
                 LoadDashboardStatistics();
                 LoadRecentOrders();
-                LoadLowStockProducts();
+                LoadLowStockAlerts();
             }
         }
 
@@ -19,30 +20,15 @@ namespace BCBTL.Admin
         {
             using (var db = DbContextHelper.GetContext())
             {
-                // 1. Tổng sản phẩm đồng hồ đang bán (ItemType = 1, Hide = 0)
-                int totalProducts = db.PageItems.Count(p => p.ItemType == 1 && !p.Hide);
-                lblTotalProducts.Text = totalProducts.ToString("N0");
-
-                // 2. Số đơn hàng chờ xử lý
-                int pendingOrders = db.Orders.Count(o => o.Status == "Chờ xử lý");
-                lblPendingOrders.Text = pendingOrders.ToString("N0");
-
-                // 3. Doanh thu thực tế (Tổng giá trị các đơn hàng trừ đơn Đã hủy)
-                decimal totalRevenue = db.Orders
-                    .Where(o => o.Status != "Đã hủy")
-                    .Sum(o => (decimal?)o.TotalAmount) ?? 0;
-                lblTotalRevenue.Text = string.Format("{0:N0} đ", totalRevenue);
-
-                // 4. Tổng số đơn hàng
+                int totalProducts = db.PageItems.Count(p => p.ItemType == 1 && p.Hide == false);
+                int totalBrands = db.Menus.Count(m => m.Hide == false);
                 int totalOrders = db.Orders.Count();
-                lblTotalOrders.Text = totalOrders.ToString("N0");
+                decimal totalRevenue = db.Orders.Where(o => o.Status != "Đã hủy").Sum(o => (decimal?)o.TotalAmount) ?? 0;
 
-                // 5. Cảnh báo tồn kho thấp (<= 5)
-                int lowStockCount = (from pr in db.ProductPrices
-                                     join p in db.PageItems on pr.ID_P equals p.ID_P
-                                     where p.ItemType == 1 && !p.Hide && pr.StockQuantity <= 5
-                                     select pr.ID_P).Count();
-                lblLowStock.Text = lowStockCount.ToString("N0");
+                litTotalProducts.Text = totalProducts.ToString("N0");
+                litTotalBrands.Text = totalBrands.ToString("N0");
+                litTotalOrders.Text = totalOrders.ToString("N0");
+                litTotalRevenue.Text = totalRevenue.ToString("N0") + " đ";
             }
         }
 
@@ -50,63 +36,58 @@ namespace BCBTL.Admin
         {
             using (var db = DbContextHelper.GetContext())
             {
-                var orders = (from o in db.Orders
-                              orderby o.OrderID descending
-                              select new
-                              {
-                                  o.OrderID,
-                                  o.CustomerName,
-                                  o.CustomerPhone,
-                                  o.OrderDate,
-                                  o.TotalAmount,
-                                  o.Status
-                              }).Take(5).ToList();
+                var recentOrders = db.Orders
+                    .OrderByDescending(o => o.OrderID)
+                    .Take(5)
+                    .Select(o => new
+                    {
+                        o.OrderID,
+                        o.CustomerName,
+                        o.CustomerPhone,
+                        o.TotalAmount,
+                        o.Status,
+                        o.OrderDate
+                    })
+                    .ToList();
 
-                gvRecentOrders.DataSource = orders;
+                gvRecentOrders.DataSource = recentOrders;
                 gvRecentOrders.DataBind();
             }
         }
 
-        private void LoadLowStockProducts()
+        private void LoadLowStockAlerts()
         {
             using (var db = DbContextHelper.GetContext())
             {
                 var lowStock = (from p in db.PageItems
                                 join pr in db.ProductPrices on p.ID_P equals pr.ID_P
                                 join m in db.Menus on p.ID_MN equals m.ID_MN
-                                where p.ItemType == 1 && !p.Hide && pr.StockQuantity <= 5
+                                where p.ItemType == 1 && p.Hide == false && pr.StockQuantity <= 5
                                 orderby pr.StockQuantity ascending
                                 select new
                                 {
                                     p.ID_P,
                                     p.Title,
-                                    p.Image,
-                                    BrandName = m.Lable,
-                                    pr.StockQuantity,
-                                    pr.Price
+                                    CategoryName = m.Lable,
+                                    pr.StockQuantity
                                 }).Take(5).ToList();
 
-                gvLowStockProducts.DataSource = lowStock;
-                gvLowStockProducts.DataBind();
+                gvLowStock.DataSource = lowStock;
+                gvLowStock.DataBind();
             }
         }
 
-        public string GetStatusBadgeClass(string status)
+        public string GetStatusClass(string status)
         {
-            switch (status)
+            if (string.IsNullOrEmpty(status)) return "status-pending";
+            switch (status.Trim())
             {
-                case "Chờ xử lý":
-                    return "badge badge-warning";
-                case "Đã xác nhận":
-                    return "badge badge-info";
-                case "Đang giao":
-                    return "badge badge-purple";
-                case "Đã hoàn tất":
-                    return "badge badge-success";
-                case "Đã hủy":
-                    return "badge badge-danger";
-                default:
-                    return "badge badge-secondary";
+                case "Chờ xử lý": return "status-pending";
+                case "Đã xác nhận": return "status-confirmed";
+                case "Đang giao": return "status-shipping";
+                case "Đã hoàn tất": return "status-completed";
+                case "Đã hủy": return "status-cancelled";
+                default: return "status-pending";
             }
         }
     }

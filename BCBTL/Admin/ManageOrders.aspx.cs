@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Web.UI;
 using System.Web.UI.WebControls;
 
 namespace BCBTL.Admin
@@ -10,66 +11,31 @@ namespace BCBTL.Admin
         {
             if (!IsPostBack)
             {
-                BindOrdersGrid();
-
-                // Nếu có query string ?id= từ Dashboard chuyển sang thì mở ngay chi tiết
-                if (!string.IsNullOrEmpty(Request.QueryString["id"]))
+                if (int.TryParse(Request.QueryString["viewId"], out int vId))
                 {
-                    int orderId = 0;
-                    if (int.TryParse(Request.QueryString["id"], out orderId))
-                    {
-                        ShowOrderDetail(orderId);
-                    }
+                    ShowOrderDetail(vId);
                 }
+
+                BindOrdersGrid();
             }
         }
 
         private void BindOrdersGrid()
         {
-            string keyword = txtSearchCustomer.Text.Trim();
-            string statusFilter = ddlFilterStatus.SelectedValue;
-
             using (var db = DbContextHelper.GetContext())
             {
-                var query = from o in db.Orders
-                            select o;
+                var query = db.Orders.AsQueryable();
 
-                if (!string.IsNullOrEmpty(statusFilter))
+                string status = ddlFilterStatus.SelectedValue;
+                if (!string.IsNullOrEmpty(status) && status != "ALL")
                 {
-                    query = query.Where(o => o.Status == statusFilter);
-                }
-
-                if (!string.IsNullOrEmpty(keyword))
-                {
-                    query = query.Where(o => o.CustomerName.Contains(keyword) || o.CustomerPhone.Contains(keyword));
+                    query = query.Where(o => o.Status == status);
                 }
 
                 var list = query.OrderByDescending(o => o.OrderID).ToList();
                 gvOrders.DataSource = list;
                 gvOrders.DataBind();
-
-                lblTotalOrdersCount.Text = list.Count.ToString();
             }
-        }
-
-        protected void btnFilter_Click(object sender, EventArgs e)
-        {
-            gvOrders.PageIndex = 0;
-            BindOrdersGrid();
-        }
-
-        protected void btnResetFilter_Click(object sender, EventArgs e)
-        {
-            txtSearchCustomer.Text = string.Empty;
-            ddlFilterStatus.SelectedIndex = 0;
-            gvOrders.PageIndex = 0;
-            BindOrdersGrid();
-        }
-
-        protected void gvOrders_PageIndexChanging(object sender, GridViewPageEventArgs e)
-        {
-            gvOrders.PageIndex = e.NewPageIndex;
-            BindOrdersGrid();
         }
 
         protected void gvOrders_RowCommand(object sender, GridViewCommandEventArgs e)
@@ -88,65 +54,57 @@ namespace BCBTL.Admin
                 var order = db.Orders.FirstOrDefault(o => o.OrderID == orderId);
                 if (order != null)
                 {
-                    lblDetailOrderId.Text = order.OrderID.ToString();
-                    lblDetailCustomerName.Text = Server.HtmlEncode(order.CustomerName);
-                    lblDetailPhone.Text = Server.HtmlEncode(order.CustomerPhone);
-                    lblDetailEmail.Text = string.IsNullOrEmpty(order.CustomerEmail) ? "(Không có)" : Server.HtmlEncode(order.CustomerEmail);
-                    lblDetailAddress.Text = Server.HtmlEncode(order.DeliveryAddress);
-                    lblDetailNotes.Text = string.IsNullOrEmpty(order.OrderNotes) ? "(Không có ghi chú)" : Server.HtmlEncode(order.OrderNotes);
-                    lblDetailAccount.Text = string.IsNullOrEmpty(order.Username) ? "Khách vãng lai" : "Thành viên (" + order.Username + ")";
-                    lblDetailOrderDate.Text = order.OrderDate.ToString("dd/MM/yyyy HH:mm:ss");
-                    lblDetailTotalAmount.Text = string.Format("{0:N0} VNĐ", order.TotalAmount);
-
-                    lblDetailCurrentStatus.Text = string.Format("<span class='{0}'>{1}</span>", GetStatusBadgeClass(order.Status), order.Status);
+                    pnlOrderDetail.Visible = true;
+                    litDetailOrderId.Text = order.OrderID.ToString();
+                    litDetailCustomerName.Text = Server.HtmlEncode(order.CustomerName);
+                    litDetailPhone.Text = Server.HtmlEncode(order.CustomerPhone);
+                    litDetailEmail.Text = string.IsNullOrEmpty(order.CustomerEmail) ? "Chưa cung cấp" : Server.HtmlEncode(order.CustomerEmail);
+                    litDetailDate.Text = order.OrderDate.ToString("dd/MM/yyyy HH:mm:ss");
+                    litDetailAddress.Text = Server.HtmlEncode(order.DeliveryAddress);
+                    litDetailNotes.Text = string.IsNullOrEmpty(order.OrderNotes) ? "Không có ghi chú" : Server.HtmlEncode(order.OrderNotes);
+                    litDetailTotal.Text = string.Format("{0:N0} đ", order.TotalAmount);
 
                     if (ddlUpdateStatus.Items.FindByValue(order.Status) != null)
                     {
                         ddlUpdateStatus.SelectedValue = order.Status;
                     }
 
-                    // Tải danh sách sản phẩm trong đơn
+                    // Load Items
                     var items = (from d in db.OrderDetails
                                  join p in db.PageItems on d.ID_P equals p.ID_P
                                  where d.OrderID == orderId
                                  select new
                                  {
-                                     d.ID_P,
                                      p.Title,
                                      p.Image,
-                                     d.UnitPrice,
                                      d.Quantity,
-                                     d.LineTotal
+                                     d.UnitPrice,
+                                     LineTotal = d.Quantity * d.UnitPrice
                                  }).ToList();
 
                     gvOrderItems.DataSource = items;
                     gvOrderItems.DataBind();
-
-                    pnlOrderDetail.Visible = true;
                 }
             }
         }
 
         protected void btnUpdateStatus_Click(object sender, EventArgs e)
         {
-            int orderId = 0;
-            if (int.TryParse(lblDetailOrderId.Text, out orderId))
+            if (int.TryParse(litDetailOrderId.Text, out int orderId))
             {
-                string newStatus = ddlUpdateStatus.SelectedValue;
-
                 using (var db = DbContextHelper.GetContext())
                 {
                     var order = db.Orders.FirstOrDefault(o => o.OrderID == orderId);
                     if (order != null)
                     {
-                        order.Status = newStatus;
+                        order.Status = ddlUpdateStatus.SelectedValue;
                         db.SubmitChanges();
 
-                        ShowAlert("Cập nhật trạng thái đơn hàng #" + orderId + " sang [" + newStatus + "] thành công!", "alert-success");
+                        lblDetailMsg.Visible = true;
+                        lblDetailMsg.Text = "✔ Đã cập nhật trạng thái đơn hàng thành công sang: " + order.Status;
                     }
                 }
 
-                ShowOrderDetail(orderId);
                 BindOrdersGrid();
             }
         }
@@ -156,30 +114,30 @@ namespace BCBTL.Admin
             pnlOrderDetail.Visible = false;
         }
 
-        public string GetStatusBadgeClass(string status)
+        protected void ddlFilterStatus_SelectedIndexChanged(object sender, EventArgs e)
         {
-            switch (status)
-            {
-                case "Chờ xử lý":
-                    return "badge badge-warning";
-                case "Đã xác nhận":
-                    return "badge badge-info";
-                case "Đang giao":
-                    return "badge badge-purple";
-                case "Đã hoàn tất":
-                    return "badge badge-success";
-                case "Đã hủy":
-                    return "badge badge-danger";
-                default:
-                    return "badge badge-secondary";
-            }
+            gvOrders.PageIndex = 0;
+            BindOrdersGrid();
         }
 
-        private void ShowAlert(string msg, string cssClass)
+        protected void gvOrders_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
-            pnlAlert.Visible = true;
-            pnlAlert.CssClass = "alert " + cssClass;
-            lblAlertMsg.Text = msg;
+            gvOrders.PageIndex = e.NewPageIndex;
+            BindOrdersGrid();
+        }
+
+        public string GetStatusClass(string status)
+        {
+            if (string.IsNullOrEmpty(status)) return "status-pending";
+            switch (status.Trim())
+            {
+                case "Chờ xử lý": return "status-pending";
+                case "Đã xác nhận": return "status-confirmed";
+                case "Đang giao": return "status-shipping";
+                case "Đã hoàn tất": return "status-completed";
+                case "Đã hủy": return "status-cancelled";
+                default: return "status-pending";
+            }
         }
     }
 }

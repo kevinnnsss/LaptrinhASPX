@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Web.UI;
 using System.Web.UI.WebControls;
 
 namespace BCBTL.Admin
@@ -21,139 +22,102 @@ namespace BCBTL.Admin
                 var list = db.Acounts.OrderBy(a => a.Permission).ThenBy(a => a.Username).ToList();
                 gvAccounts.DataSource = list;
                 gvAccounts.DataBind();
-
-                lblTotalAccounts.Text = list.Count.ToString();
             }
         }
 
-        protected void btnAddAccount_Click(object sender, EventArgs e)
+        protected void btnCreateAccount_Click(object sender, EventArgs e)
         {
-            string username = txtUsername.Text.Trim();
-            string password = txtPassword.Text.Trim();
-            string fullname = txtFullname.Text.Trim();
-            string email = txtEmail.Text.Trim();
-            int permission = int.Parse(ddlPermission.SelectedValue);
-            bool active = chkActive.Checked;
-            bool lockAcc = chkLock.Checked;
+            string username = txtNewUsername.Text.Trim();
+            string password = txtNewPassword.Text.Trim();
+            string fullname = txtNewFullname.Text.Trim();
+            string email = txtNewEmail.Text.Trim();
+            int perm = int.Parse(ddlNewRole.SelectedValue);
 
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password) || string.IsNullOrEmpty(fullname))
             {
-                ShowAlert("Vui lòng điền đầy đủ Tên đăng nhập, Mật khẩu và Họ tên!", "alert-danger");
+                ShowMsg("Vui lòng điền đầy đủ Tên đăng nhập, Mật khẩu và Họ tên!", true);
                 return;
             }
 
             using (var db = DbContextHelper.GetContext())
             {
-                // Kiểm tra trùng username
-                bool exists = db.Acounts.Any(a => a.Username == username);
-                if (exists)
+                if (db.Acounts.Any(a => a.Username == username))
                 {
-                    ShowAlert("Tên đăng nhập [" + username + "] đã tồn tại! Vui lòng chọn tên khác.", "alert-danger");
+                    ShowMsg("Tên đăng nhập '" + username + "' đã tồn tại trên hệ thống!", true);
                     return;
                 }
 
-                // Băm mật khẩu chuẩn SHA-256
-                string hashedPassword = SecurityHelper.HashPassword(password);
-
-                Acount newAcc = new Acount
+                Acount acc = new Acount
                 {
                     Username = username,
-                    Password = hashedPassword,
+                    Password = SecurityHelper.HashPassword(password),
                     Fullname = fullname,
-                    Email = email,
-                    Permission = permission,
-                    Active = active,
-                    Lock = lockAcc
+                    Email = string.IsNullOrEmpty(email) ? null : email,
+                    Permission = perm,
+                    Lock = false,
+                    Active = true
                 };
 
-                db.Acounts.InsertOnSubmit(newAcc);
+                db.Acounts.InsertOnSubmit(acc);
                 db.SubmitChanges();
 
-                ShowAlert("Tạo tài khoản [" + username + "] thành công!", "alert-success");
+                ShowMsg("Tạo tài khoản '" + username + "' thành công!", false);
+                txtNewUsername.Text = "";
+                txtNewPassword.Text = "";
+                txtNewFullname.Text = "";
+                txtNewEmail.Text = "";
             }
 
-            ResetForm();
             BindAccountsGrid();
-        }
-
-        private void ResetForm()
-        {
-            txtUsername.Text = string.Empty;
-            txtPassword.Text = string.Empty;
-            txtFullname.Text = string.Empty;
-            txtEmail.Text = string.Empty;
-            ddlPermission.SelectedValue = "1";
-            chkActive.Checked = true;
-            chkLock.Checked = false;
         }
 
         protected void gvAccounts_RowCommand(object sender, GridViewCommandEventArgs e)
         {
-            string targetUsername = e.CommandArgument.ToString();
-            string currentAdmin = Session["AdminUser"] != null ? Session["AdminUser"].ToString() : "";
+            string user = e.CommandArgument?.ToString();
+            if (string.IsNullOrEmpty(user)) return;
 
-            if (e.CommandName == "ToggleLock")
+            using (var db = DbContextHelper.GetContext())
             {
-                if (string.Equals(targetUsername, currentAdmin, StringComparison.OrdinalIgnoreCase))
+                var acc = db.Acounts.FirstOrDefault(a => a.Username == user);
+                if (acc != null)
                 {
-                    ShowAlert("Bạn không thể tự khóa tài khoản của chính mình khi đang đăng nhập!", "alert-danger");
-                    return;
-                }
-
-                using (var db = DbContextHelper.GetContext())
-                {
-                    var acc = db.Acounts.FirstOrDefault(a => a.Username == targetUsername);
-                    if (acc != null)
+                    if (e.CommandName == "ToggleLock")
                     {
+                        // Prevent locking yourself
+                        if (user.Equals(Session["Username"]?.ToString(), StringComparison.OrdinalIgnoreCase) ||
+                            user.Equals(Session["AdminUser"]?.ToString(), StringComparison.OrdinalIgnoreCase))
+                        {
+                            ShowMsg("Bạn không thể tự khóa tài khoản của chính mình!", true);
+                            return;
+                        }
+
                         acc.Lock = !acc.Lock;
                         db.SubmitChanges();
-
-                        string statusStr = acc.Lock ? "ĐÃ KHÓA" : "ĐÃ MỞ KHÓA";
-                        ShowAlert("Tài khoản [" + targetUsername + "] hiện " + statusStr + " thành công!", "alert-success");
+                        ShowMsg("Đã " + (acc.Lock ? "khóa" : "mở khóa") + " tài khoản " + user + " thành công!", false);
                     }
-                }
-
-                BindAccountsGrid();
-            }
-            else if (e.CommandName == "DeleteAccount")
-            {
-                if (string.Equals(targetUsername, currentAdmin, StringComparison.OrdinalIgnoreCase))
-                {
-                    ShowAlert("Bạn không thể tự xóa tài khoản của chính mình khi đang thao tác!", "alert-danger");
-                    return;
-                }
-
-                using (var db = DbContextHelper.GetContext())
-                {
-                    var acc = db.Acounts.FirstOrDefault(a => a.Username == targetUsername);
-                    if (acc != null)
+                    else if (e.CommandName == "ResetPassword")
                     {
-                        // Kiểm tra nếu tài khoản có ràng buộc trong bảng Orders
-                        bool hasOrders = db.Orders.Any(o => o.Username == targetUsername);
-                        if (hasOrders)
-                        {
-                            acc.Lock = true;
-                            db.SubmitChanges();
-                            ShowAlert("Tài khoản [" + targetUsername + "] đã có liên kết đơn hàng. Hệ thống tự động KHÓA tài khoản thay vì xóa vật lý để bảo toàn dữ liệu!", "alert-warning");
-                        }
-                        else
-                        {
-                            db.Acounts.DeleteOnSubmit(acc);
-                            db.SubmitChanges();
-                            ShowAlert("Đã xóa hoàn toàn tài khoản [" + targetUsername + "]!", "alert-success");
-                        }
+                        acc.Password = SecurityHelper.HashPassword("123456");
+                        db.SubmitChanges();
+                        ShowMsg("Đã đặt lại mật khẩu của '" + user + "' về '123456' thành công!", false);
                     }
                 }
-
-                BindAccountsGrid();
             }
+
+            BindAccountsGrid();
         }
 
-        private void ShowAlert(string msg, string cssClass)
+        protected void gvAccounts_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
-            pnlAlert.Visible = true;
-            pnlAlert.CssClass = "alert " + cssClass;
-            lblAlertMsg.Text = msg;
+            gvAccounts.PageIndex = e.NewPageIndex;
+            BindAccountsGrid();
+        }
+
+        private void ShowMsg(string msg, bool isError)
+        {
+            lblMsg.Visible = true;
+            lblMsg.Text = (isError ? "✖ " : "✔ ") + msg;
+            lblMsg.CssClass = "alert-msg " + (isError ? "alert-error" : "alert-success");
         }
     }
 }
