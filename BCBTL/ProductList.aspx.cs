@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
@@ -223,27 +223,27 @@ namespace BCBTL
                 Page.Title = "Đồng Hồ " + bName + " Chính Hãng";
                 litBreadcrumbCategory.Text = bName;
                 litCategoryTitle.Text = "ĐỒNG HỒ " + bName.ToUpper() + " CHÍNH HÃNG";
-                litCategoryDescription.Text = $"Bộ sưu tập đồng hồ {bName} chính hãng được nhập khẩu và phân phối ủy quyền tại Duy Anh Watch. Bảo hành 5 năm độc quyền, miễn phí thay pin trọn đời.";
+                litCategoryDescription.Text = $"Bộ sưu tập đồng hồ {bName} chính hãng được nhập khẩu và phân phối ủy quyền tại KevLouis. Bảo hành 5 năm độc quyền, miễn phí thay pin trọn đời.";
             }
             else if (CurrentGender.HasValue)
             {
                 if (CurrentGender == 1)
                 {
-                    Page.Title = "Đồng Hồ Nam Chính Hãng - Duy Anh Watch";
+                    Page.Title = "Đồng Hồ Nam Chính Hãng - KevLouis";
                     litBreadcrumbCategory.Text = "Đồng hồ Nam";
                     litCategoryTitle.Text = "ĐỒNG HỒ NAM CHÍNH HÃNG";
-                    litCategoryDescription.Text = "Duy Anh Watch tự hào là đại lý ủy quyền chính thức của các thương hiệu đồng hồ nam nổi tiếng thế giới: Casio, Seiko, Citizen, Rolex... Thiết kế mạnh mẽ, sang trọng và lịch lãm dành riêng cho phái mạnh. Cam kết 100% chính hãng, đền gấp 10 lần nếu phát hiện hàng giả.";
+                    litCategoryDescription.Text = "KevLouis tự hào là đại lý ủy quyền chính thức của các thương hiệu đồng hồ nam nổi tiếng thế giới: Casio, Seiko, Citizen, Rolex... Thiết kế mạnh mẽ, sang trọng và lịch lãm dành riêng cho phái mạnh. Cam kết 100% chính hãng, đền gấp 10 lần nếu phát hiện hàng giả.";
                 }
                 else if (CurrentGender == 2)
                 {
-                    Page.Title = "Đồng Hồ Nữ Chính Hãng - Duy Anh Watch";
+                    Page.Title = "Đồng Hồ Nữ Chính Hãng - KevLouis";
                     litBreadcrumbCategory.Text = "Đồng hồ Nữ";
                     litCategoryTitle.Text = "ĐỒNG HỒ NỮ CHÍNH HÃNG";
                     litCategoryDescription.Text = "Bộ sưu tập đồng hồ nữ chính hãng quý phái, thanh lịch và cuốn hút. Phụ kiện hoàn hảo tôn vinh nét duyên dáng của phái đẹp với chất liệu kính Sapphire, đính đá sang trọng.";
                 }
                 else
                 {
-                    Page.Title = "Đồng Hồ Unisex & Cặp Đôi - Duy Anh Watch";
+                    Page.Title = "Đồng Hồ Unisex & Cặp Đôi - KevLouis";
                     litBreadcrumbCategory.Text = "Đồng hồ Unisex";
                     litCategoryTitle.Text = "ĐỒNG HỒ UNISEX & CẶP ĐÔI";
                     litCategoryDescription.Text = "Những mẫu đồng hồ thiết kế hài hòa, đẳng cấp phù hợp cho cả nam và nữ.";
@@ -251,7 +251,7 @@ namespace BCBTL
             }
             else
             {
-                Page.Title = "Tất Cả Đồng Hồ Chính Hãng - Duy Anh Watch";
+                Page.Title = "Tất Cả Đồng Hồ Chính Hãng - KevLouis";
                 litBreadcrumbCategory.Text = "Tất cả đồng hồ";
                 litCategoryTitle.Text = "ĐỒNG HỒ CHÍNH HÃNG CAO CẤP";
                 litCategoryDescription.Text = "Khám phá hàng trăm mẫu đồng hồ chính hãng từ các thương hiệu danh tiếng Nhật Bản và Thụy Sĩ. Bảo hành 5 năm độc quyền, trả góp 0%, miễn phí giao hàng toàn quốc.";

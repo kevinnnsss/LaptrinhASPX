@@ -132,18 +132,35 @@ flowchart TD
   2. Kiểm tra phân quyền trong sự kiện `Page_Load` của `Admin.Master` (nếu Session rỗng thì tự động chuyển hướng về `Login.aspx`).
   3. Trang `ManageProducts.aspx`: Dùng `GridView` hỗ trợ phân trang (`AllowPaging="True"`), sắp xếp, xóa có xác nhận JavaScript (`OnClientClick="return confirm('...');"`), upload ảnh bằng `FileUpload` lưu vào thư mục `/Assets/images/products/` (Xem Phụ lục 9.3 - Mẫu 4).
 
-### GĐ6: Lập trình chức năng Bán hàng (Giỏ hàng & Đặt hàng)
-- **Mục tiêu:** Khách chọn mua sản phẩm, cập nhật số lượng và gửi đơn đặt hàng.
+### GĐ6: Lập trình chức năng Bán hàng (Giỏ hàng, Đặt hàng & Tra cứu tiến độ đơn hàng)
+- **Mục tiêu:** Khách chọn mua sản phẩm, cập nhật số lượng, gửi đơn đặt hàng và theo dõi tiến độ xử lý đơn hàng.
 - **Các bước:**
   1. Xây dựng lớp đối tượng `CartItem.cs` lưu trữ trong `Session["Cart"]` (Xem Phụ lục 9.3 - Mẫu 5).
-  2. Trang `Cart.aspx`: Dùng `GridView` hoặc `Repeater` hiển thị giỏ hàng, cho phép sửa số lượng, xóa từng món, nút "Xóa hết" và tính tổng tiền.
-  3. Trang `Checkout.aspx`: Thu thập thông tin khách (Họ tên, SĐT, Địa chỉ) → Lưu bản ghi vào bảng `Orders` → Lặp từng món trong giỏ hàng để lưu vào bảng `OrderDetails` → Xóa giỏ hàng Session → Chuyển sang trang `OrderSuccess.aspx`.
+  2. Trang `Cart.aspx`: Dùng `Repeater`/`UpdatePanel` hiển thị giỏ hàng, cho phép sửa số lượng, xóa từng món, nút "Xóa hết" và tính tổng tiền tự động.
+  3. Trang `Checkout.aspx`: Thu thập thông tin khách (Họ tên, SĐT, Địa chỉ, Ghi chú) → Kiểm tra tồn kho & giá trực tiếp từ CSDL → Sử dụng Giao dịch (Transaction) lưu bản ghi vào `Orders`, lặp từng món lưu vào `OrderDetails` và tự động trừ tồn kho `ProductPrices.StockQuantity` → Xóa giỏ hàng Session → Chuyển sang trang `OrderSuccess.aspx`.
+  4. Trang `TrackOrder.aspx` (Tra cứu tiến độ đơn hàng): Khách hàng nhập Số điện thoại hoặc Mã đơn hàng để theo dõi tiến độ đơn hàng trực quan qua thanh Stepper Timeline (Chờ xử lý → Đã xác nhận → Đang giao → Đã hoàn tất), xem chi tiết sản phẩm đã mua và tổng tiền thanh toán.
+  5. Trang `Register.aspx` (Đăng ký tài khoản thành viên): Cung cấp biểu mẫu cho khách hàng mới đăng ký tài khoản thành viên (`Permission = 2`, `Lock = false`, `Active = true`, băm mật khẩu SHA-256 an toàn), kiểm tra trùng username, tự động khởi tạo Session và đăng nhập ngay cho khách hàng.
 
 ### GĐ7: Nâng cao trải nghiệm (Validation, jQuery & ASP.NET AJAX)
-- **Mục tiêu:** Kiểm tra dữ liệu hợp lệ và tăng tốc thao tác người dùng.
-- **Các bước:**
-  1. Sử dụng Server Controls: `RequiredFieldValidator` (bắt buộc nhập họ tên, địa chỉ), `RegularExpressionValidator` (kiểm tra định dạng SĐT 10 số).
-  2. Sử dụng `ScriptManager` và `UpdatePanel` trong `Cart.aspx` để khi tăng/giảm số lượng sản phẩm thì chỉ cập nhật phần tiền mà không cần tải lại toàn bộ trang web (F5 ngầm).
+- **Mục tiêu:** Kiểm tra dữ liệu hợp lệ đa tầng, tăng tốc thao tác người dùng và tạo trải nghiệm mượt mà không reload trang.
+- **Các bước triển khai chi tiết:**
+  1. **Server Validation Controls:**
+     - `RequiredFieldValidator`: Bắt buộc nhập Họ tên, SĐT, Địa chỉ tại `Checkout.aspx`; thông tin tài khoản tại `Register.aspx`; Họ tên và SĐT tại `Contact.aspx`.
+     - `RegularExpressionValidator`: Kiểm tra định dạng SĐT Việt Nam 10 số (`^(0|\+84)[0-9]{9,10}$`) và Email chuẩn (`^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$`).
+     - `CompareValidator`: So khớp Mật khẩu và Xác nhận mật khẩu tại `Register.aspx`.
+     - `ValidationSummary`: Tổng hợp cảnh báo trực quan tại đầu form thanh toán và đăng ký.
+     - Lọc ký tự phía máy khách: `onkeypress="return event.charCode >= 48 && event.charCode <= 57"` trên các ô nhập số.
+  2. **Kiến trúc ASP.NET AJAX toàn diện:**
+     - `ScriptManager` đặt tại MasterPage `Site.Master` (`EnablePartialRendering="true"`) để quản trị toàn bộ vòng đời client script và AJAX.
+     - `UpdatePanel` (UpdateMode="Conditional") tại các khu vực tương tác:
+       * **`Cart.aspx`**: Bộ điều khiển tăng/giảm số lượng (+/-) bằng `LinkButton`, ô nhập số lượng `AutoPostBack`, xóa món, xóa toàn bộ và áp dụng mã Voucher giảm giá 10% (`KEV10`, `CHAOBAN`) $\rightarrow$ Cập nhật tức thời đơn giá, tạm tính, giảm giá và tổng tiền thanh toán mà không cần F5 toàn trang.
+       * **`Site.Master` Header Cart Preview**: Đặt trong `UpdatePanel` riêng $\rightarrow$ Live Sync tự động cập nhật số lượng và tổng tiền trên huy hiệu góc phải header ngay khi thêm hoặc đổi số lượng ở bất kỳ trang nào.
+       * **`ProductDetail.aspx`**: Thao tác "Thêm vào giỏ hàng" xử lý mượt mà qua AJAX, hiển thị thông báo thành công xanh lá không giật lag màn hình.
+       * **`TrackOrder.aspx`**: Nhập SĐT/Mã đơn $\rightarrow$ Kích hoạt AJAX hiển thị Stepper Timeline 4 bước và danh sách đơn hàng tức thì.
+       * **`Contact.aspx`**: Gửi tin nhắn tư vấn và nhận phản hồi tức thời.
+     - `UpdateProgress`: Hiển thị hiệu ứng lớp phủ làm mờ (Backdrop Blur) cùng vòng xoay đồng hồ loading (`cart-spinner`) chuyên nghiệp trong suốt quá trình AJAX xử lý dữ liệu ngầm.
+  3. **Tương tác phương thức thanh toán linh hoạt:**
+     - Lựa chọn giữa COD (Thanh toán khi nhận hàng) và Chuyển khoản VietQR $\rightarrow$ Tự động hiển thị/ẩn khối thông tin tài khoản ngân hàng Vietcombank và hướng dẫn quét mã QR.
 
 ### GĐ8: Kiểm thử & Bảo mật cơ bản
 - **Mục tiêu:** Phát hiện lỗi trước khi nộp và đảm bảo an toàn dữ liệu.
@@ -191,7 +208,7 @@ flowchart TD
 | **Mốc 1** | Khung nền tảng | Kết nối CSDL thành công | [x] Chạy script SQL tạo đủ 6 bảng<br>[x] Tạo `WatchStore.dbml` kéo đủ 6 bảng<br>[x] Chạy thử `Default.aspx` kết nối được DB |
 | **Mốc 2** | Giao diện Khách hàng | Duyệt xem sản phẩm mượt mà | [x] Menu đa cấp hiển thị đúng phân cấp cha-con<br>[x] Xem danh sách đồng hồ theo hãng<br>[x] Xem chi tiết đồng hồ đầy đủ ảnh, giá, mô tả |
 | **Mốc 3** | Quản trị Admin | Đăng nhập và CRUD sản phẩm | [x] Đăng nhập đúng tài khoản/mật khẩu bảng `Acounts`<br>[x] Thêm sản phẩm mới kèm upload ảnh thành công<br>[x] Sửa, xóa sản phẩm trực tiếp trên GridView |
-| **Mốc 4** | Nghiệp vụ Bán hàng | Mua hàng & Lưu đơn hoàn chỉnh | [x] Thêm vào giỏ hàng lưu bằng Session<br>[x] Sửa số lượng, xóa món trong giỏ hàng<br>[x] Đặt hàng lưu thành công vào `Orders` & `OrderDetails` |
+| **Mốc 4** | Nghiệp vụ Bán hàng | Mua hàng & Lưu đơn hoàn chỉnh | [x] Thêm vào giỏ hàng lưu bằng Session<br>[x] Sửa số lượng, xóa món trong giỏ hàng<br>[x] Đặt hàng lưu thành công vào `Orders` & `OrderDetails`<br>[x] Tra cứu tiến độ đơn hàng qua `TrackOrder.aspx` |
 | **Mốc 5** | Hoàn thiện & Bảo vệ | Triển khai & Tài liệu | [x] Tích hợp Ajax UpdatePanel giỏ hàng<br>[x] Publish chạy tốt trên IIS<br>[x] Hoàn thiện file Báo cáo Word và Slide thuyết trình |
 
 ---
@@ -202,7 +219,7 @@ flowchart TD
 * **Thành viên A (Phụ trách Phân hệ Khách hàng & Bán hàng):**
   - Thiết kế `Site.Master`, CSS giao diện người dùng.
   - Xây dựng: `Default.aspx`, `ProductList.aspx`, `ProductDetail.aspx`.
-  - Xây dựng module Giỏ hàng & Đặt hàng: `Cart.aspx`, `Checkout.aspx`, `OrderSuccess.aspx`.
+  - Xây dựng module Giỏ hàng, Đặt hàng & Tra cứu: `Cart.aspx`, `Checkout.aspx`, `OrderSuccess.aspx`, `TrackOrder.aspx`.
 * **Thành viên B (Phụ trách Phân hệ Quản trị Admin & CSDL):**
   - Viết và bảo trì script SQL Server, quản lý file `WatchStore.dbml`.
   - Thiết kế `Admin.Master`, bảo mật phân quyền kiểm tra Session.
@@ -343,7 +360,8 @@ BCBTL/
 │   ├── Dashboard.aspx            (Trang tổng quan thống kê)
 │   ├── ManageMenus.aspx          (Quản lý danh mục Menu đa cấp)
 │   ├── ManageProducts.aspx       (Thêm, sửa, xóa sản phẩm + Upload ảnh)
-│   └── ManageOrders.aspx         (Xem và duyệt đơn đặt hàng)
+│   ├── ManageOrders.aspx         (Xem và duyệt đơn đặt hàng)
+│   └── ManageAccounts.aspx       (Quản lý tài khoản, khóa và phân quyền)
 │
 ├── Site.Master                   (MasterPage giao diện Khách hàng)
 ├── Site.Master.cs
@@ -352,7 +370,11 @@ BCBTL/
 ├── ProductDetail.aspx            (Xem chi tiết một sản phẩm)
 ├── Cart.aspx                     (Xem và cập nhật giỏ hàng)
 ├── Checkout.aspx                 (Điền thông tin và đặt hàng)
+├── OrderSuccess.aspx             (Thông báo đặt hàng thành công)
+├── TrackOrder.aspx               (Tra cứu tiến độ đơn hàng bằng SĐT hoặc Mã đơn)
 ├── Login.aspx                    (Trang đăng nhập hệ thống)
+├── Register.aspx                 (Trang đăng ký tài khoản khách hàng thành viên)
+├── Logout.aspx                   (Xóa Session và đăng xuất an toàn)
 ├── WatchStore.dbml               (Sơ đồ LINQ to SQL ánh xạ CSDL)
 ├── Database_layout.sql           (Script SQL Server 2022 tạo CSDL)
 └── Web.config                    (File cấu hình hệ thống & Connection String)
@@ -601,6 +623,106 @@ namespace BCBTL
                 {
                     Response.Redirect("~/Default.aspx");
                 }
+            }
+        }
+    }
+}
+```
+
+---
+
+### MẪU 3B: TRANG ĐĂNG KÝ THÀNH VIÊN KHÁCH HÀNG (`Register.aspx` & `Register.aspx.cs`)
+
+**File: `Register.aspx`**
+```html
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Register.aspx.cs" Inherits="BCBTL.Register" %>
+
+<!DOCTYPE html>
+<html lang="vi">
+<head runat="server">
+    <meta charset="utf-8" />
+    <title>Đăng Ký Tài Khoản Khách Hàng - KevLouis Watch</title>
+    <link href="Assets/css/style.css" rel="stylesheet" />
+</head>
+<body>
+    <form id="formRegister" runat="server">
+        <div class="auth-wrapper">
+            <div class="auth-card">
+                <h2>TẠO TÀI KHOẢN MỚI</h2>
+                <asp:Label ID="lblMsg" runat="server" Visible="false" />
+                <div class="form-group">
+                    <label>Tên đăng nhập (*):</label>
+                    <asp:TextBox ID="txtUsername" runat="server" placeholder="Viết liền không dấu..." />
+                </div>
+                <div class="form-group">
+                    <label>Họ và tên (*):</label>
+                    <asp:TextBox ID="txtFullname" runat="server" placeholder="Nguyễn Văn A..." />
+                </div>
+                <div class="form-group">
+                    <label>Email (*):</label>
+                    <asp:TextBox ID="txtEmail" runat="server" TextMode="Email" />
+                </div>
+                <div class="form-group">
+                    <label>Mật khẩu (*):</label>
+                    <asp:TextBox ID="txtPassword" runat="server" TextMode="Password" />
+                </div>
+                <div class="form-group">
+                    <label>Xác nhận mật khẩu (*):</label>
+                    <asp:TextBox ID="txtConfirmPassword" runat="server" TextMode="Password" />
+                </div>
+                <asp:Button ID="btnRegister" runat="server" Text="ĐĂNG KÝ THÀNH VIÊN" OnClick="btnRegister_Click" CssClass="btn-auth" />
+                <p>Đã có tài khoản? <a href="Login.aspx">Đăng nhập ngay</a></p>
+            </div>
+        </div>
+    </form>
+</body>
+</html>
+```
+
+**File: `Register.aspx.cs` (Trích lược xử lý băm SHA-256 và tạo quyền Permission = 2)**
+```csharp
+using System;
+using System.Linq;
+
+namespace BCBTL
+{
+    public partial class Register : System.Web.UI.Page
+    {
+        protected void btnRegister_Click(object sender, EventArgs e)
+        {
+            string username = txtUsername.Text.Trim();
+            string fullname = txtFullname.Text.Trim();
+            string email = txtEmail.Text.Trim();
+            string password = txtPassword.Text.Trim();
+
+            using (var db = DbContextHelper.GetContext())
+            {
+                if (db.Acounts.Any(a => a.Username == username))
+                {
+                    lblMsg.Text = "Tên đăng nhập đã tồn tại!";
+                    lblMsg.Visible = true;
+                    return;
+                }
+
+                Acount acc = new Acount
+                {
+                    Username = username,
+                    Password = SecurityHelper.HashPassword(password),
+                    Fullname = fullname,
+                    Email = email,
+                    Permission = 2, // 2 = Thành viên khách hàng
+                    Lock = false,
+                    Active = true
+                };
+
+                db.Acounts.InsertOnSubmit(acc);
+                db.SubmitChanges();
+
+                // Tự động đăng nhập
+                Session["Username"] = acc.Username;
+                Session["Fullname"] = acc.Fullname;
+                Session["Permission"] = acc.Permission;
+                Response.Redirect("~/Default.aspx?reg=success");
             }
         }
     }
@@ -968,6 +1090,9 @@ namespace BCBTL
 | **TC08** | Cập nhật số lượng giỏ hàng | Nhập số lượng mới và bấm Cập nhật | Đổi số lượng từ `1` thành `3` | Đơn giá x 3, tổng tiền giỏ hàng cập nhật chính xác. |
 | **TC09** | Thêm đồng hồ mới có ảnh | Vào Admin, điền form, chọn ảnh | Tên: "Seiko 5", Ảnh: `.jpg` | Thêm thành công, ảnh lưu vào thư mục `products`, GridView nạp sản phẩm mới. |
 | **TC10** | Đặt hàng hoàn tất | Điền form thanh toán và bấm Đặt hàng | Tên: "An", SĐT: `0912345678` | Lưu vào bảng `Orders` & `OrderDetails`, giỏ hàng Session được làm trống. |
+| **TC11** | Tra cứu tiến độ đơn hàng | Nhập SĐT hoặc Mã đơn đã đặt | `0912345678` | Hiển thị Stepper trạng thái 4 bước và danh sách đồng hồ đặt mua. |
+| **TC12** | Đăng ký thành viên mới | Điền đầy đủ thông tin tại `Register.aspx` | `khachmoi` / pass `123456` | Lưu vào `Acounts` với Permission = 2, Lock = 0, băm SHA-256, tự động đăng nhập. |
+| **TC13** | Đăng ký trùng tên đăng nhập | Nhập tên tài khoản đã tồn tại | `admin` | Hệ thống báo lỗi đỏ: "Tên đăng nhập đã được sử dụng! Vui lòng chọn tên khác." |
 
 ---
 

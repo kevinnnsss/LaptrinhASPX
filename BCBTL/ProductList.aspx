@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Danh Sách Đồng Hồ" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ProductList.aspx.cs" Inherits="BCBTL.ProductList" %>
+<%@ Page Title="Danh Sách Đồng Hồ" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ProductList.aspx.cs" Inherits="BCBTL.ProductList" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
@@ -25,7 +25,7 @@
             </h2>
             <p>
                 <asp:Literal ID="litCategoryDescription" runat="server">
-                    Hệ thống phân phối đồng hồ chính hãng hàng đầu Việt Nam. Duy Anh Watch cam kết 100% sản phẩm có nguồn gốc xuất xứ rõ ràng từ các thương hiệu danh tiếng Nhật Bản và Thụy Sĩ, bảo hành 5 năm độc quyền.
+                    Hệ thống phân phối đồng hồ chính hãng hàng đầu Việt Nam. KevLouis cam kết 100% sản phẩm có nguồn gốc xuất xứ rõ ràng từ các thương hiệu danh tiếng Nhật Bản và Thụy Sĩ, bảo hành 5 năm độc quyền.
                 </asp:Literal>
             </p>
         </div>
@@ -126,8 +126,8 @@
                 <!-- Advisor Support Box -->
                 <div class="sidebar-advisor-box">
                     <h5>Tư Vấn Chọn Mua</h5>
-                    <p>Chuyên gia Duy Anh Watch sẵn sàng hỗ trợ bạn chọn mẫu đồng hồ phù hợp với cổ tay và phong cách.</p>
-                    <a href="tel:18000091" class="advisor-btn">📞 1800 0091 (Miễn phí)</a>
+                    <p>Chuyên gia KevLouis sẵn sàng hỗ trợ bạn chọn mẫu đồng hồ phù hợp với cổ tay và phong cách.</p>
+                    <a href="tel:19002117" class="advisor-btn">📞 1900 2117</a>
                 </div>
             </aside>
 

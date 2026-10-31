@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -33,6 +33,11 @@ namespace BCBTL
                 litCartCount.Text = "0";
                 litCartTotal.Text = "0 đ";
             }
+
+            if (upHeaderCart != null)
+            {
+                upHeaderCart.Update();
+            }
         }
 
         private void CheckUserAuth()
@@ -54,7 +59,7 @@ namespace BCBTL
             }
             else
             {
-                litUserAuth.Text = "<a href='Login.aspx' class='top-bar-link'>Đăng nhập</a> | <a href='Login.aspx' class='top-bar-link'>Đăng ký</a>";
+                litUserAuth.Text = "<a href='Login.aspx' class='top-bar-link'>Đăng nhập</a> | <a href='Register.aspx' class='top-bar-link'>Đăng ký</a>";
             }
         }
 

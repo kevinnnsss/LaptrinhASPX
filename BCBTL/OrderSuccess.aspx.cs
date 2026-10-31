@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 
 namespace BCBTL
@@ -48,6 +48,7 @@ namespace BCBTL
                     litOrderDate.Text = order.OrderDate.ToString("dd/MM/yyyy HH:mm");
                     litOrderStatus.Text = Server.HtmlEncode(order.Status);
                     litTotalAmount.Text = string.Format("{0:N0} đ", order.TotalAmount);
+                    lnkTrackThisOrder.NavigateUrl = "TrackOrder.aspx?id=" + order.OrderID;
                 }
                 else
                 {

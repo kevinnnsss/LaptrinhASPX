@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 
 namespace BCBTL
@@ -36,11 +36,11 @@ namespace BCBTL
                 pnlContent.Visible = true;
                 pnlNotFound.Visible = false;
 
-                Page.Title = article.Title + " - Duy Anh Watch";
+                Page.Title = article.Title + " - KevLouis";
                 litBreadcrumbTitle.Text = Server.HtmlEncode(article.Title);
                 litTitle.Text = Server.HtmlEncode(article.Title);
                 litDate.Text = article.CreaDate.ToString("dd/MM/yyyy HH:mm");
-                litAuthor.Text = Server.HtmlEncode(article.UserAdd ?? "Duy Anh Watch");
+                litAuthor.Text = Server.HtmlEncode(article.UserAdd ?? "KevLouis");
                 litSummary.Text = Server.HtmlEncode(article.Sumary ?? "");
                 litContents.Text = article.Contents ?? "<p>Nội dung đang được cập nhật.</p>";
 

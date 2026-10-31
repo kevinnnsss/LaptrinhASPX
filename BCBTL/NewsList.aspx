@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Tin Tức & Đánh Giá" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="NewsList.aspx.cs" Inherits="BCBTL.NewsList" %>
+<%@ Page Title="Tin Tức & Đánh Giá" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="NewsList.aspx.cs" Inherits="BCBTL.NewsList" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
@@ -16,7 +16,7 @@
 
         <div class="catalog-banner" style="background: linear-gradient(rgba(17, 24, 39, 0.9), rgba(15, 23, 42, 0.9)), url('Assets/images/products/news_phanbiet.jpg') center/cover;">
             <h2>TIN TỨC & KIẾN THỨC ĐỒNG HỒ</h2>
-            <p>Khám phá thế giới thời gian cùng các chuyên gia Duy Anh Watch. Cập nhật xu hướng đồng hồ mới nhất, mẹo phân biệt thật giả và cẩm nang sử dụng, bảo dưỡng chuẩn Thụy Sĩ.</p>
+            <p>Khám phá thế giới thời gian cùng các chuyên gia KevLouis. Cập nhật xu hướng đồng hồ mới nhất, mẹo phân biệt thật giả và cẩm nang sử dụng, bảo dưỡng chuẩn Thụy Sĩ.</p>
         </div>
 
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 25px; margin-bottom: 40px;">
@@ -29,7 +29,7 @@
                         </a>
                         <div style="padding:20px; flex:1; display:flex; flex-direction:column;">
                             <span style="font-size:12px; color:#888888; margin-bottom:6px;">
-                                📅 <%# string.Format("{0:dd/MM/yyyy}", Eval("CreaDate")) %> • Người đăng: <%# Eval("UserAdd") ?? "Duy Anh Watch" %>
+                                📅 <%# string.Format("{0:dd/MM/yyyy}", Eval("CreaDate")) %> • Người đăng: <%# Eval("UserAdd") ?? "KevLouis" %>
                             </span>
                             <h3 style="font-size:16px; font-weight:700; margin-bottom:10px; line-height:1.4;">
                                 <a href='<%# "NewsDetail.aspx?id=" + Eval("ID_P") %>' style="color:var(--dark-color);">

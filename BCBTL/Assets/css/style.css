@@ -1,4 +1,4 @@
-﻿/* ==========================================================================
+/* ==========================================================================
    DUY ANH WATCH - STYLESHEET (GIAO DIỆN KHÁCH HÀNG CHUẨN DONGHODUYANH.COM)
    ========================================================================== */
 
@@ -75,18 +75,21 @@ img {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    white-space: nowrap;
 }
 
 .top-bar-left {
     display: flex;
-    gap: 20px;
+    gap: 18px;
     align-items: center;
+    white-space: nowrap;
 }
 
 .top-bar-item {
     display: inline-flex;
     align-items: center;
     gap: 6px;
+    white-space: nowrap;
 }
 
 .top-bar-item b {
@@ -95,8 +98,9 @@ img {
 
 .top-bar-right {
     display: flex;
-    gap: 18px;
+    gap: 14px;
     align-items: center;
+    white-space: nowrap;
 }
 
 .top-bar-link {
@@ -1588,4 +1592,120 @@ img {
     .footer-grid {
         grid-template-columns: 1fr;
     }
+}
+
+
+/* ==========================================================================
+   GIAI ĐOẠN 7: AJAX, INTERACTIVE CONTROLS & VALIDATION STYLING
+   ========================================================================== */
+
+/* Cart Quantity Interactive Controls (+ / -) */
+.cart-qty-ctrl {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #ffffff;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.cart-qty-btn {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f1f5f9;
+    color: #334155;
+    font-weight: 800;
+    font-size: 15px;
+    text-decoration: none !important;
+    transition: background 0.15s, color 0.15s;
+    user-select: none;
+    line-height: 1;
+}
+
+.cart-qty-btn:hover {
+    background: #e2e8f0;
+    color: var(--primary-color);
+}
+
+.cart-qty-val {
+    width: 44px;
+    height: 28px;
+    border: none;
+    border-left: 1px solid #e2e8f0;
+    border-right: 1px solid #e2e8f0;
+    text-align: center;
+    font-weight: 700;
+    font-size: 13px;
+    color: #0f172a;
+    outline: none;
+    background: #ffffff;
+}
+
+/* AJAX Loading Overlay & Spinner */
+.cart-loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(15, 23, 42, 0.4);
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(2px);
+}
+
+.cart-spinner-box {
+    background: #ffffff;
+    padding: 22px 32px;
+    border-radius: 8px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border: 1px solid #e2e8f0;
+}
+
+.cart-spinner {
+    width: 28px;
+    height: 28px;
+    border: 3px solid #f1f5f9;
+    border-top: 3px solid var(--primary-color);
+    border-radius: 50%;
+    animation: cartSpin 0.75s linear infinite;
+}
+
+@keyframes cartSpin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Validation Summary & Error Badges */
+.val-summary-alert {
+    background: #fee2e2;
+    border: 1px solid #f87171;
+    color: #991b1b;
+    padding: 12px 18px;
+    border-radius: 6px;
+    font-size: 13px;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.val-summary-alert ul {
+    margin: 6px 0 0 18px;
+    padding: 0;
+}
+
+.val-error {
+    color: #dc2626;
+    font-size: 12px;
+    display: block;
+    margin-top: 4px;
+    font-weight: 600;
 }

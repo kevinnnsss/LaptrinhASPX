@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.UI;
@@ -64,7 +64,7 @@ namespace BCBTL
                 pnlNotFound.Visible = false;
 
                 // Page Title & Breadcrumbs
-                Page.Title = watch.Title + " - Duy Anh Watch";
+                Page.Title = watch.Title + " - KevLouis";
                 litBreadcrumbTitle.Text = Server.HtmlEncode(watch.Title);
                 lnkBreadcrumbCategory.Text = Server.HtmlEncode(watch.BrandName);
                 lnkBreadcrumbCategory.NavigateUrl = "ProductList.aspx?idmn=" + watch.ID_MN;
@@ -132,7 +132,7 @@ namespace BCBTL
 
                 // Summary & Contents
                 litSummary.Text = string.IsNullOrEmpty(watch.Sumary) 
-                    ? "Đồng hồ chính hãng phân phối bởi Duy Anh Watch, bảo hành 5 năm toàn diện." 
+                    ? "Đồng hồ chính hãng phân phối bởi KevLouis, bảo hành 5 năm toàn diện." 
                     : Server.HtmlEncode(watch.Sumary);
 
                 litContents.Text = string.IsNullOrEmpty(watch.Contents)
@@ -173,7 +173,7 @@ namespace BCBTL
         {
             pnlProductDetail.Visible = false;
             pnlNotFound.Visible = true;
-            Page.Title = "Không tìm thấy đồng hồ - Duy Anh Watch";
+            Page.Title = "Không tìm thấy đồng hồ - KevLouis";
         }
 
         protected void btnAddToCart_Click(object sender, EventArgs e)
@@ -192,6 +192,7 @@ namespace BCBTL
                 lblActionMsg.BackColor = System.Drawing.Color.FromArgb(254, 235, 235);
                 lblActionMsg.ForeColor = System.Drawing.Color.FromArgb(220, 38, 38);
             }
+            upOrderActions.Update();
         }
 
         protected void btnBuyNow_Click(object sender, EventArgs e)
@@ -207,6 +208,7 @@ namespace BCBTL
                 lblActionMsg.BackColor = System.Drawing.Color.FromArgb(254, 235, 235);
                 lblActionMsg.ForeColor = System.Drawing.Color.FromArgb(220, 38, 38);
             }
+            upOrderActions.Update();
         }
 
         private bool ExecuteAddToCart(out string message, out bool isSuccess)

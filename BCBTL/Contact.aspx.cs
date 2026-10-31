@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace BCBTL
 {
@@ -22,7 +22,7 @@ namespace BCBTL
             }
 
             lblContactMsg.Visible = true;
-            lblContactMsg.Text = "Cảm ơn quý khách! Chuyên viên Duy Anh Watch sẽ liên hệ lại trong ít phút.";
+            lblContactMsg.Text = "Cảm ơn quý khách! Chuyên viên KevLouis sẽ liên hệ lại trong ít phút.";
             lblContactMsg.ForeColor = System.Drawing.Color.Green;
 
             txtContactName.Text = "";

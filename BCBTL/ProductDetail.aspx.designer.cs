@@ -1,4 +1,4 @@
-﻿namespace BCBTL
+namespace BCBTL
 {
     public partial class ProductDetail
     {
@@ -16,6 +16,7 @@
         protected global::System.Web.UI.WebControls.Literal litOriginalPrice;
         protected global::System.Web.UI.WebControls.Literal litSavingBadge;
         protected global::System.Web.UI.WebControls.Literal litSummary;
+        protected global::System.Web.UI.UpdatePanel upOrderActions;
         protected global::System.Web.UI.WebControls.TextBox txtQuantity;
         protected global::System.Web.UI.WebControls.Literal litAvailableStock;
         protected global::System.Web.UI.WebControls.Button btnAddToCart;

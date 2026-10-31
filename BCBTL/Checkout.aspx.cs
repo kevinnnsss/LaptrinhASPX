@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Transactions;
@@ -46,9 +46,30 @@ namespace BCBTL
                 rptSummaryItems.DataSource = cart;
                 rptSummaryItems.DataBind();
 
-                decimal total = cart.Sum(c => c.TotalPrice);
-                litSubTotal.Text = string.Format("{0:N0} đ", total);
-                litGrandTotal.Text = string.Format("{0:N0} đ", total);
+                decimal subTotal = cart.Sum(c => c.TotalPrice);
+                litSubTotal.Text = string.Format("{0:N0} đ", subTotal);
+
+                int discountPercent = 0;
+                if (Session["DiscountPercent"] != null)
+                {
+                    int.TryParse(Session["DiscountPercent"].ToString(), out discountPercent);
+                }
+
+                if (discountPercent > 0)
+                {
+                    decimal discountAmount = Math.Round(subTotal * discountPercent / 100m);
+                    decimal grandTotal = Math.Max(0, subTotal - discountAmount);
+
+                    pnlCheckoutDiscount.Visible = true;
+                    litDiscountPercent.Text = discountPercent.ToString();
+                    litDiscountAmount.Text = string.Format("{0:N0} đ", discountAmount);
+                    litGrandTotal.Text = string.Format("{0:N0} đ", grandTotal);
+                }
+                else
+                {
+                    pnlCheckoutDiscount.Visible = false;
+                    litGrandTotal.Text = string.Format("{0:N0} đ", subTotal);
+                }
             }
         }
 
@@ -101,8 +122,34 @@ namespace BCBTL
                 }
 
                 // 2. Transactional save of Order, OrderDetails, and stock update
-                using (var scope = new TransactionScope())
+                int discountPercent = 0;
+                if (Session["DiscountPercent"] != null)
                 {
+                    int.TryParse(Session["DiscountPercent"].ToString(), out discountPercent);
+                }
+                decimal discountAmount = 0m;
+                if (discountPercent > 0)
+                {
+                    discountAmount = Math.Round(calculatedTotal * discountPercent / 100m);
+                }
+                decimal finalTotal = Math.Max(0, calculatedTotal - discountAmount);
+
+                string payMethod = Request.Form["payMethod"] ?? "COD";
+                string fullNotes = notes;
+                if (discountPercent > 0)
+                {
+                    string coupon = Session["CouponCode"]?.ToString() ?? "VOUCHER";
+                    fullNotes = $"[Mã: {coupon} -{discountPercent}% (-{discountAmount:N0}đ)] " + fullNotes;
+                }
+                if (payMethod == "BANK")
+                {
+                    fullNotes = "[Thanh toán: Chuyển khoản VietQR] " + fullNotes;
+                }
+
+                db.Connection.Open();
+                using (var trans = db.Connection.BeginTransaction())
+                {
+                    db.Transaction = trans;
                     try
                     {
                         Order order = new Order
@@ -111,8 +158,8 @@ namespace BCBTL
                             CustomerPhone = phone,
                             CustomerEmail = string.IsNullOrEmpty(email) ? null : email,
                             DeliveryAddress = address,
-                            OrderNotes = string.IsNullOrEmpty(notes) ? null : notes,
-                            TotalAmount = calculatedTotal,
+                            OrderNotes = string.IsNullOrEmpty(fullNotes) ? null : fullNotes.Trim(),
+                            TotalAmount = finalTotal,
                             OrderDate = DateTime.Now,
                             Status = "Chờ xử lý",
                             Username = string.IsNullOrEmpty(username) ? null : username
@@ -137,10 +184,14 @@ namespace BCBTL
                         }
 
                         db.SubmitChanges();
-                        scope.Complete(); // Commit transaction
+                        trans.Commit(); // Commit transaction
 
                         // 3. Clear cart session and redirect
                         Session["Cart"] = null;
+                        Session["DiscountPercent"] = 0;
+                        Session["CouponCode"] = null;
+                        Session["DiscountAmount"] = 0m;
+                        Session["GrandTotal"] = 0m;
                         Session["LastOrderID"] = order.OrderID;
 
                         if (Master is Site siteMaster)
@@ -152,6 +203,7 @@ namespace BCBTL
                     }
                     catch (Exception ex)
                     {
+                        try { trans.Rollback(); } catch { }
                         ShowError("Đã xảy ra lỗi trong quá trình lưu đơn hàng: " + ex.Message);
                     }
                 }

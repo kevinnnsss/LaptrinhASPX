@@ -1,0 +1,137 @@
+<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Admin.Master.cs" Inherits="BCBTL.Admin.Admin" %>
+
+<!DOCTYPE html>
+<html lang="vi">
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%: Page.Title %> - Hệ Thống Quản Trị KevLouis Watch</title>
+    <link rel="stylesheet" href="~/Assets/css/admin.css" />
+    <asp:ContentPlaceHolder ID="headAdmin" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="formAdmin" runat="server" enctype="multipart/form-data">
+        <div class="admin-wrapper">
+            <!-- SIDEBAR -->
+            <aside class="admin-sidebar">
+                <div class="sidebar-header">
+                    <div class="sidebar-logo-icon">KW</div>
+                    <div class="sidebar-logo-text">
+                        <h3>KevLouis Admin</h3>
+                        <span>ĐỒNG HỒ CAO CẤP</span>
+                    </div>
+                </div>
+
+                <div class="sidebar-user">
+                    <div class="sidebar-user-avatar">
+                        <asp:Literal ID="litAvatarChar" runat="server">A</asp:Literal>
+                    </div>
+                    <div class="sidebar-user-info">
+                        <div class="sidebar-user-name">
+                            <asp:Literal ID="litSidebarName" runat="server">Quản trị viên</asp:Literal>
+                        </div>
+                        <div class="sidebar-user-role">Administrator</div>
+                    </div>
+                </div>
+
+                <div class="sidebar-nav">
+                    <div class="nav-heading">Tổng Quan</div>
+                    <ul>
+                        <li>
+                            <a href='<%= ResolveUrl("~/Admin/Dashboard.aspx") %>' class='<%= IsActivePage("Dashboard.aspx") %>'>
+                                <span class="nav-icon">📊</span>
+                                <span>Bảng điều khiển</span>
+                            </a>
+                        </li>
+                    </ul>
+
+                    <div class="nav-heading">Quản Lý Bán Hàng</div>
+                    <ul>
+                        <li>
+                            <a href='<%= ResolveUrl("~/Admin/ManageProducts.aspx") %>' class='<%= IsActivePage("ManageProducts.aspx") %>'>
+                                <span class="nav-icon">⌚</span>
+                                <span>Quản lý Sản phẩm</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href='<%= ResolveUrl("~/Admin/ManageOrders.aspx") %>' class='<%= IsActivePage("ManageOrders.aspx") %>'>
+                                <span class="nav-icon">📦</span>
+                                <span>Quản lý Đơn hàng</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href='<%= ResolveUrl("~/Admin/ManageMenus.aspx") %>' class='<%= IsActivePage("ManageMenus.aspx") %>'>
+                                <span class="nav-icon">🏷️</span>
+                                <span>Quản lý Danh mục Menu</span>
+                            </a>
+                        </li>
+                    </ul>
+
+                    <div class="nav-heading">Hệ Thống</div>
+                    <ul>
+                        <li>
+                            <a href='<%= ResolveUrl("~/Admin/ManageAccounts.aspx") %>' class='<%= IsActivePage("ManageAccounts.aspx") %>'>
+                                <span class="nav-icon">👤</span>
+                                <span>Tài khoản & Phân quyền</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href='<%= ResolveUrl("~/Default.aspx") %>' target="_blank">
+                                <span class="nav-icon">🌐</span>
+                                <span>Xem Website Khách</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="sidebar-footer">
+                    <a href='<%= ResolveUrl("~/Default.aspx") %>' class="btn-sidebar-action" title="Về trang chủ">
+                        <span>Trang chủ</span>
+                    </a>
+                    <a href='<%= ResolveUrl("~/Logout.aspx") %>' class="btn-sidebar-action btn-sidebar-logout" title="Đăng xuất khỏi hệ thống">
+                        <span>Đăng xuất</span>
+                    </a>
+                </div>
+            </aside>
+
+            <!-- MAIN CONTENT AREA -->
+            <main class="admin-main">
+                <!-- TOPBAR -->
+                <header class="admin-topbar">
+                    <div class="topbar-left">
+                        <h1 class="topbar-page-title"><%: Page.Title %></h1>
+                    </div>
+                    <div class="topbar-right">
+                        <span class="topbar-badge-time">
+                            📅 <%= DateTime.Now.ToString("dd/MM/yyyy HH:mm") %>
+                        </span>
+                        <a href='<%= ResolveUrl("~/Default.aspx") %>' target="_blank" class="btn-topbar-web">
+                            <span>🌐 Xem trang bán hàng</span>
+                        </a>
+                        <a href='<%= ResolveUrl("~/Logout.aspx") %>' class="btn btn-sm btn-danger">
+                            <span>Thoát</span>
+                        </a>
+                    </div>
+                </header>
+
+                <!-- CONTENT -->
+                <div class="admin-content">
+                    <asp:ContentPlaceHolder ID="AdminMainContent" runat="server">
+                    </asp:ContentPlaceHolder>
+                </div>
+
+                <!-- FOOTER -->
+                <footer class="admin-footer">
+                    <div>
+                        <strong>KevLouis WatchStore</strong> &copy; <%= DateTime.Now.Year %> - Hệ thống Quản trị Bán Đồng Hồ Trực Tuyến
+                    </div>
+                    <div>
+                        ASP.NET Web Forms (.NET 4.8) | LINQ to SQL | SQL Server 2022
+                    </div>
+                </footer>
+            </main>
+        </div>
+    </form>
+</body>
+</html>

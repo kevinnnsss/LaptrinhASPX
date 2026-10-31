@@ -1,11 +1,11 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Login.aspx.cs" Inherits="BCBTL.Login" %>
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Login.aspx.cs" Inherits="BCBTL.Login" %>
 
 <!DOCTYPE html>
 <html lang="vi">
 <head runat="server">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Đăng Nhập Tài Khoản - Duy Anh Watch</title>
+    <title>Đăng Nhập Tài Khoản - KevLouis</title>
     <link rel="stylesheet" href="~/Assets/css/style.css" />
     <style>
         .login-wrapper {
@@ -108,7 +108,7 @@
                 <div class="login-header">
                     <a href="Default.aspx" style="text-decoration:none;">
                         <h1 style="font-size:24px; font-weight:900; color:var(--primary-color); margin-bottom:5px;">
-                            DUY ANH <span style="color:#111;">WATCH</span>
+                            KEV<span style="color:#111;">LOUIS</span>
                         </h1>
                     </a>
                     <h2>ĐĂNG NHẬP</h2>
@@ -126,6 +126,10 @@
                 </div>
 
                 <asp:Button ID="btnLogin" runat="server" Text="ĐĂNG NHẬP NGAY" CssClass="btn-login" OnClick="btnLogin_Click" />
+
+                <div style="text-align:center; margin-top:14px; font-size:13px;">
+                    Chưa có tài khoản? <a href="Register.aspx" style="color:var(--primary-color); font-weight:700;">Đăng ký thành viên ngay ▶</a>
+                </div>
 
                 <asp:Label ID="lblError" runat="server" CssClass="error-msg" Visible="false"></asp:Label>
 

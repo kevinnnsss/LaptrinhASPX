@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 
 namespace BCBTL
@@ -7,6 +7,13 @@ namespace BCBTL
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (!IsPostBack)
+            {
+                if (Request.QueryString["auth"] == "required")
+                {
+                    ShowError("Vui lòng đăng nhập với tài khoản Quản trị viên (Permission = 1) để truy cập!");
+                }
+            }
         }
 
         protected void btnLogin_Click(object sender, EventArgs e)

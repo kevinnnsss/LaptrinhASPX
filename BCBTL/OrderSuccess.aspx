@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Đặt Hàng Thành Công" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="OrderSuccess.aspx.cs" Inherits="BCBTL.OrderSuccess" %>
+<%@ Page Title="Đặt Hàng Thành Công" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="OrderSuccess.aspx.cs" Inherits="BCBTL.OrderSuccess" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
@@ -11,7 +11,7 @@
                 ĐẶT HÀNG THÀNH CÔNG!
             </h1>
             <p style="font-size:14px; color:#555555; margin-bottom:25px;">
-                Cảm ơn quý khách đã tin tưởng và mua sắm tại <b>Duy Anh Watch</b>. Chuyên viên chăm sóc khách hàng của chúng tôi sẽ liên hệ qua điện thoại để xác nhận đơn hàng trong ít phút.
+                Cảm ơn quý khách đã tin tưởng và mua sắm tại <b>KevLouis</b>. Chuyên viên chăm sóc khách hàng của chúng tôi sẽ liên hệ qua điện thoại để xác nhận đơn hàng trong ít phút.
             </p>
 
             <div style="background:#f9fafb; border:1px solid var(--border-color); border-radius:6px; padding:20px; text-align:left; margin-bottom:25px;">
@@ -34,11 +34,15 @@
                 </div>
             </div>
 
-            <div style="display:flex; justify-content:center; gap:15px;">
-                <a href="Default.aspx" class="btn-detail-buy" style="display:inline-block; padding:12px 28px; font-size:14px;">
+            <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+                <asp:HyperLink ID="lnkTrackThisOrder" runat="server" CssClass="btn-view-detail" 
+                    style="display:inline-block; padding:12px 24px; font-size:14px; font-weight:700; color:var(--primary-color); border:2px solid var(--primary-color);">
+                    📦 THEO DÕI TIẾN ĐỘ ĐƠN HÀNG
+                </asp:HyperLink>
+                <a href="Default.aspx" class="btn-detail-buy" style="display:inline-block; padding:12px 24px; font-size:14px;">
                     VỀ TRANG CHỦ
                 </a>
-                <a href="ProductList.aspx" class="btn-view-detail" style="display:inline-block; padding:12px 28px; font-size:14px; font-weight:700;">
+                <a href="ProductList.aspx" class="btn-view-detail" style="display:inline-block; padding:12px 24px; font-size:14px; font-weight:700;">
                     TIẾP TỤC XEM ĐỒNG HỒ
                 </a>
             </div>
@@ -47,7 +51,7 @@
         <asp:Panel ID="pnlInvalid" runat="server" Visible="false" CssClass="empty-results">
             <div class="empty-icon">⚠️</div>
             <h3>Yêu cầu không hợp lệ</h3>
-            <p>Không tìm thấy thông tin đơn hàng vừa thực hiện. Vui lòng kiểm tra lại hoặc liên hệ hotline 1800 0091 để được hỗ trợ.</p>
+            <p>Không tìm thấy thông tin đơn hàng vừa thực hiện. Vui lòng kiểm tra lại hoặc liên hệ hotline 1900 2117 để được hỗ trợ.</p>
             <a href="Default.aspx" class="btn-add-cart" style="display:inline-block; padding:10px 24px;">Về trang chủ</a>
         </asp:Panel>
     </div>
