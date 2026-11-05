@@ -9,7 +9,7 @@
         <div class="hero-trailer-container">
             <div class="hero-trailer-wrapper">
                 <video id="heroTrailerVideo" class="hero-trailer-player" autoplay="autoplay" muted="muted" loop="loop" playsinline="playsinline" controls="controls" poster="Assets/images/banners/banner1.jpg">
-                    <source src="trailer/trailer.mp4" type="video/mp4" />
+                    <source src="trailer/trailerdonghorollex.mp4" type="video/mp4" />
                     Trình duyệt của bạn không hỗ trợ thẻ video HTML5.
                 </video>
                 <div class="hero-trailer-overlay">

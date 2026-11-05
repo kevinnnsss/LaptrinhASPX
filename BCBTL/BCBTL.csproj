@@ -92,7 +92,7 @@
     <Content Include="Admin\ManageProducts.aspx" />
     <Content Include="Admin\ManageOrders.aspx" />
     <Content Include="Admin\ManageAccounts.aspx" />
-    <Content Include="trailer\trailer.mp4" />
+    <Content Include="trailer\trailerdonghorollex.mp4" />
     <Content Include="Assets\js\main.js" />
     <Content Include="Assets\images\banners\banner1.jpg" />
     <Content Include="Assets\images\banners\banner2.jpg" />
