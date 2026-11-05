@@ -43,7 +43,7 @@ namespace BCBTL.Admin
             {
                 if (db.Acounts.Any(a => a.Username == username))
                 {
-                    ShowMsg("Tên đăng nhập '" + username + "' đã tồn tại trên hệ thống!", true);
+                    ShowMsg("Tên đăng nhập '" + Server.HtmlEncode(username) + "' đã tồn tại trên hệ thống!", true);
                     return;
                 }
 
@@ -61,7 +61,7 @@ namespace BCBTL.Admin
                 db.Acounts.InsertOnSubmit(acc);
                 db.SubmitChanges();
 
-                ShowMsg("Tạo tài khoản '" + username + "' thành công!", false);
+                ShowMsg("Tạo tài khoản '" + Server.HtmlEncode(username) + "' thành công!", false);
                 txtNewUsername.Text = "";
                 txtNewPassword.Text = "";
                 txtNewFullname.Text = "";
@@ -93,13 +93,13 @@ namespace BCBTL.Admin
 
                         acc.Lock = !acc.Lock;
                         db.SubmitChanges();
-                        ShowMsg("Đã " + (acc.Lock ? "khóa" : "mở khóa") + " tài khoản " + user + " thành công!", false);
+                        ShowMsg("Đã " + (acc.Lock ? "khóa" : "mở khóa") + " tài khoản " + Server.HtmlEncode(user) + " thành công!", false);
                     }
                     else if (e.CommandName == "ResetPassword")
                     {
                         acc.Password = SecurityHelper.HashPassword("123456");
                         db.SubmitChanges();
-                        ShowMsg("Đã đặt lại mật khẩu của '" + user + "' về '123456' thành công!", false);
+                        ShowMsg("Đã đặt lại mật khẩu của '" + Server.HtmlEncode(user) + "' về '123456' thành công!", false);
                     }
                 }
             }

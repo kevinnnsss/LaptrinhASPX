@@ -27,16 +27,23 @@ namespace BCBTL
                 return;
             }
 
-            string hashedPassword = SecurityHelper.HashPassword(password);
-
             using (var db = DbContextHelper.GetContext())
             {
-                var account = db.Acounts.FirstOrDefault(a => a.Username == username && (a.Password == hashedPassword || a.Password == password));
+                // LINQ to SQL: Tự động Parameterized Query chống SQL Injection 100%
+                var account = db.Acounts.FirstOrDefault(a => a.Username == username);
 
-                if (account == null)
+                // GĐ8: Xác thực mật khẩu qua giải thuật băm SHA-256
+                if (account == null || !SecurityHelper.VerifyPassword(password, account.Password))
                 {
                     ShowError("Tên đăng nhập hoặc mật khẩu không chính xác!");
                     return;
+                }
+
+                // Tự động nâng cấp mật khẩu sang SHA-256 nếu trong DB còn lưu văn bản thô
+                if (!SecurityHelper.IsSha256(account.Password))
+                {
+                    account.Password = SecurityHelper.HashPassword(password);
+                    db.SubmitChanges();
                 }
 
                 if (account.Lock)
@@ -51,7 +58,7 @@ namespace BCBTL
                     return;
                 }
 
-                // Save session
+                // Lưu thông tin phiên đăng nhập (Session)
                 Session["Username"] = account.Username;
                 Session["Fullname"] = account.Fullname;
                 Session["Permission"] = account.Permission;
