@@ -1,15 +1,28 @@
-﻿<%@ Page Title="Trang Chủ" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="BCBTL.Default" %>
+<%@ Page Title="Trang Chủ" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="BCBTL.Default" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container">
-        <!-- 1. HERO SLIDER BANNER -->
-        <div class="hero-slider-wrap">
-            <img src="Assets/images/banners/banner1.jpg" alt="Bộ sưu tập đồng hồ nam 2026" class="slider-slide" />
-            <img src="Assets/images/banners/banner2.jpg" alt="Đồng hồ chính hãng Nhật Bản" class="slider-slide" style="display:none;" />
-            <img src="Assets/images/banners/banner3.jpg" alt="Tuyệt tác Thụy Sĩ sang trọng" class="slider-slide" style="display:none;" />
+        <!-- 1. HERO TRAILER VIDEO BANNER -->
+        <div class="hero-trailer-container">
+            <div class="hero-trailer-wrapper">
+                <video id="heroTrailerVideo" class="hero-trailer-player" autoplay="autoplay" muted="muted" loop="loop" playsinline="playsinline" controls="controls" poster="Assets/images/banners/banner1.jpg">
+                    <source src="trailer/trailer.mp4" type="video/mp4" />
+                    Trình duyệt của bạn không hỗ trợ thẻ video HTML5.
+                </video>
+                <div class="hero-trailer-overlay">
+                    <div class="hero-trailer-tag">
+                        <span class="trailer-live-dot"></span> 🎬 TRAILER BỘ SƯU TẬP ĐỒNG HỒ 2026
+                    </div>
+                    <div class="hero-trailer-controls">
+                        <button type="button" id="btnToggleSound" class="btn-trailer-sound" title="Bật / Tắt âm thanh">
+                            <span id="soundIcon">🔇</span> <span id="soundText">Bật âm thanh</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- 2. BRAND BAR (THƯƠNG HIỆU HÀNG ĐẦU) -->

@@ -1,4 +1,4 @@
-﻿// Duy Anh Watch - Main Client JavaScript
+// Duy Anh Watch - Main Client JavaScript
 
 document.addEventListener('DOMContentLoaded', function () {
     // 1. Back to top button
@@ -76,5 +76,25 @@ document.addEventListener('DOMContentLoaded', function () {
             currentSlide = (currentSlide + 1) % slides.length;
             slides[currentSlide].style.display = 'block';
         }, 5000);
+    }
+
+    // 5. Hero Trailer Video Sound Toggle
+    var heroVideo = document.getElementById('heroTrailerVideo');
+    var btnToggleSound = document.getElementById('btnToggleSound');
+    var soundIcon = document.getElementById('soundIcon');
+    var soundText = document.getElementById('soundText');
+
+    if (heroVideo && btnToggleSound) {
+        btnToggleSound.addEventListener('click', function () {
+            if (heroVideo.muted) {
+                heroVideo.muted = false;
+                if (soundIcon) soundIcon.textContent = '🔊';
+                if (soundText) soundText.textContent = 'Tắt âm thanh';
+            } else {
+                heroVideo.muted = true;
+                if (soundIcon) soundIcon.textContent = '🔇';
+                if (soundText) soundText.textContent = 'Bật âm thanh';
+            }
+        });
     }
 });
