@@ -110,11 +110,11 @@
     <Content Include="Assets\images\products\seiko_presage.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="cuahangdonghokevins.designer.cs">
+    <!-- <Compile Include="cuahangdonghokevins.designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>cuahangdonghokevins.dbml</DependentUpon>
-    </Compile>
+    </Compile> -->
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WatchStore.designer.cs">
       <AutoGen>True</AutoGen>

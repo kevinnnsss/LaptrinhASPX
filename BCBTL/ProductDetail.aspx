@@ -1,7 +1,87 @@
 <%@ Page Title="Chi Tiết Đồng Hồ" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ProductDetail.aspx.cs" Inherits="BCBTL.ProductDetail" %>
 
+<script runat="server">
+    protected System.Collections.Generic.List<string> GetGalleryImages()
+    {
+        var list = new System.Collections.Generic.List<string>();
+        int pid = 0;
+        if (int.TryParse(Request.QueryString["id"], out pid) && pid > 0)
+        {
+            if (imgMainProduct != null && !string.IsNullOrEmpty(imgMainProduct.ImageUrl))
+            {
+                list.Add(imgMainProduct.ImageUrl);
+            }
+            string folder = Server.MapPath("~/Assets/images/gallery/" + pid);
+            if (System.IO.Directory.Exists(folder))
+            {
+                string[] files = System.IO.Directory.GetFiles(folder);
+                System.Array.Sort(files);
+                foreach (string file in files)
+                {
+                    string ext = System.IO.Path.GetExtension(file).ToLower();
+                    if (ext == ".jpg" || ext == ".png" || ext == ".jpeg" || ext == ".webp")
+                    {
+                        list.Add("~/Assets/images/gallery/" + pid + "/" + System.IO.Path.GetFileName(file));
+                    }
+                }
+            }
+        }
+        return list;
+    }
+</script>
+
+
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+
+    <!-- Modal xem ảnh phóng to -->
+    <div id="photoLightboxModal" class="photo-modal-backdrop" onclick="if(event.target === this) closePhotoModal();">
+        <div class="photo-modal-content">
+            <button type="button" class="photo-modal-close" onclick="closePhotoModal()">&times;</button>
+            <img id="lightboxImg" src="" alt="Ảnh chi tiết phóng to" />
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        // Đổi ảnh chính khi click thumbnail
+        function switchDetailImage(thumbEl, newSrc) {
+            var mainImg = document.getElementById('imgMainProduct') || document.querySelector('.detail-main-img');
+            if (!mainImg) return;
+            
+            mainImg.style.transition = 'opacity 0.2s ease';
+            mainImg.style.opacity = '0.3';
+            setTimeout(function() {
+                mainImg.src = newSrc;
+                mainImg.style.opacity = '1';
+            }, 150);
+
+            var allThumbs = document.querySelectorAll('#detailGalleryThumbs .thumb-item');
+            for (var i = 0; i < allThumbs.length; i++) {
+                allThumbs[i].classList.remove('active');
+            }
+            if (thumbEl) {
+                thumbEl.classList.add('active');
+            }
+        }
+
+        // Mở popup modal phóng to ảnh
+        function openPhotoModal(imgSrc) {
+            var modal = document.getElementById('photoLightboxModal');
+            var img = document.getElementById('lightboxImg');
+            if (modal && img) {
+                img.src = imgSrc;
+                modal.classList.add('show');
+            }
+        }
+
+        function closePhotoModal() {
+            var modal = document.getElementById('photoLightboxModal');
+            if (modal) {
+                modal.classList.remove('show');
+            }
+        }
+    </script>
 </asp:Content>
+
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container">
@@ -28,7 +108,27 @@
                     <div class="detail-main-img-wrap">
                         <asp:Literal ID="litBadgeDiscount" runat="server"></asp:Literal>
                         <span class="badge-auth-tag">Chính Hãng 100%</span>
-                        <asp:Image ID="imgMainProduct" runat="server" CssClass="detail-main-img" />
+                        <asp:Image ID="imgMainProduct" runat="server" CssClass="detail-main-img" ClientIDMode="Static" />
+                    </div>
+
+                    <!-- GALLERY THUMBNAILS (BỘ SƯU TẬP ẢNH CÁC GÓC CHỤP) -->
+                    <div class="detail-gallery-thumbs" id="detailGalleryThumbs">
+                        <% 
+                            var galleryImgs = GetGalleryImages();
+                            if (galleryImgs != null && galleryImgs.Count > 0)
+                            {
+                                for (int i = 0; i < galleryImgs.Count; i++)
+                                {
+                                    string imgUrl = ResolveUrl(galleryImgs[i]);
+                                    string activeClass = (i == 0) ? "thumb-item active" : "thumb-item";
+                        %>
+                                    <div class="<%= activeClass %>" onclick="switchDetailImage(this, '<%= imgUrl %>')">
+                                        <img src="<%= imgUrl %>" alt="Góc chụp <%= i + 1 %>" loading="lazy" />
+                                    </div>
+                        <% 
+                                }
+                            }
+                        %>
                     </div>
 
                     <!-- Cam kết KevLouis -->
@@ -143,6 +243,39 @@
                     <div class="article-content" style="line-height:1.8;">
                         <asp:Literal ID="litContents" runat="server"></asp:Literal>
                     </div>
+
+                    <!-- BỘ SƯU TẬP HÌNH ẢNH THỰC TẾ CHI TIẾT TRONG BÀI VIẾT -->
+                    <% 
+                        var articleImgs = GetGalleryImages();
+                        if (articleImgs != null && articleImgs.Count > 1)
+                        {
+                    %>
+                        <div class="article-gallery-section">
+                            <h3 class="article-gallery-title">
+                                <span>📸</span> BỘ SƯU TẬP HÌNH ẢNH THỰC TẾ CHI TIẾT SẢN PHẨM
+                            </h3>
+                            <p class="article-gallery-sub">Hình ảnh chụp thực tế từng góc cạnh và chi tiết tinh xảo của mẫu đồng hồ:</p>
+                            <div class="article-gallery-grid">
+                                <% 
+                                    for (int j = 1; j < articleImgs.Count; j++)
+                                    {
+                                        string artImgUrl = ResolveUrl(articleImgs[j]);
+                                %>
+                                    <div class="article-photo-card" onclick="openPhotoModal('<%= artImgUrl %>')">
+                                        <div class="article-photo-wrap">
+                                            <img src="<%= artImgUrl %>" alt="Góc chụp thực tế <%= j %>" loading="lazy" />
+                                            <div class="photo-overlay-zoom"><span>🔍 Phóng to</span></div>
+                                        </div>
+                                        <div class="article-photo-caption">Góc nhìn chi tiết #<%= j %></div>
+                                    </div>
+                                <% 
+                                    }
+                                %>
+                            </div>
+                        </div>
+                    <% 
+                        }
+                    %>
                 </div>
 
                 <!-- Tab 2: Specs -->
@@ -260,4 +393,53 @@
             </a>
         </asp:Panel>
     </div>
+
+    <!-- Modal xem ảnh phóng to -->
+    <div id="photoLightboxModal" class="photo-modal-backdrop" onclick="if(event.target === this) closePhotoModal();">
+        <div class="photo-modal-content">
+            <button type="button" class="photo-modal-close" onclick="closePhotoModal()">&times;</button>
+            <img id="lightboxImg" src="" alt="Ảnh chi tiết phóng to" />
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        // Đổi ảnh chính khi click thumbnail
+        function switchDetailImage(thumbEl, newSrc) {
+            var mainImg = document.getElementById('imgMainProduct') || document.querySelector('.detail-main-img');
+            if (!mainImg) return;
+            
+            mainImg.style.transition = 'opacity 0.2s ease';
+            mainImg.style.opacity = '0.3';
+            setTimeout(function() {
+                mainImg.src = newSrc;
+                mainImg.style.opacity = '1';
+            }, 150);
+
+            var allThumbs = document.querySelectorAll('#detailGalleryThumbs .thumb-item');
+            for (var i = 0; i < allThumbs.length; i++) {
+                allThumbs[i].classList.remove('active');
+            }
+            if (thumbEl) {
+                thumbEl.classList.add('active');
+            }
+        }
+
+        // Mở popup modal phóng to ảnh
+        function openPhotoModal(imgSrc) {
+            var modal = document.getElementById('photoLightboxModal');
+            var img = document.getElementById('lightboxImg');
+            if (modal && img) {
+                img.src = imgSrc;
+                modal.classList.add('show');
+            }
+        }
+
+        function closePhotoModal() {
+            var modal = document.getElementById('photoLightboxModal');
+            if (modal) {
+                modal.classList.remove('show');
+            }
+        }
+    </script>
 </asp:Content>
+
