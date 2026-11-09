@@ -5,28 +5,64 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container">
-        <!-- 1. HERO TRAILER VIDEO BANNER -->
+        <!-- 1. HERO TRAILER CINEMATIC BANNER (CHUẨN CINEMA VỚI CHỮ & NÚT TRÊN VIDEO) -->
         <div class="hero-trailer-container">
             <div class="hero-trailer-wrapper">
-                <video id="heroTrailerVideo" class="hero-trailer-player" autoplay="autoplay" muted="muted" loop="loop" playsinline="playsinline" controls="controls" poster="Assets/images/banners/banner1.jpg">
+                <!-- Video chạy ngầm tự động lặp lại, không hiện thanh tua/điều khiển -->
+                <video id="heroTrailerVideo" class="hero-trailer-player" autoplay="autoplay" muted="muted" loop="loop" playsinline="playsinline" poster="Assets/images/banners/banner1.jpg">
                     <source src="trailer/trailerdonghorollex.mp4" type="video/mp4" />
                     Trình duyệt của bạn không hỗ trợ thẻ video HTML5.
                 </video>
+
+                <!-- Lớp phủ Cinematic Gradient & Chữ nội dung đè lên Video -->
                 <div class="hero-trailer-overlay">
-                    <div class="hero-trailer-tag">
-                        <span class="trailer-live-dot"></span> 🎬 TRAILER BỘ SƯU TẬP ĐỒNG HỒ 2026
+                    <!-- Thanh trên: Nhãn Trailer và Nút Bật/Tắt âm thanh -->
+                    <div class="hero-trailer-top-bar">
+                        <div class="hero-trailer-tag">
+                            <span class="trailer-live-dot"></span> 🎬 TRAILER BỘ SƯU TẬP 2026
+                        </div>
+                        <div class="hero-trailer-sound-box">
+                            <button type="button" id="btnToggleSound" class="btn-trailer-sound" title="Bật / Tắt âm thanh trailer">
+                                <span id="soundIcon">🔇</span> <span id="soundText">Bật âm thanh</span>
+                            </button>
+                        </div>
                     </div>
-                    <div class="hero-trailer-controls">
-                        <button type="button" id="btnToggleSound" class="btn-trailer-sound" title="Bật / Tắt âm thanh">
-                            <span id="soundIcon">🔇</span> <span id="soundText">Bật âm thanh</span>
-                        </button>
+
+                    <!-- Khối chữ tiêu đề & CTA chính giữa bên trái chuẩn Cinema -->
+                    <div class="hero-trailer-content">
+                        <div class="hero-trailer-presents">
+                            <span class="presents-line"></span> KEVLOUIS PRESENTS
+                        </div>
+                        <h1 class="hero-trailer-heading">
+                            TRẢI NGHIỆM<br />
+                            ĐẲNG CẤP<br />
+                            <span class="hero-heading-highlight">ĐỈNH CAO</span>
+                        </h1>
+                        <p class="hero-trailer-desc">
+                            Khám phá những kiệt tác đồng hồ chính hãng mới nhất tại KevLouis.
+                        </p>
+                        <div class="hero-trailer-actions">
+                            <a href="ProductList.aspx" class="btn-hero-cta btn-hero-primary">
+                                XEM BỘ SƯU TẬP
+                            </a>
+                            <a href="ProductList.aspx?gender=1" class="btn-hero-cta btn-hero-secondary">
+                                ĐỒNG HỒ NAM
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Nút cuộn xuống khám phá sản phẩm (↓ KHÁM PHÁ) -->
+                    <div class="hero-trailer-bottom">
+                        <a href="#section-brands" class="hero-scroll-btn" id="btnScrollExplore">
+                            <span class="scroll-arrow">↓</span> KHÁM PHÁ
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- 2. BRAND BAR (THƯƠNG HIỆU HÀNG ĐẦU) -->
-        <div class="brand-bar">
+        <div class="brand-bar" id="section-brands">
             <div class="brand-bar-title">
                 <span>Thương hiệu phân phối ủy quyền chính hãng</span>
                 <a href="ProductList.aspx" style="color:var(--primary-color); font-weight:700;">Xem tất cả ▶</a>

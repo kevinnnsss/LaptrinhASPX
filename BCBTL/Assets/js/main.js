@@ -78,22 +78,46 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 5000);
     }
 
-    // 5. Hero Trailer Video Sound Toggle
+    // 5. Hero Trailer Video Sound Toggle & Autoplay Assurance
     var heroVideo = document.getElementById('heroTrailerVideo');
     var btnToggleSound = document.getElementById('btnToggleSound');
     var soundIcon = document.getElementById('soundIcon');
     var soundText = document.getElementById('soundText');
 
-    if (heroVideo && btnToggleSound) {
-        btnToggleSound.addEventListener('click', function () {
-            if (heroVideo.muted) {
-                heroVideo.muted = false;
-                if (soundIcon) soundIcon.textContent = '🔊';
-                if (soundText) soundText.textContent = 'Tắt âm thanh';
-            } else {
-                heroVideo.muted = true;
-                if (soundIcon) soundIcon.textContent = '🔇';
-                if (soundText) soundText.textContent = 'Bật âm thanh';
+    if (heroVideo) {
+        // Đảm bảo video luôn tự chạy ngầm mượt mà
+        heroVideo.muted = true;
+        var playPromise = heroVideo.play();
+        if (playPromise !== undefined) {
+            playPromise.catch(function (error) {
+                console.log('Video autoplay muted: ', error);
+            });
+        }
+
+        if (btnToggleSound) {
+            btnToggleSound.addEventListener('click', function () {
+                if (heroVideo.muted) {
+                    heroVideo.muted = false;
+                    heroVideo.play();
+                    if (soundIcon) soundIcon.textContent = '🔊';
+                    if (soundText) soundText.textContent = 'Tắt âm thanh';
+                } else {
+                    heroVideo.muted = true;
+                    if (soundIcon) soundIcon.textContent = '🔇';
+                    if (soundText) soundText.textContent = 'Bật âm thanh';
+                }
+            });
+        }
+    }
+
+    // 6. Smooth Scroll cho nút "↓ KHÁM PHÁ" trên Video Trailer
+    var btnScrollExplore = document.getElementById('btnScrollExplore');
+    if (btnScrollExplore) {
+        btnScrollExplore.addEventListener('click', function (e) {
+            e.preventDefault();
+            var target = document.getElementById('section-brands');
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         });
     }
