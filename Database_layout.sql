@@ -162,6 +162,7 @@ GO
 INSERT INTO dbo.Acounts (Username, Password, Fullname, Permission, Email, Lock, Active)
 VALUES 
 ('admin', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', N'Quản trị viên Hệ thống', 1, 'admin@watchstore.vn', 0, 1),
+('anhloi', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', N'Nguyễn Quốc Lợi', 2, 'loi@gmail.com', 0, 1),
 ('member', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', N'Nguyễn Văn Khách', 2, 'khachhang@gmail.com', 0, 1);
 GO
 
@@ -191,42 +192,42 @@ INSERT INTO dbo.PageItems (ID_MN, Title, Sumary, Contents, CreaDate, ModiDate, O
 -- Casio (ID_MN = 7)
 (7, N'Đồng hồ Nam Casio Edifice EFR-539D', N'Thiết kế Chronograph thể thao mạnh mẽ, kính khoáng chịu lực, chống nước 100m.', 
  N'<p>Đồng hồ Casio Edifice EFR-539D với mặt số nhiều lớp ấn tượng mang đến vẻ đẹp cá tính, phong trần cho phái mạnh. Vỏ và dây hoàn thiện từ thép không gỉ 316L sáng bóng theo thời gian.</p>', 
- GETDATE(), GETDATE(), 1, 'admin', 0, 'casio_efr539d.jpg', 1, 1),
+ GETDATE(), GETDATE(), 1, 'admin', 0, 'sp_casio_edifice_hd.jpg', 1, 1),
 
 (7, N'Đồng hồ Casio G-Shock GA-2100-1A1', N'Dòng CasiOak vỏ Carbon siêu bền, kiểu dáng bát giác góc cạnh thời thượng.', 
  N'<p>Mẫu đồng hồ G-Shock GA-2100 có thiết kế vỏ mỏng nhẹ được gia cố bằng sợi Carbon bảo vệ bộ máy tối đa trước mọi va đập mạnh. Chống nước vượt trội ở độ sâu 200m.</p>', 
- GETDATE(), GETDATE(), 2, 'admin', 0, 'gshock_ga2100.jpg', 1, 1),
+ GETDATE(), GETDATE(), 2, 'admin', 0, 'sp_casio_gshock_hd.jpg', 1, 1),
 
 (7, N'Đồng hồ Nữ Casio Baby-G BGA-280', N'Phong cách trẻ trung ngọt ngào, đa chức năng bấm giờ và đèn LED.', 
  N'<p>Sự kết hợp hoàn hảo giữa độ bền của G-Shock và nét duyên dáng, nữ tính dành riêng cho các bạn nữ năng động.</p>', 
- GETDATE(), GETDATE(), 3, 'admin', 0, 'babyg_bga280.jpg', 2, 1),
+ GETDATE(), GETDATE(), 3, 'admin', 0, 'sp_casio_babyg_hd.jpg', 2, 1),
 
 -- Seiko (ID_MN = 8)
 (8, N'Đồng hồ Nam Seiko 5 Sports SRPD55K1', N'Máy cơ Automatic Caliber 4R36, trữ cót 41 giờ, lộ đáy quyến rũ.', 
  N'<p>Dòng Seiko 5 Sports tái sinh với diện mạo thợ lặn kinh điển. Vành bezel xoay một chiều, dạ quang LumiBrite phát sáng rực rỡ trong bóng tối.</p>', 
- GETDATE(), GETDATE(), 4, 'admin', 0, 'seiko5_srpd55k1.jpg', 1, 1),
+ GETDATE(), GETDATE(), 4, 'admin', 0, 'sp_seiko_5sports_hd.jpg', 1, 1),
 
 (8, N'Đồng hồ Nam Seiko Presage Cocktail Time', N'Mặt vân Guilloche tỏa sáng như ly cocktail thượng hạng, kính vòm cong.', 
  N'<p>Kiệt tác đồng hồ cổ điển chuẩn doanh nhân. Trang bị bộ máy cơ Automatic có hỗ trợ lên cót tay và dừng kim giây khi chỉnh giờ.</p>', 
- GETDATE(), GETDATE(), 5, 'admin', 0, 'seiko_presage.jpg', 1, 1),
+ GETDATE(), GETDATE(), 5, 'admin', 0, 'sp_seiko_presage_hd.jpg', 1, 1),
 
 -- Citizen (ID_MN = 9)
 (9, N'Đồng hồ Citizen Eco-Drive BM7100-59E', N'Công nghệ năng lượng ánh sáng độc quyền Eco-Drive, kính Sapphire nguyên khối.', 
  N'<p>Không cần thay pin trong suốt quá trình sử dụng nhờ khả năng hấp thụ bất kỳ nguồn ánh sáng nào để sạc pin. Mặt kính Sapphire chống trầy xước tuyệt đối.</p>', 
- GETDATE(), GETDATE(), 6, 'admin', 0, 'citizen_bm7100.jpg', 1, 1),
+ GETDATE(), GETDATE(), 6, 'admin', 0, 'sp_citizen_bm7100_hd.jpg', 1, 1),
 
 (9, N'Đồng hồ Nữ Citizen Eco-Drive EM0500', N'Họa tiết xà cừ tinh xảo, đính pha lê lấp lánh sang trọng.', 
  N'<p>Món trang sức đẳng cấp trên cổ tay phái đẹp với nét thanh mảnh và độ chính xác vượt trội.</p>', 
- GETDATE(), GETDATE(), 7, 'admin', 0, 'citizen_em0500.jpg', 2, 1),
+ GETDATE(), GETDATE(), 7, 'admin', 0, 'sp_citizen_em0500_hd.jpg', 2, 1),
 
 -- Rolex (ID_MN = 10)
 (10, N'Đồng hồ Rolex Submariner Date 126610LN', N'Biểu tượng đồng hồ lặn thế giới, gốm Cerachrom, thép Oystersteel siêu bền.', 
  N'<p>Đỉnh cao của nghệ thuật chế tác đồng hồ Thụy Sĩ. Bộ máy Calibre 3235 đạt chuẩn Superlative Chronometer chuẩn xác đến kinh ngạc.</p>', 
- GETDATE(), GETDATE(), 8, 'admin', 0, 'rolex_submariner.jpg', 1, 1),
+ GETDATE(), GETDATE(), 8, 'admin', 0, 'sp_rolex_submariner_hd.jpg', 1, 1),
 
 (10, N'Đồng hồ Rolex Datejust 36mm M126234', N'Vành khía vàng trắng, dây Jubilee 5 mắt truyền thống quý tộc.', 
  N'<p>Mẫu đồng hồ cổ điển trường tồn với thời gian, khẳng định vị thế và đẳng cấp của chủ nhân sở hữu.</p>', 
- GETDATE(), GETDATE(), 9, 'admin', 0, 'rolex_datejust.jpg', 0, 1),
+ GETDATE(), GETDATE(), 9, 'admin', 0, 'sp_rolex_datejust_hd.jpg', 0, 1),
 
 -- Tin tức kiến thức (ID_MN = 5): ItemType = 2, không có giá
 (5, N'Hướng dẫn cách phân biệt đồng hồ thật và giả', N'Những mẹo kiểm tra kim trôi, mặt kính sapphire và logo thương hiệu sắc nét.', 
